@@ -16,7 +16,7 @@
         case "insert":
             $usuario = new Usuarios();
             $usuario->setNombre($_POST['nombre'])
-                    ->setRol($_POST['rol'])
+                    ->setRol($_POST['id_rol'])
                     ->setUsuario($_POST['usuario'])
                     ->setClave($_POST['clave']);
             if ($usuario->insert()) {
@@ -29,7 +29,7 @@
             $usuario = new Usuarios();
             $usuario->setId($_POST['id'])
                     ->setNombre($_POST['nombre'])
-                    ->setRol($_POST['rol'])
+                    ->setRol($_POST['id_rol'])
                     ->setUsuario($_POST['usuario'])
                     ->setClave($_POST['clave']);
             if ($usuario->update()) {
