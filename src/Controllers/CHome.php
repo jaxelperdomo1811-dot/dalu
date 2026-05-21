@@ -1,16 +1,26 @@
 <?php
-namespace lenovo\tiendadaluControllers;
+namespace Lenovo\Dalu\Controllers;
+
+use Lenovo\Dalu\Models\Clientes;
+use Lenovo\Dalu\Models\Productos;
+use Lenovo\Dalu\Models\Usuarios;
+
 // Obtener la acción desde GET o POST, o establecer un valor por defecto
 $accion = $_GET['accion'] ?? $_POST['accion'] ?? 'view';
 
 // El switch maneja las diferentes acciones
 switch($accion) {
     case "view":
-
         
-        // Si necesitas datos del modelo
-        // $productoModel = new Producto();
-        // $productosDestacados = $productoModel->obtenerDestacados();
+        // Obtener conteos para el dashboard
+        $clientesModel = new Clientes();
+        $cantidadClientes = count($clientesModel->search());
+
+        $productosModel = new Productos();
+        $cantidadProductos = count($productosModel->search());
+
+        $usuariosModel = new Usuarios();
+        $cantidadUsuarios = count($usuariosModel->search());
         
         // Cargar la vista
         require_once __DIR__ . "/../Views/V_Inicio.php";

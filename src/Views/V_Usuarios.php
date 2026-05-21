@@ -106,8 +106,8 @@
                                                                     <input type="text" minlength="3" maxlength="20" name="usuario" class="form-control" placeholder="Usuario" value="<?= htmlspecialchars($u['usuario']) ?>" required />
                                                                 </div>
                                                                 <div class="mb-3">
-                                                                    <label class="form-label">Clave</label>
-                                                                    <input type="password" minlength="6" maxlength="20" name="clave" class="form-control" placeholder="Clave" value="<?= htmlspecialchars($u['clave']) ?>" required />
+                                                                    <label class="form-label">Nueva Clave (opcional)</label>
+                                                                    <input type="password" maxlength="64" name="clave" class="form-control" placeholder="Dejar en blanco para no cambiar" />
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer">
@@ -199,8 +199,8 @@
                                                                     <input type="text" minlength="3" maxlength="20" name="usuario" class="form-control" placeholder="Usuario" value="<?= htmlspecialchars($uIN['usuario']) ?>" required />
                                                                 </div>
                                                                 <div class="mb-3">
-                                                                    <label class="form-label">Clave</label>
-                                                                    <input type="password" minlength="6" maxlength="20" name="clave" class="form-control" placeholder="Clave" value="<?= htmlspecialchars($uIN['clave']) ?>" required />
+                                                                    <label class="form-label">Nueva Clave (opcional)</label>
+                                                                    <input type="password" maxlength="64" name="clave" class="form-control" placeholder="Dejar en blanco para no cambiar" />
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer">
@@ -470,11 +470,11 @@
                     </div>
                     <div class="mb-3">
                         <label for="claveAgregar" class="form-label">Clave</label>
-                        <input type="password" minlength="6" maxlength="20" name="clave" class="form-control" id="claveAgregar" placeholder="Clave" required />
+                        <input type="password" minlength="6" maxlength="64" name="clave" class="form-control" id="claveAgregar" placeholder="Clave" required />
                     </div>
                     <div class="mb-3">
                         <label for="clave2Agregar" class="form-label">Repetir Clave</label>
-                        <input type="password" minlength="6" maxlength="20" name="clave2" class="form-control" id="clave2Agregar" placeholder="Repetir Clave" required />
+                        <input type="password" minlength="6" maxlength="64" name="clave2" class="form-control" id="clave2Agregar" placeholder="Repetir Clave" required />
                     </div>
                 </div>
                 <div class="modal-footer">

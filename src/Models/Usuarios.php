@@ -44,7 +44,7 @@
             }
         }
         public function login($usuario, $clave) {
-            $sql = "SELECT * FROM usuarios WHERE usuario = :usuario AND clave = :clave AND estado = 1";
+            $sql = "SELECT u.*, (SELECT nombre FROM roles WHERE id = u.id_rol) AS rol FROM usuarios u WHERE u.usuario = :usuario AND u.clave = :clave AND u.estado = 1";
             $stmt = $this->prepare($sql);
             $stmt->bindParam(":usuario", $usuario);
             $stmt->bindParam(":clave", $clave);

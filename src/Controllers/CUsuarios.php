@@ -18,7 +18,7 @@
             $usuario->setNombre($_POST['nombre'])
                     ->setRol($_POST['id_rol'])
                     ->setUsuario($_POST['usuario'])
-                    ->setClave($_POST['clave']);
+                    ->setClave(hash('sha256', $_POST['clave']));
             if ($usuario->insert()) {
                 header("Location: ?c=usuarios&accion=view");
             } else {
@@ -30,8 +30,15 @@
             $usuario->setId($_POST['id'])
                     ->setNombre($_POST['nombre'])
                     ->setRol($_POST['id_rol'])
-                    ->setUsuario($_POST['usuario'])
-                    ->setClave($_POST['clave']);
+                    ->setUsuario($_POST['usuario']);
+            
+            if (!empty($_POST['clave'])) {
+                $usuario->setClave(hash('sha256', $_POST['clave']));
+            } else {
+                $existing = $usuario->searchId($_POST['id']);
+                $usuario->setClave($existing['clave']);
+            }
+
             if ($usuario->update()) {
                 header("Location: ?c=usuarios&accion=view");
             } else {

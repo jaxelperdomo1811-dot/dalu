@@ -24,11 +24,11 @@ $partes = explode("/", $ruta);
 $controlador = "C" . ucfirst(strtolower($partes[0])); // Ej: home -> CHome, clientes -> CClientes
 $accion = isset($partes[1]) ? $partes[1] : "view";
 
-// 5. Construir nombre de clase con namespace
-$nomClase = "Lenovo\\Dalu\\Controllers\\" . $controlador;
-
 // 6. Construir ruta del archivo controlador
 $archivoControlador = __DIR__ . "/src/Controllers/" . $controlador . ".php";
+
+// 7. Verificar Login Activo y Redireccionar si es necesario
+require_once __DIR__ . '/src/Controllers/CAuth.php';
 
 // 7. Verificar existencia del archivo y ejecutar
 if (file_exists($archivoControlador)) {

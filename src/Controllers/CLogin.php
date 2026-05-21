@@ -1,6 +1,6 @@
 <?php
-    namespace lenovo\tiendadalu\Controllers;
-    use lenovo\tiendadalu\Models\Usuarios;
+    namespace Lenovo\Dalu\Controllers;
+    use Lenovo\Dalu\Models\Usuarios;
 
     $accion = $_GET['accion'] ?? $_POST['accion'] ?? 'view';
 
@@ -11,20 +11,35 @@
         
         case "login":
             $usuario = $_POST['usuario'] ?? '';
-            $clave = $_POST['clave'] ?? '';
+            // El formulario de V_login manda "password" en el input
+            $clave = $_POST['password'] ?? $_POST['clave'] ?? '';
+            
+            // Hashear con sha256
+            $clave_hash = hash('sha256', $clave);
+
             $model = new Usuarios();
-            $result = $model->login($usuario, $clave);
+            $result = $model->login($usuario, $clave_hash);
+            
             if ($result) {
                 session_start();
-                $_SESSION['user_id'] = $result['id'];
-                $_SESSION['user_name'] = $result['nombre'];
-                $_SESSION['user_role'] = $result['rol'];
+                // Almacenando nombre, id y rol en variables de sesion
+                $_SESSION['id'] = $result['id'];
+                $_SESSION['nombre'] = $result['nombre'];
+                $_SESSION['rol'] = $result['rol'];
                 header("Location: index.php");
                 exit();
             } else {
-                http_response_code(401);
-                require_once __DIR__ . "/../Views/errors/401.php";
+                $error = "Usuario o contraseña incorrectos.";
+                require_once __DIR__ . "/../Views/V_login.php";
             }
+            break;
+            
+        case "Logout":
+        case "logout":
+            session_start();
+            session_unset();
+            session_destroy();
+            header("Location: index.php");
             break;
         
         default:

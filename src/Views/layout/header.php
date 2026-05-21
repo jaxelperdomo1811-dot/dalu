@@ -1,7 +1,7 @@
 <!-- SIDEBAR -->
 <section id="sidebar">
-  <div class="sidebar-heading border-bottom bg-light p-1">
-    <img src="assets/img/dalu.jpeg" class="img imglog background-color transparent" alt="...">
+  <div class="sidebar-heading border-bottom p-3" style="background-color: #1a1a1a; text-align: center;">
+    <img src="assets/img/dalulisto.png" style="max-width: 80%; height: auto; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.5));" alt="Logo Dalu">
   </div>
 
   <ul class="side-menu">
