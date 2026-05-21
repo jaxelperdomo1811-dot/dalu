@@ -1,3 +1,12 @@
+<script>
+// Forzar recarga si la página fue cargada desde la caché del historial (Atrás/Adelante)
+window.onpageshow = function(event) {
+    if (event.persisted) {
+        window.location.reload();
+    }
+};
+</script>
+
 <!-- SIDEBAR -->
 <section id="sidebar">
   <div class="sidebar-heading border-bottom p-3" style="background-color: #1a1a1a; text-align: center;">

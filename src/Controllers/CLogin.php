@@ -2,7 +2,8 @@
     namespace Lenovo\Dalu\Controllers;
     use Lenovo\Dalu\Models\Usuarios;
 
-    $accion = $_GET['accion'] ?? $_POST['accion'] ?? 'view';
+    $accion_cruda = $_GET['accion'] ?? $_POST['accion'] ?? $_GET['a'] ?? $_POST['a'] ?? 'view';
+    $accion = strtolower($accion_cruda);
 
     switch($accion) {
         case "view":
@@ -34,7 +35,6 @@
             }
             break;
             
-        case "Logout":
         case "logout":
             session_start();
             session_unset();
