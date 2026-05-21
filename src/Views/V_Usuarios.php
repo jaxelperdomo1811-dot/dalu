@@ -267,6 +267,7 @@
                                             <th scope="col">ID Rol</th>
                                             <th scope="col">Nombre del Rol</th>
                                             <th scope="col">Descripción</th>
+                                            <th scope="col">Estado</th>
                                             <th scope="col">Acción</th>
                                         </tr>
                                     </thead>
@@ -277,6 +278,7 @@
                                                 <td><?= $rol['id'] ?></td>
                                                 <td><?= htmlspecialchars($rol['nombre']) ?></td>
                                                 <td><?= htmlspecialchars($rol['descripcion'] ?? '') ?></td>
+                                                <td><span class="badge bg-success">Activo</span></td>
                                                 <td>
                                                     <button class="btn btn-sm btn-primary m-1" data-bs-toggle="modal" data-bs-target="#modalEditarRol<?= $rol['id'] ?>">Editar</button>
                                                     <button type="button" class="btn btn-sm btn-danger m-1" data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminarRol<?= $rol['id'] ?>">Eliminar</button>
@@ -337,7 +339,7 @@
                                             <?php endforeach; ?>
                                         <?php else: ?>
                                             <tr>
-                                                <td colspan="4" class="text-center">No hay roles activos.</td>
+                                                <td colspan="5" class="text-center">No hay roles activos.</td>
                                             </tr>
                                         <?php endif; ?>
                                     </tbody>
@@ -354,6 +356,7 @@
                                             <th scope="col">ID Rol</th>
                                             <th scope="col">Nombre del Rol</th>
                                             <th scope="col">Descripción</th>
+                                            <th scope="col">Estado</th>
                                             <th scope="col">Acción</th>
                                         </tr>
                                     </thead>
@@ -364,6 +367,7 @@
                                                 <td><?= $rolIN['id'] ?></td>
                                                 <td><?= htmlspecialchars($rolIN['nombre']) ?></td>
                                                 <td><?= htmlspecialchars($rolIN['descripcion'] ?? '') ?></td>
+                                                <td><span class="badge bg-danger">Inactivo</span></td>
                                                 <td>
                                                     <button class="btn btn-sm btn-primary m-1" data-bs-toggle="modal" data-bs-target="#modalEditarRol<?= $rolIN['id'] ?>">Editar</button>
                                                     <button type="button" class="btn btn-sm btn-success m-1" data-bs-toggle="modal" data-bs-target="#modalConfirmarActivarRol<?= $rolIN['id'] ?>">Activar</button>
@@ -424,7 +428,7 @@
                                             <?php endforeach; ?>
                                         <?php else: ?>
                                             <tr>
-                                                <td colspan="4" class="text-center">No hay roles inactivos.</td>
+                                                <td colspan="5" class="text-center">No hay roles inactivos.</td>
                                             </tr>
                                         <?php endif; ?>
                                     </tbody>
