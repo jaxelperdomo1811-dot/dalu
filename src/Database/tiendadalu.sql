@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 21-05-2026 a las 23:27:39
+-- Tiempo de generación: 21-05-2026 a las 23:54:18
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -181,16 +181,18 @@ INSERT INTO `proveedores` (`id`, `razon_social`, `nombre`, `apellido`, `telefono
 CREATE TABLE `roles` (
   `id` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
-  `descripcion` text DEFAULT NULL
+  `descripcion` text DEFAULT NULL,
+  `activo` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
 
 --
 -- Volcado de datos para la tabla `roles`
 --
 
-INSERT INTO `roles` (`id`, `nombre`, `descripcion`) VALUES
-(1, 'admin', ''),
-(2, 'ventas', '');
+INSERT INTO `roles` (`id`, `nombre`, `descripcion`, `activo`) VALUES
+(1, 'admin', '', 1),
+(2, 'ventas', '', 1),
+(3, 'cajero', '', 1);
 
 -- --------------------------------------------------------
 
@@ -213,7 +215,9 @@ CREATE TABLE `usuarios` (
 
 INSERT INTO `usuarios` (`id`, `id_rol`, `nombre`, `usuario`, `clave`, `estado`) VALUES
 (1, 1, 'Administrador', 'admin', 'admin', 1),
-(2, 2, 'Vendedor', 'ventas1', 'vndr', 0);
+(2, 2, 'Vendedor', 'ventas1', 'vndr', 0),
+(3, NULL, 'Rafael', 'kesto', '123456', 1),
+(4, 1, 'Userrrrrt', 'kestico2', '12345678', 1);
 
 --
 -- Índices para tablas volcadas
@@ -325,13 +329,13 @@ ALTER TABLE `proveedores`
 -- AUTO_INCREMENT de la tabla `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Restricciones para tablas volcadas
