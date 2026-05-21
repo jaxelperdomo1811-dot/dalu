@@ -1,6 +1,13 @@
 <?php
     namespace Lenovo\Dalu\Controllers;
     use Lenovo\Dalu\Models\Proveedores;
+    use Lenovo\Dalu\Models\Entradas;
+    use Lenovo\Dalu\Models\Productos;
+
+    // Incluir archivos de los modelos si el autoload falla
+    require_once __DIR__ . '/../Models/Proveedores.php';
+    require_once __DIR__ . '/../Models/Entradas.php';
+    require_once __DIR__ . '/../Models/Productos.php';
 
     $accion = $_GET['accion'] ?? $_POST['accion'] ?? 'view';
 
@@ -8,6 +15,11 @@
         case 'view':
             $proveedores = (new Proveedores())->search();
             $proveedoresInactivos = (new Proveedores())->searchInactive();
+            
+            // Cargar datos para el módulo de entradas
+            $entradasLista = (new Entradas())->search();
+            $productosDisponibles = (new Productos())->search();
+
             require_once __DIR__ . '/../Views/V_Proveedores.php';
             break;
         case 'insert':
