@@ -1,4 +1,5 @@
-let table = new DataTable('#myTable',{
+// Inicializar DataTables para todas las tablas con la clase .tables o .table-DT
+let table = new DataTable('.tables, .table-DT', {
     language: {
         url: 'https://cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json',
         info: 'Pagina _PAGE_ de _PAGES_',

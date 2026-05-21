@@ -32,6 +32,10 @@
                     <button class="nav-link" id="tab-categorias" data-bs-toggle="tab" data-bs-target="#categorias"
                         type="button">Categoría de Productos</button>
                 </li>
+                <li class="nav-item">
+                    <button class="nav-link" id="tab-inventario" data-bs-toggle="tab" data-bs-target="#inventario"
+                        type="button">Inventario</button>
+                </li>
             </ul>
 
             <div class="tab-content">
@@ -448,6 +452,44 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Inventario -->
+                <div class="tab-pane fade" id="inventario">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h1 class="titulo text-black">Inventario de Productos</h1>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table id="tablaInventario" class="table-DT table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Categoría</th>
+                                    <th scope="col">Nombre del Producto</th>
+                                    <th scope="col">Stock Actual</th>
+                                    <th scope="col">Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($productos as $p): ?>
+                                <tr>
+                                    <td><?php echo $p['categoria']; ?></td>
+                                    <td><?php echo $p['nombre']; ?></td>
+                                    <td><span class="fs-5 fw-bold"><?php echo $p['stock']; ?></span></td>
+                                    <td>
+                                        <?php if($p['stock'] <= 5): ?>
+                                            <span class="badge bg-danger">Bajo Stock</span>
+                                        <?php elseif($p['stock'] <= 15): ?>
+                                            <span class="badge bg-warning text-dark">Stock Medio</span>
+                                        <?php else: ?>
+                                            <span class="badge bg-success">Stock Óptimo</span>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
