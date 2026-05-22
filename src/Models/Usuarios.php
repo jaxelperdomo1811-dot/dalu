@@ -95,7 +95,7 @@
                 return false;
             }
         }
-        public function desactive() {
+        public function delete() {
             $sql = "UPDATE usuarios SET estado = 0 WHERE id = :id";
             $stmt = $this->prepare($sql);
             $stmt->bindParam(":id", $this->id);

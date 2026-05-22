@@ -60,12 +60,12 @@
                                         <td><?php echo $u['clave']; ?></td>
                                         <td><?php echo $u['rol']; ?></td>
                                         <td>
-                                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalEditar<?= $u['id'] ?>">Editar</button>
-                                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminar<?= $u['id'] ?>">Eliminar</button>
+                                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalEditarUsuario<?= $u['id'] ?>">Editar</button>
+                                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminarUsuario<?= $u['id'] ?>">Eliminar</button>
                                         </td>
                                     </tr>
                                     <!-- Modal Editar -->
-                                    <div class="modal fade" id="modalEditar<?= $u['id'] ?>" tabindex="-1">
+                                    <div class="modal fade" id="modalEditarUsuario<?= $u['id'] ?>" tabindex="-1">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <form action="?c=clientes&accion=update" method="POST">
@@ -113,10 +113,10 @@
                                         </div>
                                     </div>
                                     <!-- Modal Confirmar Eliminación -->
-                                    <div class="modal fade" id="modalConfirmarEliminar<?= $u['id'] ?>" tabindex="-1">
+                                    <div class="modal fade" id="modalConfirmarEliminarUsuario<?= $u['id'] ?>" tabindex="-1">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
-                                                <form action="?c=clientes&accion=delete" method="POST">
+                                                <form action="?c=usuarios&accion=delete" method="POST">
                                                     <input type="hidden" name="id" value="<?= $u['id'] ?>">
                                                     <div class="modal-header">
                                                         <h5 class="modal-title">Confirmar eliminación</h5>
@@ -148,7 +148,7 @@
                                     <th scope="col">Nombre</th>
                                     <th scope="col">Usuario</th>
                                     <th scope="col">Clave</th>
-                                    <th scope="col">Rol</th>tr>
+                                    <th scope="col">Rol</th>
                                     <th scope="col">Accion</th>
                                 </tr>
                             </thead>
@@ -160,12 +160,12 @@
                                         <td><?php echo $uIN['clave']; ?></td>
                                         <td><?php echo $uIN['rol']; ?></td>
                                         <td>
-                                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalEditar<?= $uIN['id'] ?>">Editar</button>
-                                            <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#modalConfirmarActivar<?= $uIN['id'] ?>">Activar</button>
+                                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalEditarUsuario<?= $uIN['id'] ?>">Editar</button>
+                                            <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#modalConfirmarActivarUsuario<?= $uIN['id'] ?>">Activar</button>
                                         </td>
                                     </tr>
                                     <!-- Modal Editar -->
-                                    <div class="modal fade" id="modalEditar<?= $uIN['id'] ?>" tabindex="-1">
+                                    <div class="modal fade" id="modalEditarUsuario<?= $uIN['id'] ?>" tabindex="-1">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <form action="?c=clientes&accion=update" method="POST">
@@ -213,10 +213,10 @@
                                         </div>
                                     </div>
                                     <!-- Modal Confirmar Activación -->
-                                    <div class="modal fade" id="modalConfirmarActivar<?= $uIN['id'] ?>" tabindex="-1">
+                                    <div class="modal fade" id="modalConfirmarActivarUsuario<?= $uIN['id'] ?>" tabindex="-1">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
-                                                <form action="?c=clientes&accion=active" method="POST">
+                                                <form action="?c=usuarios&accion=active" method="POST">
                                                     <input type="hidden" name="id" value="<?= $uIN['id'] ?>">
                                                     <div class="modal-header">
                                                         <h5 class="modal-title">Confirmar activación</h5>
@@ -241,112 +241,48 @@
             </div>
         </div>
     </main>
-</body>
 
-
-
-
-<!-- TEST -->
-             <!-- Modal Agregar Cliente -->
-        <div class="modal fade" id="modalAgregar" tabindex="-1">
-            <div class="modal-dialog">
-                <form action="?c=usuarios&accion=insert" method="POST" class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Agregar Usuario</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <!-- Modal Agregar Usuario -->
+    <div class="modal fade" id="modalAgregar" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form action="?c=usuarios&accion=insert" method="POST" class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Agregar Usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="rolAgregar" class="form-label">Rol</label>
+                        <select class="form-select" name="id_rol" id="rolAgregar" required>
+                            <option value="" disabled selected>Seleccione un rol</option>
+                            <?php foreach ($roles as $rol): ?>
+                                <option value="<?= $rol['id'] ?>"><?= htmlspecialchars($rol['nombre']) ?></option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
-                    <div class="modal-body">
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="nombre" class="form-label">Nombre</label>
-                            <input type="text" minlength="3" maxlength="20" pattern="[A-Za-z\s]{3,}" title="Ingrese solo texto, entre 3 y 20 caracteres" name="nombre" class="form-control" id="nombre" placeholder="Nombre" required />
-                        </div>
-                        <div class="col-md-6">
-                            <label for="usuario" class="form-label">Usuario</label>
-                            <input type="text" minlength="3" maxlength="20" pattern="[A-Za-z0-9_]{3,20}" title="Ingrese solo letras, números o guiones bajos, entre 3 y 20 caracteres" name="usuario" class="form-control" id="usuario" placeholder="Usuario" required />
-                        </div>
+                    <div class="mb-3">
+                        <label for="nombreAgregar" class="form-label">Nombre</label>
+                        <input type="text" minlength="3" maxlength="20" pattern="[A-Za-z\s]{3,}" title="Ingrese solo texto, entre 3 y 20 caracteres" name="nombre" class="form-control" id="nombreAgregar" placeholder="Nombre" required />
                     </div>
-
-                    <div class="row mb-3">
-                        <div class="col-md-12">
-                            <label for="clave" class="form-label">Clave</label>
-                            <div class="input-group mb-2">
-                                <input type="password" minlength="6" maxlength="20" name="clave" class="form-control" id="clave" placeholder="Clave" required />
-                                <button class="btn btn-outline-secondary" type="button" id="toggleClave" tabindex="-1">
-                                    <span id="iconClave" class="bi bi-eye"></span>
-                                </button>
-                            </div>
-                            <div class="form-text">Mínimo 6 caracteres.</div>
-                        </div>
-                        <div class="col-md-12">
-                            <label for="clave2" class="form-label">Repetir Clave</label>
-                            <div class="input-group">
-                                <input type="password" minlength="6" maxlength="20" class="form-control" id="clave2" placeholder="Repetir Clave" required />
-                                <button class="btn btn-outline-secondary" type="button" id="toggleClave2" tabindex="-1">
-                                    <span id="iconClave2" class="bi bi-eye"></span>
-                                </button>
-                            </div>
-                            <div class="form-text text-danger" id="claveMismatch" style="display:none;">Las claves no coinciden.</div>
-                        </div>
+                    <div class="mb-3">
+                        <label for="usuarioAgregar" class="form-label">Usuario</label>
+                        <input type="text" minlength="3" maxlength="20" pattern="[A-Za-z0-9_]{3,20}" title="Ingrese solo letras, números o guiones bajos, entre 3 y 20 caracteres" name="usuario" class="form-control" id="usuarioAgregar" placeholder="Usuario" required />
                     </div>
-                    <script>
-                        document.addEventListener('DOMContentLoaded', function () {
-                            const claveInput = document.getElementById('clave');
-                            const clave2Input = document.getElementById('clave2');
-                            const toggleBtn = document.getElementById('toggleClave');
-                            const toggleBtn2 = document.getElementById('toggleClave2');
-                            const iconClave = document.getElementById('iconClave');
-                            const iconClave2 = document.getElementById('iconClave2');
-                            const form = claveInput.closest('form');
-                            const mismatch = document.getElementById('claveMismatch');
-
-                            if (toggleBtn) {
-                                toggleBtn.addEventListener('click', function () {
-                                    if (claveInput.type === 'password') {
-                                        claveInput.type = 'text';
-                                        iconClave.classList.remove('bi-eye');
-                                        iconClave.classList.add('bi-eye-slash');
-                                    } else {
-                                        claveInput.type = 'password';
-                                        iconClave.classList.remove('bi-eye-slash');
-                                        iconClave.classList.add('bi-eye');
-                                    }
-                                });
-                            }
-                            if (toggleBtn2) {
-                                toggleBtn2.addEventListener('click', function () {
-                                    if (clave2Input.type === 'password') {
-                                        clave2Input.type = 'text';
-                                        iconClave2.classList.remove('bi-eye');
-                                        iconClave2.classList.add('bi-eye-slash');
-                                    } else {
-                                        clave2Input.type = 'password';
-                                        iconClave2.classList.remove('bi-eye-slash');
-                                        iconClave2.classList.add('bi-eye');
-                                    }
-                                });
-                            }
-
-                            function checkPasswordsMatch() {
-                                if (claveInput.value !== clave2Input.value) {
-                                    mismatch.style.display = 'block';
-                                    clave2Input.setCustomValidity('Las claves no coinciden');
-                                } else {
-                                    mismatch.style.display = 'none';
-                                    clave2Input.setCustomValidity('');
-                                }
-                            }
-
-                            claveInput.addEventListener('input', checkPasswordsMatch);
-                            clave2Input.addEventListener('input', checkPasswordsMatch);
-                        });
-                    </script>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-success">Guardar</button>
+                    <div class="mb-3">
+                        <label for="claveAgregar" class="form-label">Clave</label>
+                        <input type="password" minlength="6" maxlength="20" name="clave" class="form-control" id="claveAgregar" placeholder="Clave" required />
                     </div>
-                </form>
-            </div>
+                    <div class="mb-3">
+                        <label for="clave2Agregar" class="form-label">Repetir Clave</label>
+                        <input type="password" minlength="6" maxlength="20" name="clave2" class="form-control" id="clave2Agregar" placeholder="Repetir Clave" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
         </div>
-
+    </div>
+</body>
 </html>

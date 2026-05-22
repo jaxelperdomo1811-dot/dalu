@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 22-05-2026 a las 04:28:13
+-- Tiempo de generación: 22-05-2026 a las 05:04:01
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -123,16 +123,17 @@ CREATE TABLE `proveedores` (
 CREATE TABLE `roles` (
   `id` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
-  `descripcion` text DEFAULT NULL
+  `descripcion` text DEFAULT NULL,
+  `activo` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
 
 --
 -- Volcado de datos para la tabla `roles`
 --
 
-INSERT INTO `roles` (`id`, `nombre`, `descripcion`) VALUES
-(1, 'admin', ''),
-(2, 'ventas', '');
+INSERT INTO `roles` (`id`, `nombre`, `descripcion`, `activo`) VALUES
+(1, 'admin', '', 1),
+(2, 'ventas', '', 1);
 
 -- --------------------------------------------------------
 
@@ -155,7 +156,8 @@ CREATE TABLE `usuarios` (
 
 INSERT INTO `usuarios` (`id`, `id_rol`, `nombre`, `usuario`, `clave`, `estado`) VALUES
 (1, 1, 'Administrador', 'admin', 'admin', 1),
-(2, 2, 'Vendedor', 'ventas1', 'vndr', 0);
+(2, 2, 'Vendedor', 'ventas1', 'vndr', 0),
+(3, NULL, 'jose', 'aass', '123456', 1);
 
 --
 -- Índices para tablas volcadas
@@ -246,7 +248,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Restricciones para tablas volcadas

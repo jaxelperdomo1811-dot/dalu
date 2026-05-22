@@ -1,11 +1,14 @@
 <?php
     namespace Lenovo\Dalu\Controllers;
     use Lenovo\Dalu\Models\Usuarios;
+    use Lenovo\Dalu\Models\Roles;
 
     $accion = $_GET['accion'] ?? $_POST['accion'] ?? 'view';
 
     switch($accion) {
         case "view":
+            $roles = (new Roles())->search();
+            $rolesInactivos = (new Roles())->searchInactive();
             $usuarios = (new Usuarios())->search();
             $usuariosInactivos = (new Usuarios())->searchInactive();
             require_once __DIR__ . "/../Views/V_Usuarios.php";
@@ -47,7 +50,7 @@
         case "active":
             $usuario = new Usuarios();
             $usuario->setId($_POST['id']);
-            if ($usuario->activate()) {
+            if ($usuario->active()) {
                 header("Location: ?c=usuarios&accion=view");
             } else {
                 echo "Error al activar el usuario.";

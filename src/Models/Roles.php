@@ -1,5 +1,5 @@
 <?php
-    namespace Lenovo\Dalu\Controllers;
+    namespace Lenovo\Dalu\Models;
     use Lenovo\Dalu\Models\Conexion;
 
     class Roles extends Conexion {
