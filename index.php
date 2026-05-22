@@ -2,8 +2,8 @@
 /**
  * Front Controller - Enfoque Procedural con Composer
  * 
- * URL esperada: ?c=controlador/accion
- * Ejemplo: ?c=home/view o ?c=usuarios/crear
+ * URL esperada: ?c=controlador&accion=accion
+ * Ejemplo: ?c=home&view o ?c=usuarios&accion=crear
  */
 
 // 1. Inicializar sesión si no existe
