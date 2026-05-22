@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="assets/css/css.css">
+    <link rel="stylesheet" href="assets/css/tabla.css">
+    <link rel="stylesheet" href="assets/css/header.css">
+    <link rel="stylesheet" href="assets/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/DataTablet/datatables.css">
+    <script src="assets/js/js.js" defer></script>
+    <script src="assets/js/servicios.js" defer></script>
+    <script src="assets/js/especialidades.js" defer></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/DataTablet/datatables.min.js" defer></script>
+    <script src="assets/DataTablet/tabla.js" defer></script>
+
+    <title>Productos</title>
+</head>
+
+<body>
+    <?php require_once __DIR__ . "/../Views/layout/header.php"; ?>
+
+    <main>
+        <div class="container bg-white p-4 rounded shadow-sm">
+            <ul class="nav nav-tabs mb-3" id="mainTabs" role="tablist">
+                <li class="nav-item">
+                    <button class="nav-link active" id="tab-productos" data-bs-toggle="tab" data-bs-target="#productos"
+                        type="button">Productos</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" id="tab-categorias" data-bs-toggle="tab" data-bs-target="#categorias"
+                        type="button">Categoría de Productos</button>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="productos">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h1 class="titulo text-black">Productos</h1>
+                        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregar">+ Nuevo
+                        Producto</button>
+                    </div>
+
+                    <!-- Tabs de Bootstrap -->
+                    <ul class="nav nav-tabs mb-3" id="productoTabs" role="tablist">
+                        <li class="nav-item">
+                            <button class="nav-link active" id="activos-tab" data-bs-toggle="tab" data-bs-target="#activos"
+                                type="button">Activos</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" id="inactivos-tab" data-bs-toggle="tab" data-bs-target="#inactivos"
+                                type="button">Inactivos</button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <!-- Productos Activos -->
+                        <div class="tab-pane fade show active" id="activos">
+                            <div class="table-responsive">
+                                <table id="tablaActivos" class="table-DT table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Categoria</th>
+                                            <th scope="col">Nombre</th>
+                                            <th scope="col">Descripción</th>
+                                            <th scope="col">Precio($)</th>
+                                            <th scope="col">Stock</th>
+                                            <th scope="col">Fecha de registro</th>
+                                            <th scope="col">Accion</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($productos as $p): ?>
+                                        <tr>
+                                            <td><?php echo $p['categoria']; ?></td>
+                                            <td><?php echo $p['nombre']; ?></td>
+                                            <td><?php echo $p['descripcion']; ?></td>
+                                            <td><?php echo $p['precio']; ?></td>
+                                            <td><?php echo $p['stock']; ?></td>
+                                            <td><?php echo $p['fecha_registro']; ?></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                                    data-bs-target="#modalEditar<?= $p['id'] ?>">Editar</button>
+                                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                                                    data-bs-target="#modalConfirmarEliminar<?= $p['id'] ?>">Eliminar</button>
+                                            </td>
+                                        </tr>
+                                        <!-- Modal Editar -->
+                                        <div class="modal fade" id="modalEditar<?= $p['id'] ?>" tabindex="-1">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <form action="?c=productos&accion=update" method="POST">
+                                                        <input type="hidden" name="id" value="<?= $p['id'] ?>">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Editar Producto</h5>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="col-md-12">
+                                                                <label for="categoria" class="form-label">Categoría</label>
+                                                                <select class="form-select" name="id_categoria" id="categoria" required>
+                                                                    <option value="<?= $p['id_categoria'] ?>" selected><?= $p['categoria'] ?></option>
+                                                                    <?php foreach ($categorias as $categoria): ?>
+                                                                        <option value="<?= $categoria['id'] ?>"><?= htmlspecialchars($categoria['nombre']) ?></option>
+                                                                    <?php endforeach; ?>
+                                                                </select>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="nombre" class="form-label">Nombre</label>
+                                                                <input type="text" class="form-control" id="nombre" name="nombre" value="<?= $p['nombre'] ?>" required />
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="descripcion" class="form-label">Descripción</label>
+                                                                <textarea class="form-control" id="descripcion" name="descripcion"
+                                                                    rows="3"><?= $p['descripcion'] ?></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Cerrar</button>
+                                                            <button type="submit" class="btn btn-primary">Guardar</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Modal Confirmar Eliminación -->
+                                        <div class="modal fade" id="modalConfirmarEliminar<?= $p['id'] ?>" tabindex="-1">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <form action="?c=productos&accion=delete" method="POST">
+                                                        <input type="hidden" name="id" value="<?= $p['id'] ?>">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Confirmar eliminación</h5>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            ¿Estás seguro de que deseas inhabilitar el producto <?= htmlspecialchars($p['nombre']) ?>?
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Cancelar</button>
+                                                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Productos Inactivos -->
+                        <div class="tab-pane fade" id="inactivos">
+                            <div class="table-responsive">
+                                <table id="tablaInactivos" class="table-DT table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Categoria</th>
+                                            <th scope="col">Nombre</th>
+                                            <th scope="col">Descripción</th>
+                                            <th scope="col">Precio($)</th>
+                                            <th scope="col">Stock</th>
+                                            <th scope="col">Fecha de registro</th>
+                                            <th scope="col">Accion</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($productosInactivos as $pIN): ?>
+                                        <tr>
+                                            <td><?php echo $pIN['categoria']; ?></td>
+                                            <td><?php echo $pIN['nombre']; ?></td>
+                                            <td><?php echo $pIN['descripcion']; ?></td>
+                                            <td><?php echo $pIN['precio']; ?></td>
+                                            <td><?php echo $pIN['stock']; ?></td>
+                                            <td><?php echo $pIN['fecha_registro']; ?></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                                    data-bs-target="#modalEditar<?= $pIN['id'] ?>">Editar</button>
+                                                <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal"
+                                                    data-bs-target="#modalConfirmarActivar<?= $pIN['id'] ?>">Activar</button>
+                                            </td>
+                                        </tr>
+                                        <!-- Modal Editar -->
+                                        <div class="modal fade" id="modalEditar<?= $pIN['id'] ?>" tabindex="-1">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <form action="?c=productos&accion=update" method="POST">
+                                                        <input type="hidden" name="id" value="<?= $pIN['id'] ?>">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Editar Producto</h5>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="col-md-12">
+                                                                <label for="categoria" class="form-label">Categoría</label>
+                                                                <select class="form-select" name="id_categoria" id="categoria" required>
+                                                                    <option value="<?= $pIN['id_categoria'] ?>" selected><?= $pIN['categoria'] ?></option>
+                                                                    <?php foreach ($categorias as $categoria): ?>
+                                                                        <option value="<?= $categoria['id'] ?>"><?= htmlspecialchars($categoria['nombre']) ?></option>
+                                                                    <?php endforeach; ?>
+                                                                </select>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="nombre" class="form-label">Nombre</label>
+                                                                <input type="text" class="form-control" id="nombre" name="nombre" value="<?= $pIN['nombre'] ?>" required />
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="descripcion" class="form-label">Descripción</label>
+                                                                <textarea class="form-control" id="descripcion" name="descripcion"
+                                                                    rows="3"><?= $pIN['descripcion'] ?></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Cerrar</button>
+                                                            <button type="submit" class="btn btn-primary">Guardar</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Modal Confirmar Activación -->
+                                        <div class="modal fade" id="modalConfirmarActivar<?= $pIN['id'] ?>" tabindex="-1">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <form action="?c=productos&accion=active" method="POST">
+                                                        <input type="hidden" name="id" value="<?= $pIN['id'] ?>">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Confirmar activación</h5>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            ¿Estás seguro de que deseas habilitar a <?= htmlspecialchars($pIN['nombre']) ?>?
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Cancelar</button>
+                                                            <button type="submit" class="btn btn-success">Activar</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="categorias">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h1 class="titulo text-black">Categoría de Productos</h1>
+                        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarCategoria">+ Nueva
+                        Categoría</button>
+                    </div>
+
+                    <div class="table-responsive">
+                        <!-- Tabs de Bootstrap -->
+                        <ul class="nav nav-tabs mb-3" id="categoriaTabs" role="tablist">
+                            <li class="nav-item">
+                                <button class="nav-link active" id="cat_activos-tab" data-bs-toggle="tab" data-bs-target="#catActivos"
+                                    type="button">Activos</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link" id="cat_inactivos-tab" data-bs-toggle="tab" data-bs-target="#catInactivos"
+                                    type="button">Inactivos</button>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <!-- Categorías Activas -->
+                            <div class="tab-pane fade show active" id="catActivos">
+                                <div class="table-responsive">
+                                    <table id="tablaActivos" class="table-DT table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Nombre</th>
+                                                <th scope="col">Descripción</th>
+                                                <th scope="col">Fecha de registro</th>
+                                                <th scope="col">Accion</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($categorias as $c): ?>
+                                            <tr>
+                                                <td><?php echo $c['nombre']; ?></td>
+                                                <td><?php echo $c['descripcion']; ?></td>
+                                                <td><?php echo $c['fecha_registro']; ?></td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                                        data-bs-target="#modalEditarCategoria<?= $c['id'] ?>">Editar</button>
+                                                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                                                        data-bs-target="#modalConfirmarEliminarCategoria<?= $c['id'] ?>">Eliminar</button>
+                                                </td>
+                                            </tr>
+                                            <!-- Modal Editar -->
+                                            <div class="modal fade" id="modalEditarCategoria<?= $c['id'] ?>" tabindex="-1">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <form action="?c=categorias&accion=update" method="POST">
+                                                            <input type="hidden" name="id" value="<?= $c['id'] ?>">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Editar Categoria</h5>
+                                                                <button type="button" class="btn-close"
+                                                                    data-bs-dismiss="modal"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="mb-3">
+                                                                    <label for="nombre" class="form-label">Nombre</label>
+                                                                    <input type="text" class="form-control" id="nombre" name="nombre" value="<?= $c['nombre'] ?>" required />
+                                                                </div>
+                                                                <div class="mb-3">
+                                                                    <label for="descripcion" class="form-label">Descripción</label>
+                                                                    <textarea class="form-control" id="descripcion" name="descripcion"
+                                                                        rows="3"><?= $c['descripcion'] ?></textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary"
+                                                                    data-bs-dismiss="modal">Cerrar</button>
+                                                                <button type="submit" class="btn btn-primary">Guardar</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Modal Confirmar Eliminación -->
+                                            <div class="modal fade" id="modalConfirmarEliminarCategoria<?= $c['id'] ?>" tabindex="-1">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <form action="?c=categorias&accion=delete" method="POST">
+                                                            <input type="hidden" name="id" value="<?= $c['id'] ?>">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Confirmar eliminación</h5>
+                                                                <button type="button" class="btn-close"
+                                                                    data-bs-dismiss="modal"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                ¿Estás seguro de que deseas inhabilitar la categoría <?= htmlspecialchars($c['nombre']) ?>?
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary"
+                                                                    data-bs-dismiss="modal">Cancelar</button>
+                                                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Categorias Inactivas -->
+                            <div class="tab-pane fade" id="catInactivos">
+                                <div class="table-responsive">
+                                    <table id="tablaInactivos" class="table-DT table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Nombre</th>
+                                                <th scope="col">Descripción</th>
+                                                <th scope="col">Fecha de registro</th>
+                                                <th scope="col">Accion</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($categoriasInactivas as $cIN): ?>
+                                            <tr>
+                                                <td><?php echo $cIN['nombre']; ?></td>
+                                                <td><?php echo $cIN['descripcion']; ?></td>
+                                                <td><?php echo $cIN['fecha_registro']; ?></td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                                        data-bs-target="#modalEditarCategoria<?= $cIN['id'] ?>">Editar</button>
+                                                    <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal"
+                                                        data-bs-target="#modalConfirmarActivarCategoria<?= $cIN['id'] ?>">Activar</button>
+                                                </td>
+                                            </tr>
+                                            <!-- Modal Editar -->
+                                            <div class="modal fade" id="modalEditarCategoria<?= $cIN['id'] ?>" tabindex="-1">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <form action="?c=categorias&accion=update" method="POST">
+                                                            <input type="hidden" name="id" value="<?= $cIN['id'] ?>">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Editar Categoría</h5>
+                                                                <button type="button" class="btn-close"
+                                                                    data-bs-dismiss="modal"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="mb-3">
+                                                                    <label for="nombre" class="form-label">Nombre</label>
+                                                                    <input type="text" class="form-control" id="nombre" name="nombre" value="<?= $cIN['nombre'] ?>" required />
+                                                                </div>
+                                                                <div class="mb-3">
+                                                                    <label for="descripcion" class="form-label">Descripción</label>
+                                                                    <textarea class="form-control" id="descripcion" name="descripcion"
+                                                                        rows="3"><?= $cIN['descripcion'] ?></textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary"
+                                                                    data-bs-dismiss="modal">Cerrar</button>
+                                                                <button type="submit" class="btn btn-primary">Guardar</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Modal Confirmar Activación -->
+                                            <div class="modal fade" id="modalConfirmarActivarCategoria<?= $cIN['id'] ?>" tabindex="-1">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <form action="?c=categorias&accion=active" method="POST">
+                                                            <input type="hidden" name="id" value="<?= $cIN['id'] ?>">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Confirmar activación</h5>
+                                                                <button type="button" class="btn-close"
+                                                                    data-bs-dismiss="modal"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                ¿Estás seguro de que deseas habilitar la categoria <?= htmlspecialchars($cIN['nombre']) ?>?
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary"
+                                                                    data-bs-dismiss="modal">Cancelar</button>
+                                                                <button type="submit" class="btn btn-success">Activar</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- TEST -->
+    <!-- Modal Agregar Cliente -->
+    <div class="modal fade" id="modalAgregar" tabindex="-1">
+        <div class="modal-dialog">
+            <form action="?c=productos&accion=insert" method="POST" class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Agregar Producto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label for="categoria" class="form-label">Categoría</label>
+                            <select class="form-select" name="id_categoria" id="categoria" required>
+                                <option value="" disabled selected>Seleccione una categoría</option>
+                                <?php foreach ($categorias as $categoria): ?>
+                                    <option value="<?= $categoria['id'] ?>"><?= htmlspecialchars($categoria['nombre']) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" minlength="3" maxlength="20"
+                                pattern="[A-Za-z\s]{3,}"
+                                title="Ingrese solo texto, entre 3 y 20 caracteres" name="nombre" class="form-control"
+                                id="nombre" placeholder="Nombre" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label for="precio" class="form-label">Precio</label>
+                            <input type="number" step="0.01" min="0" name="precio" class="form-control"
+                                id="precio" placeholder="Precio" required />
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label for="descripcion" class="form-label">Descripción</label>
+                            <input type="text" minlength="5" maxlength="25" name="descripcion" class="form-control"
+                                id="descripcion" title="Entre 5 y 25 caracteres" placeholder="Descripción" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Agregar Categoría -->
+    <div class="modal fade" id="modalAgregarCategoria" tabindex="-1">
+        <div class="modal-dialog">
+            <form action="?c=categorias&accion=insert" method="POST" class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Agregar Categoría de Producto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción</label>
+                        <textarea class="form-control" id="descripcion" name="descripcion"
+                            rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

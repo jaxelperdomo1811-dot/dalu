@@ -1,0 +1,37 @@
+.titulo {
+    color: #0508c7;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
+
+.table-body {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.table {
+    border-radius: 10px;
+}
+
+.lista{
+  display: none; 
+  position: absolute; 
+  width: 80%; 
+  max-height: 200px; /* Limitar altura con scroll si hay muchos */
+  overflow-y: auto; /* Scroll si excede la altura */
+  background-color: #fff; 
+  border: 1px solid #ccc; 
+  border-radius: 4px; /* Bordes redondeados */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* Sombra suave */
+  z-index: 1000; 
+  padding: 0; 
+  margin-top: 2px;
+}
+
+
+#containerEspecialidades {
+    max-height: 330px;
+    overflow-y: auto;
+    border: 1px solid #000000;
+    padding: 10px;
+}

@@ -1,0 +1,276 @@
+* {
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.img {
+    border-radius: 50%;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-wrap: nowrap;
+    background: #9794942c;
+}
+
+
+
+/* MAIN */
+main {
+	width: 100%;
+	padding: 24px 20px 20px 20px;
+}
+
+.contenido {
+    width: calc(100% - 230px);
+    margin-left: 230px;
+    transition: 300ms;
+}
+.content-uncollapse {
+    width: calc(100% - 90px);
+    margin-left: 90px;
+    transition: 300ms;
+}
+
+.header {
+    width: 230px;
+    height: 100%;
+    transition: 300ms;
+    overflow: auto;
+    position: fixed;
+    scrollbar-width: none;
+    top: 0;
+    left: 0;
+    z-index: 99998;
+    background: #9800fd;
+    img {
+        width: 100%;
+        /* height: 150px; */
+        background-color: white;
+    }
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+
+        li {
+            padding: 0 10px;
+            margin: 5px 0;
+            width: 100%;
+
+            svg {
+                width: 20px;
+                margin-right: 10px;
+                min-width: 20px;
+                transition: inherit;
+            }
+
+            p {
+                font-size: 16px;
+                color: white;
+            }
+
+            a {
+                text-decoration: none;
+                color: white;
+                padding: 10px;
+                margin: 0 10px;
+                text-align: center;
+                border-radius: 10px;
+                transition: 300ms;
+                align-items: center;
+                display: flex;
+
+                &:hover {
+                    background-color: blue;
+                }
+            }
+        }
+    }
+    
+}
+
+.content {
+    width: 100%;
+    height: 100%;
+    float: left;
+}
+
+.collapse {
+    width: 90px;
+    transition: 300ms;
+
+    & ul li a p {
+        display: none;
+    }
+    & ul li a svg {
+        min-width: 30px;
+        width: 30px;
+        transition: 300ms;
+    }
+
+}
+
+.header.collapse:hover {
+    width: 230px;
+    & ul li a p {
+        display: block;
+    }
+    & ul li a svg {
+        min-width: 20px;
+        width: 20px;
+        transition: 300ms;
+    }
+
+}
+
+.rotate180 {
+    transform: rotate(180deg);
+    transition: 300ms; 
+}
+
+
+.titulo-cabezera{
+    font-size: medium;
+    font-family: sans-serif;
+    margin: 5px;
+    padding: 5px;
+    display: flex;
+    flex-wrap: wrap;
+
+}
+
+#header-collapse {
+    cursor: pointer;
+    font-weight: bolder;
+    margin: 10px;
+    transition: 300ms;
+}
+
+/* estilos para el modal */
+  /* Borde más elegante y definido para el modal */
+  .modal-content {
+    border: 2px solid #2c3e50; /* Azul oscuro */
+    border-radius: 0.75rem;
+  }
+
+  /* Cabecera con fondo y texto más sobrio */
+  .modal-header {
+    background-color: #2c3e50; /* Azul oscuro */
+    color: #f8f9fa; /* Blanco humo */
+    box-shadow: 0 2px 8px rgba(44, 62, 80, 0.7);
+  }
+
+  /* Sombra sutil para títulos h6 */
+  h6 {
+    color: #34495e;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    font-weight: 600;
+  }
+
+  /* Texto principal un poco más oscuro */
+  .modal-body p,
+  .modal-body strong {
+    color: #2c3e50;
+    text-shadow: 0 1px 1px rgba(255,255,255,0.4);
+  }
+
+  /* Íconos con un color más tenue pero definido */
+  .bi {
+    color: #2980b9; /* Azul vibrante */
+  }
+
+  /* Botón cerrar con sombra y transición */
+  .btn-close.btn-close-white {
+    filter: drop-shadow(0 0 1px rgba(255,255,255,0.7));
+    transition: filter 0.3s ease;
+  }
+  .btn-close.btn-close-white:hover {
+    filter: drop-shadow(0 0 4px rgba(255,255,255,1));
+  }
+
+  /* Footer más limpio */
+  .modal-footer {
+    border-top: 1px solid #ccc;
+  }
+
+
+
+
+  /* estilos del modal de editar precios especialidades */
+  #modal {
+    display: none;
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    padding: 20px;
+    max-width: 450px;
+    width: 90%;
+    z-index: 1050;
+  }
+
+  #modal h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-weight: 600;
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  #tabla-especialidades {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+
+  #tabla-especialidades th,
+  #tabla-especialidades td {
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+    font-size: 0.95rem;
+  }
+
+  #tabla-especialidades th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+  }
+
+  #form-especialidades button {
+    padding: 8px 16px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background-color 0.3s ease;
+  }
+
+  #form-especialidades button[type="submit"] {
+    background-color: #0d6efd;
+    color: white;
+  }
+
+  #form-especialidades button[type="submit"]:hover {
+    background-color: #0b5ed7;
+  }
+
+  #form-especialidades button#cerrar-modal {
+    background-color: #6c757d;
+    color: white;
+  }
+
+  #form-especialidades button#cerrar-modal:hover {
+    background-color: #5c636a;
+  }
