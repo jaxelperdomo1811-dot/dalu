@@ -11,6 +11,7 @@
             $rolesInactivos = (new Roles())->searchInactive();
             $usuarios = (new Usuarios())->search();
             $usuariosInactivos = (new Usuarios())->searchInactive();
+            $preguntas_seguridad = (new Usuarios())->searchIdPregunta_S();
             require_once __DIR__ . "/../Views/V_Usuarios.php";
             break;
         case "insert":
@@ -18,11 +19,18 @@
             $usuario->setNombre($_POST['nombre'])
                     ->setRol($_POST['id_rol'])
                     ->setUsuario($_POST['usuario'])
-                    ->setClave(hash('sha256', $_POST['clave']));
+                    ->setClave(hash('sha256', $_POST['clave']))
+                    ->setPreguntaS1($_POST['pregunta_s_1'])
+                    ->setRespuestaS1(hash('sha256', $_POST['respuesta_s_1']))
+                    ->setPreguntaS2($_POST['pregunta_s_2'])
+                    ->setRespuestaS2(hash('sha256', $_POST['respuesta_s_2']))
+                    ->setPreguntaS3($_POST['pregunta_s_3'])
+                    ->setRespuestaS3(hash('sha256', $_POST['respuesta_s_3']));
             if ($usuario->insert()) {
+                $success = "Usuario registrado exitosamente.";
                 header("Location: ?c=usuarios&accion=view");
             } else {
-                echo "Error al insertar el usuario.";
+                $error = "Error al insertar el usuario.";
             }
             break;
         case "update":
@@ -40,9 +48,10 @@
             }
 
             if ($usuario->update()) {
+                $success = "Usuario actualizado exitosamente.";
                 header("Location: ?c=usuarios&accion=view");
             } else {
-                echo "Error al actualizar el usuario.";
+                $error = "Error al actualizar el usuario.";
             }
             break;
         case "delete":
@@ -58,9 +67,10 @@
             $usuario = new Usuarios();
             $usuario->setId($_POST['id']);
             if ($usuario->active()) {
+                $success = "Usuario activado exitosamente.";
                 header("Location: ?c=usuarios&accion=view");
             } else {
-                echo "Error al activar el usuario.";
+                $error = "Error al activar el usuario.";
             }
             break;
         default:

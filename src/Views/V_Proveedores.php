@@ -9,9 +9,11 @@
     <link rel="stylesheet" href="assets/css/header.css">
     <link rel="stylesheet" href="assets/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-    
+    <link rel="stylesheet" href="assets/css/libs/intlTelInput.css">
+    <script src="assets/js/libs/intlTelInput.min.js" defer></script>
     <link rel="stylesheet" href="assets/DataTablet/datatables.css">
     <script src="assets/js/proveedores.js" defer></script>
+    <script src="assets/js/pages/proveedores.js" defer></script>
     <script src="assets/js/js.js" defer></script>
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script src="assets/DataTablet/datatables.min.js" defer></script>
@@ -110,7 +112,7 @@
                                                                 <div class="row mb-3">
                                                                     <div class="col-md-6">
                                                                         <label for="telefono" class="form-label">Teléfono</label>
-                                                                        <input type="text" class="form-control" pattern="[0-9]{9,11}" title="Ingrese solo números, entre 9 y 11 caracteres" name="telefono" placeholder="Teléfono" value="<?php echo $p['telefono'] ?>" required />
+                                                                        <input type="tel" class="form-control phone-input" inputmode="tel" title="Ingrese un teléfono válido" name="telefono" placeholder="Teléfono" value="<?php echo $p['telefono'] ?>" required />
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <label for="email" class="form-label">Email</label>
@@ -214,7 +216,7 @@
                                                                 <div class="row mb-3">
                                                                     <div class="col-md-6">
                                                                         <label for="telefono" class="form-label">Teléfono</label>
-                                                                        <input type="text" class="form-control" pattern="[0-9]{9,11}" title="Ingrese solo números, entre 9 y 11 caracteres" name="telefono" placeholder="Teléfono" value="<?php echo $pIN['telefono'] ?>" required />
+                                                                            <input type="tel" class="form-control phone-input" inputmode="tel" title="Ingrese un teléfono válido" name="telefono" placeholder="Teléfono" value="<?php echo $pIN['telefono'] ?>" required />
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <label for="email" class="form-label">Email</label>
@@ -340,11 +342,27 @@
                             <input type="text" minlength="5" maxlength="15" title="Ingrese solo texto/numeros" name="rif" class="form-control" placeholder="Razon social" required />
                         </div>
                     </div>
+                    <div class="row mb-3">
+                        <div class="col-md-5">
+                            <label for="tipo_persona" class="form-label">Tipo de Persona</label>
+                            <select class="form-select" name="tipo_persona" id="tipo_persona" required>
+                                <option value="" disabled selected>Seleccione un tipo de persona</option>
+                                <option value="V-">Natural (V)</option>
+                                <option value="J-">Jurídica (J)</option>
+                                <option value="E-">Extranjera (E)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-7">
+                            <label for="cedula" class="form-label">Cédula</label>
+                            <input type="text" class="form-control" pattern="[0-9]{6,8}" title="Solo números, entre 6 y 8 caracteres" name="cedula" id="cedula" placeholder="Número de Cédula" required />
+                            <div id="mensaje-cedula" style="color: red; margin-top: 5px;"></div>
+                        </div>
+                    </div>
 
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="telefono" class="form-label">Teléfono</label>
-                            <input type="text" class="form-control" pattern="[0-9]{9,11}" title="Ingrese solo números, entre 9 y 11 caracteres" name="telefono" placeholder="Teléfono" required />
+                            <input type="tel" class="form-control phone-input" inputmode="tel" title="Ingrese un teléfono válido" name="telefono" placeholder="Teléfono" required />
                         </div>
                         <div class="col-md-6">
                             <label for="email" class="form-label">Email</label>
@@ -442,7 +460,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="contenidoEntradasInsumo">
-                   
+                    
                 </div>
             </div>
         </div>

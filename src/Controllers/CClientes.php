@@ -13,17 +13,22 @@
         case 'insert':
 
             $cliente = new Clientes();
+            $tipoPersona = $_POST['tipo_persona'] ?? '';
+            $cedulaNumero = $_POST['cedula'] ?? '';
+            $cedulaCompleta = trim($tipoPersona . $cedulaNumero);
+
             $cliente->setNombre($_POST['nombre'] ?? null)
                     ->setApellido($_POST['apellido'] ?? null)
                     ->setCorreo($_POST['correo'] ?? null)
                     ->setTelefono($_POST['telefono'] ?? null)
                     ->setDireccion($_POST['direccion'] ?? null)
-                    ->setCedula($_POST['cedula'] ?? null);
+                    ->setCedula($cedulaCompleta !== '' ? $cedulaCompleta : null);
             if ($cliente->insert()) {
+                $success = "Cliente registrado exitosamente.";
                 header("Location: ?c=clientes&accion=view");
                 exit();
             } else {
-                echo "Error al insertar el cliente.";
+                $error = "Error al insertar el cliente.";
             }
             break;
         case 'update':
@@ -35,10 +40,12 @@
                     ->setTelefono($_POST['telefono'] ?? null)
                     ->setDireccion($_POST['direccion'] ?? null);
             if ($cliente->update()) {
+                $success = "Cliente actualizado exitosamente.";
                 header("Location: ?c=clientes&accion=view");
                 exit();
             } else {
-                echo "Error al actualizar el cliente.";
+                $error = "Error al actualizar los datos del cliente.";
+
             }
             break;
 
@@ -46,20 +53,22 @@
             $cliente = new Clientes();
             $cliente->setId($_POST['id'] ?? null);
             if ($cliente->delete()) {
+                $success = "Cliente eliminado exitosamente.";
                 header("Location: ?c=clientes&accion=view");
                 exit();
             } else {
-                echo "Error al eliminar el cliente.";
+                $error = "Error al eliminar el cliente.";
             }
             break;
         case 'active':
             $cliente = new Clientes();
             $cliente->setId($_POST['id'] ?? null);
             if ($cliente->activate()) {
+                $success = "Cliente activado exitosamente.";
                 header("Location: ?c=clientes&accion=view");
                 exit();
             } else {
-                echo "Error al activar el cliente.";
+                $error = "Error al activar el cliente.";
             }
             break;
         default:

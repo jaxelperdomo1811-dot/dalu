@@ -19,9 +19,10 @@
                         ->setDescripcion($_POST['descripcion'])
                         ->setPrecio($_POST['precio']);
             if ($producto->insert()) {
+                $success = "Producto registrado exitosamente.";
                 header("Location: ?c=productos&accion=view");
             } else {
-                echo "Error al insertar el producto.";
+                $error = "Error al insertar el producto.";
             }
             break;
         case "update":
@@ -32,27 +33,30 @@
                         ->setDescripcion($_POST['descripcion'])
                         ->setPrecio($_POST['precio']);
             if ($producto->update()) {
+                $success = "Producto actualizado exitosamente.";
                 header("Location: ?c=productos&accion=view");
             } else {
-                echo "Error al actualizar el producto.";
+                $error = "Error al actualizar el producto.";
             }
             break;
         case "delete":
             $producto = new Productos();
             $producto->setId($_POST['id']);
             if ($producto->delete()) {
+                $success = "Producto eliminado exitosamente.";
                 header("Location: ?c=productos&accion=view");
             } else {
-                echo "Error al eliminar el producto.";
+                $error = "Error al eliminar el producto.";
             }
             break;
         case "active":
             $producto = new Productos();
             $producto->setId($_POST['id']);
             if ($producto->activate()) {
+                $success = "Producto activado exitosamente.";
                 header("Location: ?c=productos&accion=view");
             } else {
-                echo "Error al activar el producto.";
+                $error = "Error al activar el producto.";
             }
             break;
         default:

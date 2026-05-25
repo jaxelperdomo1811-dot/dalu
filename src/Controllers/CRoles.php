@@ -12,10 +12,10 @@ switch ($accion) {
         $rol->setDescripcion($_POST['descripcion']);
         
         if ($rol->insert()) {
-            // Redirect back to usuarios view, but open the roles tab
+            $success = "Rol registrado exitosamente.";
             header("Location: ?c=usuarios&accion=view&tab=roles");
         } else {
-            echo "Error al registrar el rol.";
+            $error = "Error al registrar el rol.";
         }
         break;
 
@@ -26,9 +26,10 @@ switch ($accion) {
         $rol->setDescripcion($_POST['descripcion']);
 
         if ($rol->update()) {
+            $success = "Rol actualizado exitosamente.";
             header("Location: ?c=usuarios&accion=view&tab=roles");
         } else {
-            echo "Error al actualizar el rol.";
+            $error = "Error al actualizar el rol.";
         }
         break;
 
@@ -37,9 +38,10 @@ switch ($accion) {
         $rol->setId($_POST['id']);
 
         if ($rol->delete()) {
+            $success = "Rol inhabilitado exitosamente.";
             header("Location: ?c=usuarios&accion=view&tab=roles");
         } else {
-            echo "Error al inhabilitar el rol.";
+            $error = "Error al inhabilitar el rol.";
         }
         break;
 
@@ -48,9 +50,10 @@ switch ($accion) {
         $rol->setId($_POST['id']);
 
         if ($rol->activate()) {
+            $success = "Rol habilitado exitosamente.";
             header("Location: ?c=usuarios&accion=view&tab=roles");
         } else {
-            echo "Error al habilitar el rol.";
+            $error = "Error al habilitar el rol.";
         }
         break;
 

@@ -476,6 +476,45 @@
                         <label for="clave2Agregar" class="form-label">Repetir Clave</label>
                         <input type="password" minlength="6" maxlength="64" name="clave2" class="form-control" id="clave2Agregar" placeholder="Repetir Clave" required />
                     </div>
+                    <div class="col-md-12 mb-3">
+                        <label for="pregunta_1" class="form-label">Pregunta de seguridad 1</label>
+                        <select class="form-select" name="pregunta_s_1" id="pregunta_1" required>
+                            <option value="" disabled selected>Seleccione una pregunta de seguridad</option>
+                            <?php foreach ($preguntas_seguridad as $pregunta): ?>
+                                <option value="<?= $pregunta['id'] ?>"><?= htmlspecialchars($pregunta['pregunta']) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    <div class="mb-3 mt-3">
+                        <label for="respuesta1Agregar" class="form-label">Respuesta 1</label>
+                        <input type="text" maxlength="20" pattern="[a-z\s]{3,}" title="Ingrese solo texto en minuscula, entre 3 y 20 caracteres" name="respuesta_s_1" class="form-control" id="respuesta1Agregar" placeholder="Respuesta" required />
+                    </div>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <label for="pregunta_2" class="form-label">Pregunta de seguridad 2</label>
+                        <select class="form-select" name="pregunta_s_2" id="pregunta_2" required>
+                            <option value="" disabled selected>Seleccione una pregunta de seguridad</option>
+                            <?php foreach ($preguntas_seguridad as $pregunta): ?>
+                                <option value="<?= $pregunta['id'] ?>"><?= htmlspecialchars($pregunta['pregunta']) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    <div class="mb-3 mt-3">
+                        <label for="respuesta2Agregar" class="form-label">Respuesta 2</label>
+                        <input type="text" maxlength="20" pattern="[a-z\s]{3,}" title="Ingrese solo texto en minuscula, entre 3 y 20 caracteres" name="respuesta_s_2" class="form-control" id="respuesta2Agregar" placeholder="Respuesta" required />
+                    </div>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <label for="pregunta_3" class="form-label">Pregunta de seguridad 3</label>
+                        <select class="form-select" name="pregunta_s_3" id="pregunta_3" required>
+                            <option value="" disabled selected>Seleccione una pregunta de seguridad</option>
+                            <?php foreach ($preguntas_seguridad as $pregunta): ?>
+                                <option value="<?= $pregunta['id'] ?>"><?= htmlspecialchars($pregunta['pregunta']) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    <div class="mb-3 mt-3">
+                        <label for="respuesta3Agregar" class="form-label">Respuesta 3</label>
+                        <input type="text" maxlength="20" pattern="[a-z\s]{3,}" title="Ingrese solo texto en minuscula, entre 3 y 20 caracteres" name="respuesta_s_3" class="form-control" id="respuesta3Agregar" placeholder="Respuesta" required />
+                    </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>

@@ -497,7 +497,7 @@
     </main>
 
     <!-- TEST -->
-    <!-- Modal Agregar Cliente -->
+    <!-- Modal Agregar Producto -->
     <div class="modal fade" id="modalAgregar" tabindex="-1">
         <div class="modal-dialog">
             <form action="?c=productos&accion=insert" method="POST" class="modal-content">

@@ -6,9 +6,9 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // Evitar que el navegador guarde la página en caché (soluciona el problema del botón 'Atrás')
-header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
-header("Cache-Control: post-check=0, pre-check=0", false);
-header("Pragma: no-cache");
+// header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+// header("Cache-Control: post-check=0, pre-check=0", false);
+// header("Pragma: no-cache");
 
 $loggeado = isset($_SESSION['id']) && !empty($_SESSION['id']);
 
@@ -23,15 +23,17 @@ $esLogout = ($accion === 'logout' || $a === 'logout');
 // Manejar las rutas con un switch siguiendo el estándar de controladores procedimentales
 switch ($controladorVerificar) {
     case 'clogin':
+    case 'crecoverpass':
+        // Permitir acceso público a CLogin y CRecoverPass.
         // Si intenta acceder a CLogin y ya está loggeado (y NO es logout), redirigir a Home
-        if ($loggeado && !$esLogout) {
+        if ($controladorVerificar === 'clogin' && $loggeado && !$esLogout) {
             header("Location: ?c=home");
             exit();
         }
         break;
-        
+
     default:
-        // Cualquier otro controlador (incluyendo home, productos, etc.)
+        // Cualquier otro controlador (incluyendo home, productos, etc.) requiere sesión
         if (!$loggeado) {
             header("Location: ?c=login");
             exit();

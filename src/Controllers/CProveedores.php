@@ -30,10 +30,11 @@
                       ->setEmail($_POST['email'] ?? null)
                       ->setDireccion($_POST['direccion'] ?? null);
             if ($proveedor->insert()) {
+                $success = "Proveedores registrado exitosamente.";
                 header("Location: ?c=proveedores&accion=view");
                 exit();
             } else {
-                echo "Error al insertar el proveedor.";
+                $error = "Error al insertar el proveedor.";
             }
             break;
         case 'update':
@@ -45,30 +46,33 @@
                       ->setEmail($_POST['email'] ?? null)
                       ->setDireccion($_POST['direccion'] ?? null);
             if ($proveedor->update()) {
+                $success = "Proveedor actualizado exitosamente.";
                 header("Location: ?c=proveedores&accion=view");
                 exit();
             } else {
-                echo "Error al actualizar el proveedor.";
+                $error = "Error al actualizar el proveedor.";
             }
             break;
         case 'delete':
             $proveedor = new Proveedores();
             $proveedor->setId($_POST['id'] ?? null);
             if ($proveedor->delete()) {
+                $success = "Proveedor eliminado exitosamente.";
                 header("Location: ?c=proveedores&accion=view");
                 exit();
             } else {
-                echo "Error al eliminar el proveedor.";
+                $error = "Error al eliminar el proveedor.";
             }
             break;
         case 'active':
             $proveedor = new Proveedores();
             $proveedor->setId($_POST['id'] ?? null);
             if ($proveedor->activate()) {
+                $success = "Proveedor activado exitosamente.";
                 header("Location: ?c=proveedores&accion=view");
                 exit();
             } else {
-                echo "Error al activar el proveedor.";
+                $error = "Error al activar el proveedor.";
             }
             break;
         default:

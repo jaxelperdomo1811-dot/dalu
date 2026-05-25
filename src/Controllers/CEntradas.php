@@ -32,13 +32,14 @@ switch ($accion) {
         if (count($detalles) > 0 && $id_proveedor && $numero_lote && $fecha_ingreso) {
             if ($entradas->registrarEntrada($id_proveedor, $numero_lote, $fecha_ingreso, $detalles)) {
                 // Redirigir de vuelta a proveedores, tal vez agregando un parámetro para abrir la pestaña
+                $success = "Entrada registrada exitosamente.";
                 header("Location: ?c=proveedores&tab=entradas");
                 exit();
             } else {
-                echo "Error al registrar la entrada.";
+                $error = "Error al registrar la entrada.";
             }
         } else {
-            echo "Faltan datos requeridos o detalles de productos.";
+            $error = "Faltan datos requeridos o detalles de productos.";
         }
         break;
 

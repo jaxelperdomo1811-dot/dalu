@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="assets/bootstrap.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="assets/js/"></script>
     
     <style>
         body, html {
@@ -111,11 +112,58 @@
             outline: none;
         }
 
+        .custom-select {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 10px;
+            padding: 12px 15px;
+            width: 100%;
+            appearance: none;
+            transition: all 0.3s ease;
+        }
+
+        .custom-select option {
+            background: #111;
+            color: #fff;
+        }
+
+        .custom-select:focus {
+            background: rgba(0, 0, 0, 0.5);
+            border-color: #c5a059;
+            box-shadow: 0 0 10px rgba(197, 160, 89, 0.5);
+            color: white;
+            outline: none;
+        }
+
+        .section-title {
+            text-align: center;
+            color: #f8f9fa;
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin: 30px 0 15px;
+        }
+
+        .divider {
+            border: none;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.15);
+            margin: 20px 0;
+        }
+
         .btn-login {
             background: linear-gradient(90deg, #c5a059 0%, #8a6c38 100%);
             border: none;
             border-radius: 10px;
             color: white;
+            font-size: 1.1rem;
+            font-weight: 700;
+            padding: 12px;
+            width: 100%;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             font-size: 1.1rem;
             font-weight: 700;
             padding: 12px;
@@ -155,33 +203,57 @@
                 <img src="assets/img/dalulisto.png" alt="Logo DALU">
             </div>
             
-            <h1 class="title">BIENVENIDO</h1>
+            <h1 class="title">Recuperar contraseña</h1>
             
-            <form action="?c=login&accion=login" method="POST">
-                
-                <!-- Mensaje de error -->
-                <?php if (isset($error)): ?>
-                    <div class="alert alert-custom" role="alert">
-                        <?= htmlspecialchars($error); ?>
-                    </div>
-                <?php endif; ?>
+            <?php if (isset($error)): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <div><?= htmlspecialchars($error); ?></div>
+                </div>
+            <?php endif; ?>
+            <?php if (isset($success)): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <?= htmlspecialchars($success); ?>
+                </div>
+            <?php endif; ?>
+
+            <form action="?c=recoverpass&accion=recovery" method="POST">
+                <div class="form-group mb-4">
+                    <label for="usuario_recuperacion">Usuario</label>
+                    <input type="text" name="usuario_recuperacion" class="form-control custom-input" id="usuario_recuperacion" placeholder="Ingrese su usuario" required>
+                </div>
 
                 <div class="form-group mb-4">
-                    <label for="usuario">Usuario</label>
-                    <input type="text" name="usuario" class="form-control custom-input" id="usuario" placeholder="Ingrese su usuario" required>
+                    <label for="pregunta_seguridad">Pregunta de seguridad</label>
+                    <select name="pregunta_seguridad" id="pregunta_seguridad" class="custom-select" required>
+                        <option value="" disabled selected>Seleccione su pregunta</option>
+                        <option value="mascota">¿Cuál es el nombre de tu primera mascota?</option>
+                        <option value="madre">¿Cuál es el segundo nombre de tu madre?</option>
+                        <option value="escuela">¿Cuál fue el nombre de tu escuela primaria?</option>
+                        <option value="pelicula">¿Cuál es tu película favorita?</option>
+                    </select>
                 </div>
-                
+
                 <div class="form-group mb-4">
-                    <label for="password">Contraseña</label>
-                    <input type="password" name="password" class="form-control custom-input" id="password" placeholder="Ingrese su contraseña" required>
+                    <label for="respuesta_seguridad">Respuesta</label>
+                    <input type="text" name="respuesta_seguridad" class="form-control custom-input" id="respuesta_seguridad" placeholder="Ingrese la respuesta" required>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label for="nueva_clave">Nueva contraseña</label>
+                    <input type="password" name="nueva_clave" class="form-control custom-input" id="nueva_clave" placeholder="Ingrese la nueva contraseña" required>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label for="confirmar_clave">Confirmar contraseña</label>
+                    <input type="password" name="confirmar_clave" class="form-control custom-input" id="confirmar_clave" placeholder="Repita la nueva contraseña" required>
                 </div>
 
                 <div class="mb-3">
-                    <a href="?c=recoverpass&accion=view" class="text-decoration-none" style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">¿Olvidaste tu contraseña?</a>
+                    <a href="?c=login&accion=view" class="text-decoration-none" style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">Inicia sesión con tu contraseña</a>
                 </div>
 
                 <div class="text-center">
-                    <button type="submit" class="btn-login">INGRESAR</button>
+                    <button type="submit" class="btn-login">RECUPERAR</button>
                 </div>
             </form>
 

@@ -26,6 +26,16 @@
             <h1 class="titulo text-black">Clientes</h1>
             <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregar">+ Nuevo Cliente</button>
         </div>
+        <?php if (isset($error)): ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <div><?= htmlspecialchars($error); ?></div>
+            </div>
+        <?php endif; ?>
+        <?php if (isset($success)): ?>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <?= htmlspecialchars($success); ?>
+            </div>
+        <?php endif; ?>
         <div class="container bg-white p-4 rounded shadow-sm">
             <!-- Tabs de Bootstrap -->
             <ul class="nav nav-tabs mb-3" id="clienteTabs" role="tablist">
@@ -47,8 +57,8 @@
                                     <th scope="col">Cedula</th>
                                     <th scope="col">Nombre</th>
                                     <th scope="col">Apellido</th>
-                                    <th scope="col">Telefono</th>
                                     <th scope="col">Correo</th>
+                                    <th scope="col">Telefono</th>
                                     <th scope="col">Dirección</th>
                                     <th scope="col">Fecha de registro</th>
                                     <th scope="col">Accion</th>
@@ -153,8 +163,8 @@
                                     <th scope="col">Cedula</th>
                                     <th scope="col">Nombre</th>
                                     <th scope="col">Apellido</th>
-                                    <th scope="col">Telefono</th>
                                     <th scope="col">Correo</th>
+                                    <th scope="col">Telefono</th>
                                     <th scope="col">Dirección</th>
                                     <th scope="col">Fecha de registro</th>
                                     <th scope="col">Accion</th>
@@ -268,7 +278,16 @@
                     </div>
                     <div class="modal-body">
                     <div class="row mb-3">
-                        <div class="col-md-12">
+                        <div class="col-md-5">
+                            <label for="tipo_persona" class="form-label">Tipo de Persona</label>
+                            <select class="form-select" name="tipo_persona" id="tipo_persona" required>
+                                <option value="" disabled selected>Seleccione un tipo de persona</option>
+                                <option value="V-">Natural (V)</option>
+                                <option value="J-">Jurídica (J)</option>
+                                <option value="E-">Extranjera (E)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-7">
                             <label for="cedula" class="form-label">Cédula</label>
                             <input type="text" class="form-control" pattern="[0-9]{6,8}" title="Solo números, entre 6 y 8 caracteres" name="cedula" id="cedula" placeholder="Número de Cédula" required />
                             <div id="mensaje-cedula" style="color: red; margin-top: 5px;"></div>

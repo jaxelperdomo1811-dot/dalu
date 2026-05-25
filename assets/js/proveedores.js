@@ -35,7 +35,13 @@ $(document).ready(function() {
     // Check url params for "tab=entradas"
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('tab') === 'entradas') {
-        $('#tab-entradas').tab('show');
+        const tabTriggerEl = document.querySelector('#tab-entradas');
+        if (tabTriggerEl && window.bootstrap?.Tab) {
+            const tab = new bootstrap.Tab(tabTriggerEl);
+            tab.show();
+        } else if (typeof jQuery !== 'undefined' && typeof jQuery.fn.tab === 'function') {
+            $('#tab-entradas').tab('show');
+        }
     }
 
     // Agregar nuevo producto al formulario de Entradas
@@ -60,7 +66,7 @@ $(document).ready(function() {
     });
 
     // Ver detalles de la entrada
-    $('.ver-detalle-entrada').click(function() {
+    $(document).on('click', '.ver-detalle-entrada', function() {
         var idEntrada = $(this).data('id');
         
         $.ajax({
@@ -72,12 +78,23 @@ $(document).ready(function() {
             },
             success: function(response) {
                 $('#contenidoEntradasInsumo').html(response);
-                $('#entradasInsumoModal').modal('show');
+                const modalEl = document.getElementById('entradasInsumoModal');
+                if (modalEl) {
+                    if (window.bootstrap?.Modal) {
+                        const detalleModal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                        detalleModal.show();
+                    } else if (typeof jQuery !== 'undefined' && typeof jQuery.fn.modal === 'function') {
+                        $(modalEl).modal('show');
+                    } else {
+                        console.error('Bootstrap modal API no disponible para mostrar detalles de entrada.');
+                    }
+                }
             },
             error: function() {
                 $('#contenidoEntradasInsumo').html('<div class="alert alert-danger">Error al cargar los detalles de la entrada.</div>');
             }
         });
     });
+
 
 });
