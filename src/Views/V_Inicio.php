@@ -6,6 +6,7 @@
     <meta charset="utf-8">
     <link rel="stylesheet" href="assets/css/header.css">
     <link rel="stylesheet" href="assets/bootstrap.min.css">
+    <link rel="icon" href="assets/img/dalulisto.png">
     <script src="assets/js/js.js" defer></script>
     <style>
         .dashboard-container {

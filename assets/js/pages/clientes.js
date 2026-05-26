@@ -1,9 +1,9 @@
 /**
- * proveedores.js – Inicialización de intlTelInput para formularios de proveedores (usando CDN).
+ * clientes.js – Inicialización de intlTelInput para formularios de clientes (usando CDN).
  */
 document.addEventListener('DOMContentLoaded', () => {
     if (!window.intlTelInput) {
-        console.error('[proveedores.js] intlTelInput no está cargado.');
+        console.error('[clientes.js] intlTelInput no está cargado.');
         return;
     }
 

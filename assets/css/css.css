@@ -274,3 +274,8 @@ main {
   #form-especialidades button#cerrar-modal:hover {
     background-color: #5c636a;
   }
+
+/* intl-tel-input full-width override */
+.iti {
+    width: 100% !important;
+}

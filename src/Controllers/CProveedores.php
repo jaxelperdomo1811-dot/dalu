@@ -23,57 +23,93 @@
             require_once __DIR__ . '/../Views/V_Proveedores.php';
             break;
         case 'insert':
+            $telefonoRaw = trim($_POST['telefono'] ?? '');
+            // Quitar espacios, guiones y paréntesis
+            $telefono = preg_replace('/[^\d+]/', '', $telefonoRaw);
+            
+            // Normalizar si se omitió el código de país (asumiendo Venezuela por defecto)
+            if (preg_match('/^0[1-9]\d{9}$/', $telefono)) {
+                $telefono = '+58' . substr($telefono, 1);
+            } elseif (preg_match('/^[1-9]\d{9}$/', $telefono)) {
+                $telefono = '+58' . $telefono;
+            }
+
+            // Validar formato E.164 internacional
+            if (!preg_match('/^\+[1-9]\d{6,14}$/', $telefono)) {
+                $_SESSION['error'] = "Error: El número de teléfono no es válido o no tiene el formato correcto (+58...).";
+                header("Location: ?c=proveedores&accion=view");
+                exit();
+            }
+
             $proveedor = new Proveedores();
             $proveedor->setNombre($_POST['nombre'] ?? null)
                       ->setRif($_POST['rif'] ?? null)
-                      ->setTelefono($_POST['telefono'] ?? null)
+                      ->setTelefono($telefono)
                       ->setEmail($_POST['email'] ?? null)
                       ->setDireccion($_POST['direccion'] ?? null);
             if ($proveedor->insert()) {
-                $success = "Proveedores registrado exitosamente.";
-                header("Location: ?c=proveedores&accion=view");
-                exit();
+                $_SESSION['success'] = "Proveedor registrado exitosamente.";
             } else {
-                $error = "Error al insertar el proveedor.";
+                $_SESSION['error'] = "Error al registrar el proveedor.";
             }
+            header("Location: ?c=proveedores&accion=view");
+            exit();
             break;
         case 'update':
+            $telefonoRaw = trim($_POST['telefono'] ?? '');
+            // Quitar espacios, guiones y paréntesis
+            $telefono = preg_replace('/[^\d+]/', '', $telefonoRaw);
+            
+            // Normalizar si se omitió el código de país (asumiendo Venezuela por defecto)
+            if (preg_match('/^0[1-9]\d{9}$/', $telefono)) {
+                $telefono = '+58' . substr($telefono, 1);
+            } elseif (preg_match('/^[1-9]\d{9}$/', $telefono)) {
+                $telefono = '+58' . $telefono;
+            }
+
+            // Validar formato E.164 internacional
+            if (!preg_match('/^\+[1-9]\d{6,14}$/', $telefono)) {
+                $_SESSION['error'] = "Error: El número de teléfono no es válido o no tiene el formato correcto (+58...).";
+                header("Location: ?c=proveedores&accion=view");
+                exit();
+            }
+
             $proveedor = new Proveedores();
             $proveedor->setId($_POST['id'] ?? null)
                       ->setNombre($_POST['nombre'] ?? null)
                       ->setRif($_POST['rif'] ?? null)
-                      ->setTelefono($_POST['telefono'] ?? null)
+                      ->setTelefono($telefono)
                       ->setEmail($_POST['email'] ?? null)
                       ->setDireccion($_POST['direccion'] ?? null);
             if ($proveedor->update()) {
-                $success = "Proveedor actualizado exitosamente.";
-                header("Location: ?c=proveedores&accion=view");
-                exit();
+                $_SESSION['success'] = "Proveedor actualizado exitosamente.";
             } else {
-                $error = "Error al actualizar el proveedor.";
+                $_SESSION['error'] = "Error al actualizar el proveedor.";
             }
+            header("Location: ?c=proveedores&accion=view");
+            exit();
             break;
         case 'delete':
             $proveedor = new Proveedores();
             $proveedor->setId($_POST['id'] ?? null);
             if ($proveedor->delete()) {
-                $success = "Proveedor eliminado exitosamente.";
-                header("Location: ?c=proveedores&accion=view");
-                exit();
+                $_SESSION['success'] = "Proveedor inhabilitado exitosamente.";
             } else {
-                $error = "Error al eliminar el proveedor.";
+                $_SESSION['error'] = "Error al inhabilitar el proveedor.";
             }
+            header("Location: ?c=proveedores&accion=view");
+            exit();
             break;
         case 'active':
             $proveedor = new Proveedores();
             $proveedor->setId($_POST['id'] ?? null);
             if ($proveedor->activate()) {
-                $success = "Proveedor activado exitosamente.";
-                header("Location: ?c=proveedores&accion=view");
-                exit();
+                $_SESSION['success'] = "Proveedor activado exitosamente.";
             } else {
-                $error = "Error al activar el proveedor.";
+                $_SESSION['error'] = "Error al activar el proveedor.";
             }
+            header("Location: ?c=proveedores&accion=view");
+            exit();
             break;
         default:
             http_response_code(404);

@@ -19,11 +19,12 @@
                         ->setDescripcion($_POST['descripcion'])
                         ->setPrecio($_POST['precio']);
             if ($producto->insert()) {
-                $success = "Producto registrado exitosamente.";
-                header("Location: ?c=productos&accion=view");
+                $_SESSION['success'] = "Producto registrado exitosamente.";
             } else {
-                $error = "Error al insertar el producto.";
+                $_SESSION['error'] = "Error al registrar el producto.";
             }
+            header("Location: ?c=productos&accion=view");
+            exit();
             break;
         case "update":
             $producto = new Productos();
@@ -33,31 +34,34 @@
                         ->setDescripcion($_POST['descripcion'])
                         ->setPrecio($_POST['precio']);
             if ($producto->update()) {
-                $success = "Producto actualizado exitosamente.";
-                header("Location: ?c=productos&accion=view");
+                $_SESSION['success'] = "Producto actualizado exitosamente.";
             } else {
-                $error = "Error al actualizar el producto.";
+                $_SESSION['error'] = "Error al actualizar el producto.";
             }
+            header("Location: ?c=productos&accion=view");
+            exit();
             break;
         case "delete":
             $producto = new Productos();
             $producto->setId($_POST['id']);
             if ($producto->delete()) {
-                $success = "Producto eliminado exitosamente.";
-                header("Location: ?c=productos&accion=view");
+                $_SESSION['success'] = "Producto inhabilitado exitosamente.";
             } else {
-                $error = "Error al eliminar el producto.";
+                $_SESSION['error'] = "Error al inhabilitar el producto.";
             }
+            header("Location: ?c=productos&accion=view");
+            exit();
             break;
         case "active":
             $producto = new Productos();
             $producto->setId($_POST['id']);
             if ($producto->activate()) {
-                $success = "Producto activado exitosamente.";
-                header("Location: ?c=productos&accion=view");
+                $_SESSION['success'] = "Producto activado exitosamente.";
             } else {
-                $error = "Error al activar el producto.";
+                $_SESSION['error'] = "Error al activar el producto.";
             }
+            header("Location: ?c=productos&accion=view");
+            exit();
             break;
         default:
             http_response_code(404);

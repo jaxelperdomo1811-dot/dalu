@@ -32,6 +32,11 @@ require_once __DIR__ . '/src/Controllers/CAuth.php';
 
 // 7. Verificar existencia del archivo y ejecutar
 if (file_exists($archivoControlador)) {
+    // Cargar y limpiar mensajes flash de la sesión si existen
+    $success = $_SESSION['success'] ?? null;
+    $error = $_SESSION['error'] ?? null;
+    unset($_SESSION['success'], $_SESSION['error']);
+
     require_once $archivoControlador;
 } else {
     echo "NO EXISTE EL CONTROLADOR";

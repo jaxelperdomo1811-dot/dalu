@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <!-- Añadir el CSS en el <head> -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/css/intlTelInput.css">
+
+<!-- Añadir el JS antes de cerrar el <body> -->
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/js/intlTelInput.min.js"></script>
+</head>
+<body>
+<form id="registro-form" method="POST">
+  <div class="field-container">
+    <input type="tel" id="phone" name="phone">
+    <span id="error-msg" class="hide" style="color: red; display: none;"></span>
+    <span id="valid-msg" class="hide" style="color: green; display: none;">✓ Válido</span>
+  </div>
+  <button type="submit" id="btn-submit">Enviar</button>
+</form>
+</body>
+<script>
+  const input = document.querySelector("#phone");
+  const errorMsg = document.querySelector("#error-msg");
+  const validMsg = document.querySelector("#valid-msg");
+
+  // Mapeo de errores según la documentación [4]
+  const errorMap = ["Número inválido", "Código de país no válido", "Demasiado corto", "Demasiado largo", "Número inválido"];
+
+  // Inicialización
+  const iti = window.intlTelInput(input, {
+    initialCountry: "ve",
+     nationalMode: false, 
+     showSelectedDialCode: true,  
+    loadUtils: () => import("https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/js/utils.js"),
+    hiddenInputs: (telInputName) => ({
+      phone: "phone_full",
+      country: "country_iso2",
+    }),
+    utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/js/utils.js" 
+  });
+
+  const reset = () => {
+    input.classList.remove("error");
+    errorMsg.innerHTML = "";
+    errorMsg.style.display = "none";
+    validMsg.style.display = "none";
+  };
+
+  // Validar al perder el foco o escribir
+  input.addEventListener('blur', () => {
+    reset();
+    if (input.value.trim()) {
+      if (iti.isValidNumber()) {
+        validMsg.style.display = "block";
+      } else {
+        input.classList.add("error");
+        const errorCode = iti.getValidationError();
+        errorMsg.innerHTML = errorMap[errorCode] || "Número inválido";
+        errorMsg.style.display = "block";
+      }
+    }
+  });
+
+  // Prevenir envío si es inválido
+  const form = document.querySelector("#registro-form");
+  form.addEventListener("submit", (e) => {
+    if (!iti.isValidNumber()) {
+      e.preventDefault(); // Detiene el envío a PHP
+      alert("Por favor, introduce un número de teléfono válido.");
+    }
+    else {
+        alert("Número válido, su numero completo es: " + iti.getNumber());
+    }
+  });
+
+  // Limpiar estados al volver a escribir
+  input.addEventListener('change', reset);
+  input.addEventListener('keyup', reset);
+</script>
+</html>

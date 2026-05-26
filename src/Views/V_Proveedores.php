@@ -8,14 +8,15 @@
     <link rel="stylesheet" href="assets/css/tabla.css">
     <link rel="stylesheet" href="assets/css/header.css">
     <link rel="stylesheet" href="assets/bootstrap.min.css">
+    <link rel="icon" href="assets/img/dalulisto.png">
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="assets/css/libs/intlTelInput.css">
-    <script src="assets/js/libs/intlTelInput.min.js" defer></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/css/intlTelInput.css">
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/js/intlTelInput.min.js" defer></script>
     <link rel="stylesheet" href="assets/DataTablet/datatables.css">
     <script src="assets/js/proveedores.js" defer></script>
     <script src="assets/js/pages/proveedores.js" defer></script>
     <script src="assets/js/js.js" defer></script>
-    <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script src="assets/DataTablet/datatables.min.js" defer></script>
     <script src="assets/DataTablet/tabla.js" defer></script>
 
@@ -113,6 +114,8 @@
                                                                     <div class="col-md-6">
                                                                         <label for="telefono" class="form-label">Teléfono</label>
                                                                         <input type="tel" class="form-control phone-input" inputmode="tel" title="Ingrese un teléfono válido" name="telefono" placeholder="Teléfono" value="<?php echo $p['telefono'] ?>" required />
+                                                                        <span class="error-msg text-danger small" style="display: none; margin-top: 5px;"></span>
+                                                                        <span class="valid-msg text-success small" style="display: none; margin-top: 5px;">✓ Válido</span>
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <label for="email" class="form-label">Email</label>
@@ -216,7 +219,9 @@
                                                                 <div class="row mb-3">
                                                                     <div class="col-md-6">
                                                                         <label for="telefono" class="form-label">Teléfono</label>
-                                                                            <input type="tel" class="form-control phone-input" inputmode="tel" title="Ingrese un teléfono válido" name="telefono" placeholder="Teléfono" value="<?php echo $pIN['telefono'] ?>" required />
+                                                                        <input type="tel" class="form-control phone-input" inputmode="tel" title="Ingrese un teléfono válido" name="telefono" placeholder="Teléfono" value="<?php echo $pIN['telefono'] ?>" required />
+                                                                        <span class="error-msg text-danger small" style="display: none; margin-top: 5px;"></span>
+                                                                        <span class="valid-msg text-success small" style="display: none; margin-top: 5px;">✓ Válido</span>
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <label for="email" class="form-label">Email</label>
@@ -363,6 +368,8 @@
                         <div class="col-md-6">
                             <label for="telefono" class="form-label">Teléfono</label>
                             <input type="tel" class="form-control phone-input" inputmode="tel" title="Ingrese un teléfono válido" name="telefono" placeholder="Teléfono" required />
+                            <span class="error-msg text-danger small" style="display: none; margin-top: 5px;"></span>
+                            <span class="valid-msg text-success small" style="display: none; margin-top: 5px;">✓ Válido</span>
                         </div>
                         <div class="col-md-6">
                             <label for="email" class="form-label">Email</label>

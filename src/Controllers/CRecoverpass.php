@@ -6,6 +6,7 @@ $accion = $_GET['accion'] ?? $_POST['accion'] ?? 'view';
 
 switch($accion) {
     case "view":
+        $preguntas_seguridad = (new Usuarios())->searchIdPregunta_S();
         require_once __DIR__ . "/../Views/V_RecoverPass.php";
         break;
     case "recovery":

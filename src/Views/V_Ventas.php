@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="assets/css/tabla.css">
     <link rel="stylesheet" href="assets/css/header.css">
     <link rel="stylesheet" href="assets/bootstrap.min.css">
+    <link rel="icon" href="assets/img/dalulisto.png">
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     
     <link rel="stylesheet" href="assets/DataTablet/datatables.css">

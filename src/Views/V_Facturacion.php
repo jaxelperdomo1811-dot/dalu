@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="assets/css/css.css">
     <link rel="stylesheet" href="assets/css/header.css">
     <link rel="stylesheet" href="assets/bootstrap.min.css">
+    <link rel="icon" href="assets/img/dalulisto.png">
     <script src="assets/js/js.js" defer></script>
     <script src="assets/js/jquery-3.6.0.min.js"></script>
 </head>

@@ -7,6 +7,7 @@
     <title>Página de Ingreso - DALU</title>
     <!-- Enlace a Bootstrap CSS -->
     <link rel="stylesheet" href="assets/bootstrap.min.css">
+    <link rel="icon" href="assets/img/dalulisto.png">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     

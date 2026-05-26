@@ -12,11 +12,12 @@ switch ($accion) {
         $rol->setDescripcion($_POST['descripcion']);
         
         if ($rol->insert()) {
-            $success = "Rol registrado exitosamente.";
-            header("Location: ?c=usuarios&accion=view&tab=roles");
+            $_SESSION['success'] = "Rol registrado exitosamente.";
         } else {
-            $error = "Error al registrar el rol.";
+            $_SESSION['error'] = "Error al registrar el rol.";
         }
+        header("Location: ?c=usuarios&accion=view&tab=roles");
+        exit();
         break;
 
     case 'update':
@@ -26,11 +27,12 @@ switch ($accion) {
         $rol->setDescripcion($_POST['descripcion']);
 
         if ($rol->update()) {
-            $success = "Rol actualizado exitosamente.";
-            header("Location: ?c=usuarios&accion=view&tab=roles");
+            $_SESSION['success'] = "Rol actualizado exitosamente.";
         } else {
-            $error = "Error al actualizar el rol.";
+            $_SESSION['error'] = "Error al actualizar el rol.";
         }
+        header("Location: ?c=usuarios&accion=view&tab=roles");
+        exit();
         break;
 
     case 'delete':
@@ -38,11 +40,12 @@ switch ($accion) {
         $rol->setId($_POST['id']);
 
         if ($rol->delete()) {
-            $success = "Rol inhabilitado exitosamente.";
-            header("Location: ?c=usuarios&accion=view&tab=roles");
+            $_SESSION['success'] = "Rol inhabilitado exitosamente.";
         } else {
-            $error = "Error al inhabilitar el rol.";
+            $_SESSION['error'] = "Error al inhabilitar el rol.";
         }
+        header("Location: ?c=usuarios&accion=view&tab=roles");
+        exit();
         break;
 
     case 'active':
@@ -50,11 +53,12 @@ switch ($accion) {
         $rol->setId($_POST['id']);
 
         if ($rol->activate()) {
-            $success = "Rol habilitado exitosamente.";
-            header("Location: ?c=usuarios&accion=view&tab=roles");
+            $_SESSION['success'] = "Rol habilitado exitosamente.";
         } else {
-            $error = "Error al habilitar el rol.";
+            $_SESSION['error'] = "Error al habilitar el rol.";
         }
+        header("Location: ?c=usuarios&accion=view&tab=roles");
+        exit();
         break;
 
     default:

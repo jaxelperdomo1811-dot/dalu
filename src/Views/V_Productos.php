@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="assets/css/tabla.css">
     <link rel="stylesheet" href="assets/css/header.css">
     <link rel="stylesheet" href="assets/bootstrap.min.css">
+    <link rel="icon" href="assets/img/dalulisto.png">
     <link rel="stylesheet" href="assets/DataTablet/datatables.css">
     <script src="assets/js/js.js" defer></script>
     <script src="assets/js/servicios.js" defer></script>

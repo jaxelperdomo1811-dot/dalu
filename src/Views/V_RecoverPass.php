@@ -4,9 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página de Ingreso - DALU</title>
-    <!-- Enlace a Bootstrap CSS -->
+        <title>Recuperar Contraseña - DALU</title>
+        <!-- Enlace a Bootstrap CSS -->
     <link rel="stylesheet" href="assets/bootstrap.min.css">
+    <link rel="icon" href="assets/img/dalulisto.png">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="assets/js/"></script>
@@ -226,10 +227,9 @@
                     <label for="pregunta_seguridad">Pregunta de seguridad</label>
                     <select name="pregunta_seguridad" id="pregunta_seguridad" class="custom-select" required>
                         <option value="" disabled selected>Seleccione su pregunta</option>
-                        <option value="mascota">¿Cuál es el nombre de tu primera mascota?</option>
-                        <option value="madre">¿Cuál es el segundo nombre de tu madre?</option>
-                        <option value="escuela">¿Cuál fue el nombre de tu escuela primaria?</option>
-                        <option value="pelicula">¿Cuál es tu película favorita?</option>
+                        <?php foreach ($preguntas_seguridad as $pregunta): ?>
+                            <option value="<?= $pregunta['id'] ?>"><?= htmlspecialchars($pregunta['pregunta']) ?></option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
 

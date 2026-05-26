@@ -27,11 +27,12 @@
                     ->setPreguntaS3($_POST['pregunta_s_3'])
                     ->setRespuestaS3(hash('sha256', $_POST['respuesta_s_3']));
             if ($usuario->insert()) {
-                $success = "Usuario registrado exitosamente.";
-                header("Location: ?c=usuarios&accion=view");
+                $_SESSION['success'] = "Usuario registrado exitosamente.";
             } else {
-                $error = "Error al insertar el usuario.";
+                $_SESSION['error'] = "Error al registrar el usuario.";
             }
+            header("Location: ?c=usuarios&accion=view");
+            exit();
             break;
         case "update":
             $usuario = new Usuarios();
@@ -48,30 +49,34 @@
             }
 
             if ($usuario->update()) {
-                $success = "Usuario actualizado exitosamente.";
-                header("Location: ?c=usuarios&accion=view");
+                $_SESSION['success'] = "Usuario actualizado exitosamente.";
             } else {
-                $error = "Error al actualizar el usuario.";
+                $_SESSION['error'] = "Error al actualizar el usuario.";
             }
+            header("Location: ?c=usuarios&accion=view");
+            exit();
             break;
         case "delete":
             $usuario = new Usuarios();
             $usuario->setId($_POST['id']);
             if ($usuario->delete()) {
-                header("Location: ?c=usuarios&accion=view");
+                $_SESSION['success'] = "Usuario inhabilitado exitosamente.";
             } else {
-                echo "Error al eliminar el usuario.";
+                $_SESSION['error'] = "Error al inhabilitar el usuario.";
             }
+            header("Location: ?c=usuarios&accion=view");
+            exit();
             break;
         case "active":
             $usuario = new Usuarios();
             $usuario->setId($_POST['id']);
             if ($usuario->active()) {
-                $success = "Usuario activado exitosamente.";
-                header("Location: ?c=usuarios&accion=view");
+                $_SESSION['success'] = "Usuario activado exitosamente.";
             } else {
-                $error = "Error al activar el usuario.";
+                $_SESSION['error'] = "Error al activar el usuario.";
             }
+            header("Location: ?c=usuarios&accion=view");
+            exit();
             break;
         default:
             http_response_code(404);

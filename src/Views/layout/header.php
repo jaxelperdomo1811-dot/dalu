@@ -1,5 +1,5 @@
 <script>
-// Forzar recarga si la página fue cargada desde la caché del historial (Atrás/Adelante)
+// Forzar recarga
 window.onpageshow = function(event) {
     if (event.persisted) {
         window.location.reload();
@@ -144,3 +144,21 @@ window.onpageshow = function(event) {
     </form>
   </nav>
   <!-- NAVBAR -->
+
+  <?php if (isset($error) && $error !== ''): ?>
+    <div class="container-fluid mt-3">
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <div><?= htmlspecialchars($error); ?></div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    </div>
+  <?php endif; ?>
+
+  <?php if (isset($success) && $success !== ''): ?>
+    <div class="container-fluid mt-3">
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <div><?= htmlspecialchars($success); ?></div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    </div>
+  <?php endif; ?>

@@ -8,9 +8,13 @@
     <link rel="stylesheet" href="assets/css/tabla.css">
     <link rel="stylesheet" href="assets/css/header.css">
     <link rel="stylesheet" href="assets/bootstrap.min.css">
+    <link rel="icon" href="assets/img/dalulisto.png">
     <script src="assets/js/js.js" defer></script>
     <script src="assets/js/cliente.js" defer></script>
     <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/css/intlTelInput.css">
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/js/intlTelInput.min.js" defer></script>
+    <script src="assets/js/pages/clientes.js" defer></script>
     <script src="assets/DataTablet/datatables.min.js" defer></script>
     <script src="assets/DataTablet/tabla.js" defer></script>
     <link rel="stylesheet" href="assets/DataTablet/datatables.css">
@@ -26,16 +30,7 @@
             <h1 class="titulo text-black">Clientes</h1>
             <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregar">+ Nuevo Cliente</button>
         </div>
-        <?php if (isset($error)): ?>
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <div><?= htmlspecialchars($error); ?></div>
-            </div>
-        <?php endif; ?>
-        <?php if (isset($success)): ?>
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <?= htmlspecialchars($success); ?>
-            </div>
-        <?php endif; ?>
+
         <div class="container bg-white p-4 rounded shadow-sm">
             <!-- Tabs de Bootstrap -->
             <ul class="nav nav-tabs mb-3" id="clienteTabs" role="tablist">
@@ -104,7 +99,9 @@
                                                         <div class="row mb-3">
                                                             <div class="col-md-6">
                                                                 <label for="telefono" class="form-label">Teléfono</label>
-                                                                <input type="text" class="form-control" pattern="[0-9]{9,11}" title="Ingrese solo números, entre 9 y 11 caracteres" id="telefono" name="telefono" placeholder="Teléfono" value="<?php echo $c['telefono'] ?>" required />
+                                                                <input type="tel" class="form-control phone-input" title="Ingrese un teléfono válido" id="telefono" name="telefono" placeholder="Teléfono" value="<?php echo $c['telefono'] ?>" required />
+                                                                <span class="error-msg text-danger small" style="display: none; margin-top: 5px;"></span>
+                                                                <span class="valid-msg text-success small" style="display: none; margin-top: 5px;">✓ Válido</span>
                                                             </div>
                                                             <div class="col-md-6">
                                                                 <label for="correo" class="form-label">Correo</label>
@@ -210,7 +207,9 @@
                                                         <div class="row mb-3">
                                                             <div class="col-md-6">
                                                                 <label for="telefono" class="form-label">Teléfono</label>
-                                                                <input type="text" class="form-control" pattern="[0-9]{9,11}" title="Ingrese solo números, entre 9 y 11 caracteres" id="telefono" name="telefono" placeholder="Teléfono" value="<?php echo $cIN['telefono'] ?>" required />
+                                                                <input type="tel" class="form-control phone-input" title="Ingrese un teléfono válido" id="telefono" name="telefono" placeholder="Teléfono" value="<?php echo $cIN['telefono'] ?>" required />
+                                                                <span class="error-msg text-danger small" style="display: none; margin-top: 5px;"></span>
+                                                                <span class="valid-msg text-success small" style="display: none; margin-top: 5px;">✓ Válido</span>
                                                             </div>
                                                             <div class="col-md-6">
                                                                 <label for="correo" class="form-label">Correo</label>
@@ -262,72 +261,70 @@
             </div>
         </div>
     </main>
-</body>
 
-
-
-
-<!-- TEST -->
-             <!-- Modal Agregar Cliente -->
-        <div class="modal fade" id="modalAgregar" tabindex="-1">
-            <div class="modal-dialog">
-                <form action="?c=clientes&accion=insert" method="POST" class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Agregar Cliente</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <!-- Modal Agregar Cliente -->
+    <div class="modal fade" id="modalAgregar" tabindex="-1">
+        <div class="modal-dialog">
+            <form action="?c=clientes&accion=insert" method="POST" class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Agregar Cliente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                <div class="row mb-3">
+                    <div class="col-md-5">
+                        <label for="tipo_persona" class="form-label">Tipo de Persona</label>
+                        <select class="form-select" name="tipo_persona" id="tipo_persona" required>
+                            <option value="" disabled selected>Seleccione un tipo de persona</option>
+                            <option value="V-">Natural (V)</option>
+                            <option value="J-">Jurídica (J)</option>
+                            <option value="E-">Extranjera (E)</option>
+                        </select>
                     </div>
-                    <div class="modal-body">
-                    <div class="row mb-3">
-                        <div class="col-md-5">
-                            <label for="tipo_persona" class="form-label">Tipo de Persona</label>
-                            <select class="form-select" name="tipo_persona" id="tipo_persona" required>
-                                <option value="" disabled selected>Seleccione un tipo de persona</option>
-                                <option value="V-">Natural (V)</option>
-                                <option value="J-">Jurídica (J)</option>
-                                <option value="E-">Extranjera (E)</option>
-                            </select>
-                        </div>
-                        <div class="col-md-7">
-                            <label for="cedula" class="form-label">Cédula</label>
-                            <input type="text" class="form-control" pattern="[0-9]{6,8}" title="Solo números, entre 6 y 8 caracteres" name="cedula" id="cedula" placeholder="Número de Cédula" required />
-                            <div id="mensaje-cedula" style="color: red; margin-top: 5px;"></div>
-                        </div>
+                    <div class="col-md-7">
+                        <label for="cedula" class="form-label">Cédula</label>
+                        <input type="text" class="form-control" pattern="[0-9]{6,8}" title="Solo números, entre 6 y 8 caracteres" name="cedula" id="cedula" placeholder="Número de Cédula" required />
+                        <div id="mensaje-cedula" style="color: red; margin-top: 5px;"></div>
                     </div>
+                </div>
 
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="nombre" class="form-label">Nombre</label>
-                            <input type="text" minlength="3" maxlength="20" pattern="[A-Za-z\s]{3,}" title="Ingrese solo texto, entre 3 y 20 caracteres" name="nombre" class="form-control" id="nombre" placeholder="Nombre" required />
-                        </div>
-                        <div class="col-md-6">
-                            <label for="apellido" class="form-label">Apellido</label>
-                            <input type="text" minlength="3" maxlength="20" pattern="[A-Za-z\s]{3,}" title="Ingrese solo texto, entre 3 y 20 caracteres" name="apellido" class="form-control" id="apellido" placeholder="Apellido" required />
-                        </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" minlength="3" maxlength="20" pattern="[A-Za-z\s]{3,}" title="Ingrese solo texto, entre 3 y 20 caracteres" name="nombre" class="form-control" id="nombre" placeholder="Nombre" required />
                     </div>
+                    <div class="col-md-6">
+                        <label for="apellido" class="form-label">Apellido</label>
+                        <input type="text" minlength="3" maxlength="20" pattern="[A-Za-z\s]{3,}" title="Ingrese solo texto, entre 3 y 20 caracteres" name="apellido" class="form-control" id="apellido" placeholder="Apellido" required />
+                    </div>
+                </div>
 
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="telefono" class="form-label">Teléfono</label>
-                            <input type="text" class="form-control" pattern="[0-9]{9,11}" title="Ingrese solo números, entre 9 y 11 caracteres" id="telefono" name="telefono" placeholder="Teléfono" required />
-                        </div>
-                        <div class="col-md-6">
-                            <label for="correo" class="form-label">Correo</label>
-                            <input type="email" class="form-control" id="correo" name="correo" placeholder="Correo" required />
-                        </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="telefono-agregar" class="form-label">Teléfono</label>
+                        <input type="tel" class="form-control phone-input" title="Ingrese un teléfono válido" id="telefono-agregar" name="telefono" placeholder="Teléfono" required />
+                        <span class="error-msg text-danger small" style="display: none; margin-top: 5px;"></span>
+                        <span class="valid-msg text-success small" style="display: none; margin-top: 5px;">✓ Válido</span>
                     </div>
+                    <div class="col-md-6">
+                        <label for="correo" class="form-label">Correo</label>
+                        <input type="email" class="form-control" id="correo" name="correo" placeholder="Correo" required />
+                    </div>
+                </div>
 
-                    <div class="row mb-3">
-                        <div class="col-md-12">
-                            <label for="direccion" class="form-label">Dirección</label>
-                            <input type="text" minlength="5" maxlength="25" name="direccion" class="form-control" id="direccion" title="Entre 5 y 25 caracteres" placeholder="Dirección" required />
-                        </div>
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label for="direccion" class="form-label">Dirección</label>
+                        <input type="text" minlength="5" maxlength="25" name="direccion" class="form-control" id="direccion" title="Entre 5 y 25 caracteres" placeholder="Dirección" required />
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-success">Guardar</button>
-                    </div>
-                </form>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                </div>
+            </form>
         </div>
+    </div>
 
+</body>
 </html>
