@@ -54,7 +54,7 @@ switch ($accion) {
                     }
 
                     $detalles[] = [
-                        'tipo' => $d['tipo'] ?? 'producto',
+                        'tipo' => 'proveedor',
                         'imagen' => $imagenRuta,
                         'link' => trim($d['link'] ?? ''),
                         'estado' => $d['estado'] ?? 'pendiente',
@@ -116,7 +116,7 @@ switch ($accion) {
                     }
 
                     $detalles[] = [
-                        'tipo' => $d['tipo'] ?? 'producto',
+                        'tipo' => 'cliente',
                         'imagen' => $imagenRuta,
                         'link' => trim($d['link'] ?? ''),
                         'estado' => $d['estado'] ?? 'pendiente',
@@ -178,7 +178,7 @@ switch ($accion) {
                     }
 
                     $detalles[] = [
-                        'tipo' => $d['tipo'] ?? 'producto',
+                        'tipo' => 'proveedor',
                         'imagen' => $imagenRuta,
                         'link' => trim($d['link'] ?? ''),
                         'estado' => $d['estado'] ?? 'pendiente',
@@ -202,6 +202,130 @@ switch ($accion) {
 
         header('Location: ?c=pedidos&accion=view');
         exit();
+        break;
+
+    case 'cancelarPedido':
+        $pedidoId = $_POST['id'] ?? null;
+        if (empty($pedidoId)) {
+            $_SESSION['error'] = 'ID de pedido inválido.';
+            header('Location: ?c=pedidos&accion=view');
+            exit();
+        }
+
+        $pedido = new Pedidos();
+        $pedido->setId($pedidoId);
+        if ($pedido->cancel()) {
+            $_SESSION['success'] = 'Pedido cancelado correctamente.';
+        } else {
+            $_SESSION['error'] = 'No se pudo cancelar el pedido.';
+        }
+
+        header('Location: ?c=pedidos&accion=view');
+        exit();
+        break;
+
+    case 'avanzarEstado':
+        $pedidoId = $_POST['id'] ?? null;
+        if (empty($pedidoId)) {
+            $_SESSION['error'] = 'ID de pedido inválido.';
+            header('Location: ?c=pedidos&accion=view');
+            exit();
+        }
+
+        $pedidoModel = new Pedidos();
+        $pedido = $pedidoModel->getById($pedidoId);
+        if (!$pedido) {
+            $_SESSION['error'] = 'Pedido no encontrado.';
+            header('Location: ?c=pedidos&accion=view');
+            exit();
+        }
+
+        $ordenEstados = [
+            'pendiente' => 'confirmado',
+            'confirmado' => 'enviado',
+            'enviado' => 'recibido',
+            'recibido' => 'entregado',
+        ];
+
+        $estadoActual = $pedido['estado'] ?? 'pendiente';
+        if (!isset($ordenEstados[$estadoActual])) {
+            $_SESSION['error'] = 'El pedido no puede avanzar desde el estado actual.';
+            header('Location: ?c=pedidos&accion=view');
+            exit();
+        }
+
+        $pedidoModel->setId($pedidoId)->setEstado($ordenEstados[$estadoActual]);
+        if ($pedidoModel->updateEstado()) {
+            $_SESSION['success'] = 'Estado del pedido actualizado a ' . $ordenEstados[$estadoActual] . '.';
+        } else {
+            $_SESSION['error'] = 'No se pudo actualizar el estado del pedido.';
+        }
+
+        header('Location: ?c=pedidos&accion=view');
+        exit();
+        break;
+
+    case 'view_detalles':
+        $pedidoId = $_GET['id'] ?? null;
+        if (!$pedidoId) {
+            echo '<div class="alert alert-danger">ID de pedido inválido.</div>';
+            break;
+        }
+
+        $pedidoModel = new Pedidos();
+        $pedido = $pedidoModel->getById($pedidoId);
+
+        if (!$pedido) {
+            echo '<div class="alert alert-warning">No se encontró el pedido solicitado.</div>';
+            break;
+        }
+
+        $clienteNombre = $pedido['cliente_nombre'] ? trim($pedido['cliente_nombre'] . ' ' . $pedido['cliente_apellido']) : null;
+        $origen = $pedido['tipo'] === 'cliente' ? $clienteNombre : ($pedido['nombre_proveedor'] ?: 'Proveedor no registrado');
+        $fecha = $pedido['fecha_pedido'] ?? $pedido['fecha_registro'] ?? 'No disponible';
+        $estado = htmlspecialchars($pedido['estado']);
+        $tipo = htmlspecialchars($pedido['tipo']);
+
+        $html = '<div class="row mb-3">';
+        $html .= '<div class="col-md-4"><strong>Pedido #</strong> ' . htmlspecialchars($pedido['id']) . '</div>';
+        $html .= '<div class="col-md-4"><strong>Origen</strong> ' . htmlspecialchars($origen) . '</div>';
+        $html .= '<div class="col-md-4"><strong>Fecha</strong> ' . htmlspecialchars($fecha) . '</div>';
+        $html .= '<div class="col-md-4"><strong>Tipo</strong> ' . $tipo . '</div>';
+        $html .= '<div class="col-md-4"><strong>Estado</strong> ' . $estado . '</div>';
+        $html .= '</div>';
+
+        if (empty($pedido['detalles'])) {
+            $html .= '<div class="alert alert-info">No hay detalles registrados para este pedido.</div>';
+            echo $html;
+            break;
+        }
+
+        $html .= '<div class="table-responsive"><table class="table table-bordered table-striped">';
+        $html .= '<thead class="table-dark"><tr><th>#</th><th>Producto / Descripción</th><th>Cantidad</th><th>Link</th><th>Imagen</th><th>Variante</th><th>Estado inventario</th></tr></thead><tbody>';
+        foreach ($pedido['detalles'] as $index => $detalle) {
+            $productoNombre = $detalle['producto_nombre'] ?: $detalle['nombre_producto'] ?: 'No definido';
+            $linkHtml = !empty($detalle['link']) ? '<a href="' . htmlspecialchars($detalle['link']) . '" target="_blank">Ver</a>' : '-';
+            $imagenHtml = !empty($detalle['imagen']) ? '<a href="' . htmlspecialchars($detalle['imagen']) . '" target="_blank">Imagen</a>' : '-';
+            $variante = '-';
+            if (!empty($detalle['variante_nombre'])) {
+                $variante = htmlspecialchars($detalle['variante_nombre']);
+                if (!empty($detalle['variante_atributos']) && is_array($detalle['variante_atributos'])) {
+                    $variante .= ' (' . htmlspecialchars(json_encode($detalle['variante_atributos'], JSON_UNESCAPED_UNICODE)) . ')';
+                }
+            }
+            $html .= '<tr>';
+            $html .= '<td>' . ($index + 1) . '</td>';
+            $html .= '<td>' . htmlspecialchars($productoNombre) . '</td>';
+            $html .= '<td>' . htmlspecialchars($detalle['cantidad']) . '</td>';
+            $html .= '<td>' . $linkHtml . '</td>';
+            $html .= '<td>' . $imagenHtml . '</td>';
+            $html .= '<td>' . $variante . '</td>';
+            $html .= '<td>' . htmlspecialchars($detalle['status_inventario'] ?? $detalle['estado']) . '</td>';
+            $html .= '</tr>';
+        }
+        $html .= '</tbody></table></div>';
+
+        echo $html;
         break;
 
     default:
