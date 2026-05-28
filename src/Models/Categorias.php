@@ -44,6 +44,14 @@
             $stmt->execute();
             return $stmt->fetchAll();
         }
+        public function searchById($id) {
+            $this->id = $id;
+            $sql = "SELECT * FROM categorias WHERE id = :id";
+            $stmt = $this->prepare($sql);
+            $stmt->bindParam(":id", $this->id);
+            $stmt->execute();
+            return $stmt->fetch();
+        }
         public function update() {
             $sql = "UPDATE categorias SET nombre = :nombre, descripcion = :descripcion WHERE id = :id";
             $stmt = $this->prepare($sql);

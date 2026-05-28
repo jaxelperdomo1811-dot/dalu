@@ -75,7 +75,7 @@
                                                 <td><?php echo htmlspecialchars($u['rol']); ?></td>
                                                 <td>
                                                     <button class="btn btn-sm btn-primary m-1" data-bs-toggle="modal" data-bs-target="#modalEditarUsuario<?= $u['id'] ?>">Editar</button>
-                                                    <button type="button" class="btn btn-sm btn-danger m-1" data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminarUsuario<?= $u['id'] ?>">Eliminar</button>
+                                                    <button type="button" class="btn btn-sm btn-danger m-1" data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminarUsuario<?= $u['id'] ?>">Desactivar</button>
                                                 </td>
                                             </tr>
                                             <!-- Modal Editar -->
@@ -282,7 +282,7 @@
                                                 <td><span class="badge bg-success">Activo</span></td>
                                                 <td>
                                                     <button class="btn btn-sm btn-primary m-1" data-bs-toggle="modal" data-bs-target="#modalEditarRol<?= $rol['id'] ?>">Editar</button>
-                                                    <button type="button" class="btn btn-sm btn-danger m-1" data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminarRol<?= $rol['id'] ?>">Eliminar</button>
+                                                    <button type="button" class="btn btn-sm btn-danger m-1" data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminarRol<?= $rol['id'] ?>">Desactivar</button>
                                                 </td>
                                             </tr>
 

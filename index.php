@@ -39,6 +39,6 @@ if (file_exists($archivoControlador)) {
 
     require_once $archivoControlador;
 } else {
-    echo "NO EXISTE EL CONTROLADOR";
+    require_once __DIR__ . '/src/Views/errors/404.php';
 }
 ?>

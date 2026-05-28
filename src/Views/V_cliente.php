@@ -71,7 +71,7 @@
                                         <td><?php echo $c['fecha_registro']; ?></td>
                                         <td>
                                             <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalEditar<?= $c['id'] ?>">Editar</button>
-                                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminar<?= $c['id'] ?>">Eliminar</button>
+                                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminar<?= $c['id'] ?>">Desactivar</button>
                                         </td>
                                     </tr>
                                     <!-- Modal Editar -->

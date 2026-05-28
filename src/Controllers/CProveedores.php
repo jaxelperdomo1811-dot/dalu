@@ -24,14 +24,21 @@
             break;
         case 'insert':
             $telefonoRaw = trim($_POST['telefono'] ?? '');
+            $telefonoRaw2 = trim($_POST['telefono2'] ?? '');
             // Quitar espacios, guiones y paréntesis
             $telefono = preg_replace('/[^\d+]/', '', $telefonoRaw);
+            $telefono2 = preg_replace('/[^\d+]/', '', $telefonoRaw2);
             
             // Normalizar si se omitió el código de país (asumiendo Venezuela por defecto)
             if (preg_match('/^0[1-9]\d{9}$/', $telefono)) {
                 $telefono = '+58' . substr($telefono, 1);
             } elseif (preg_match('/^[1-9]\d{9}$/', $telefono)) {
                 $telefono = '+58' . $telefono;
+            }
+            if (preg_match('/^0[1-9]\d{9}$/', $telefono2)) {
+                $telefono2 = '+58' . substr($telefono2, 1);
+            } elseif (preg_match('/^[1-9]\d{9}$/', $telefono2)) {
+                $telefono2 = '+58' . $telefono2;
             }
 
             // Validar formato E.164 internacional
@@ -40,10 +47,20 @@
                 header("Location: ?c=proveedores&accion=view");
                 exit();
             }
+            if (!preg_match('/^\+[1-9]\d{6,14}$/', $telefono2)) {
+                $_SESSION['error'] = "Error: El número de teléfono no es válido o no tiene el formato correcto (+58...).";
+                header("Location: ?c=proveedores&accion=view");
+                exit();
+            }
 
             $proveedor = new Proveedores();
+            $tipoPersona = $_POST['tipo_persona'] ?? '';
+            $cedulaNumero = $_POST['cedula'] ?? '';
+            $cedulaCompleta = trim($tipoPersona . $cedulaNumero);
             $proveedor->setNombre($_POST['nombre'] ?? null)
-                      ->setRif($_POST['rif'] ?? null)
+                      ->setApellido($_POST['apellido'] ?? null)
+                      ->setRazonSocial($_POST['razon_social'] ?? null)
+                      ->setDocumentoIdentidad($cedulaCompleta !== '' ? $cedulaCompleta : null)
                       ->setTelefono($telefono)
                       ->setEmail($_POST['email'] ?? null)
                       ->setDireccion($_POST['direccion'] ?? null);
@@ -75,9 +92,13 @@
             }
 
             $proveedor = new Proveedores();
+            $tipoPersona = $_POST['tipo_persona'] ?? '';
+            $cedulaNumero = $_POST['cedula'] ?? '';
+            $cedulaCompleta = trim($tipoPersona . $cedulaNumero);
             $proveedor->setId($_POST['id'] ?? null)
                       ->setNombre($_POST['nombre'] ?? null)
-                      ->setRif($_POST['rif'] ?? null)
+                      ->setRazonSocial($_POST['razon_social'] ?? null)
+                      ->setDocumentoIdentidad($cedulaCompleta !== '' ? $cedulaCompleta : null)
                       ->setTelefono($telefono)
                       ->setEmail($_POST['email'] ?? null)
                       ->setDireccion($_POST['direccion'] ?? null);

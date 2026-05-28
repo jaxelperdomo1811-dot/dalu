@@ -67,8 +67,11 @@
                                     <thead>
                                         <tr>
                                             <th scope="col">Nombre</th>
+                                            <th scope="col">Apellido</th>
                                             <th scope="col">Razon social</th>
+                                            <th scope="col">Documento de identidad</th>
                                             <th scope="col">Teléfono</th>
+                                            <th scope="col">Teléfono 2</th>
                                             <th scope="col">Email</th>
                                             <th scope="col">Dirección</th>
                                             <th scope="col">Acción</th>
@@ -77,14 +80,17 @@
                                     <tbody>
                                         <?php foreach ($proveedores as $p): ?>
                                             <tr>
-                                                <td><?php echo $p['nombre']; ?></td>
-                                                <td><?php echo $p['rif']; ?></td>
-                                                <td><?php echo $p['telefono']; ?></td>
-                                                <td><?php echo $p['email']; ?></td>
-                                                <td><?php echo $p['direccion']; ?></td>
-                                                <td>
+                                                <td class="align-items-center"><?php echo $p['nombre']; ?></td>
+                                                <td class="align-items-center"><?php echo $p['apellido']; ?></td>
+                                                <td class="align-items-center"><?php echo $p['razon_social']; ?></td>
+                                                <td class="align-items-center"><?php echo $p['documento_identidad']; ?></td>
+                                                <td class="align-items-center"><?php echo $p['telefono']; ?></td>
+                                                <td class="align-items-center"><?php echo $p['telefono2']; ?></td>
+                                                <td class="align-items-center"><?php echo $p['email']; ?></td>
+                                                <td class="align-items-center"><?php echo $p['direccion']; ?></td>
+                                                <td class="align-items-center">
                                                     <button class="btn btn-sm btn-primary m-1" data-bs-toggle="modal" data-bs-target="#modalEditar<?= $p['id'] ?>">Editar</button>
-                                                    <button type="button" class="btn btn-sm btn-danger m-1" data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminar<?= $p['id'] ?>">Eliminar</button>
+                                                    <button type="button" class="btn btn-sm btn-danger m-1" data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminar<?= $p['id'] ?>">Desactivar</button>
                                                 </td>
                                             </tr>
 
@@ -173,8 +179,11 @@
                                     <thead>
                                         <tr>
                                             <th scope="col">Nombre</th>
+                                            <th scope="col">Apellido</th>
                                             <th scope="col">Razon social</th>
+                                            <th scope="col">Documento de identidad</th>
                                             <th scope="col">Teléfono</th>
+                                            <th scope="col">Teléfono 2 </th>
                                             <th scope="col">Email</th>
                                             <th scope="col">Dirección</th>
                                             <th scope="col">Acción</th>
@@ -183,9 +192,12 @@
                                     <tbody>
                                         <?php foreach ($proveedoresInactivos as $pIN): ?>
                                             <tr>
-                                                <td><?php echo $pIN['nombre']; ?></td>
-                                                <td><?php echo $pIN['rif']; ?></td>
+                                                <td><?php echo $pIN['nombre']; ?></t
+                                                <td><?php echo $p['apellido']; ?></td>d>
+                                                <td><?php echo $pIN['razon_social']; ?></td>
+                                                <td><?php echo $pIN['documento_identidad']; ?></td>
                                                 <td><?php echo $pIN['telefono']; ?></td>
+                                                <td><?php echo $pIN['telefono2']; ?></td>
                                                 <td><?php echo $pIN['email']; ?></td>
                                                 <td><?php echo $pIN['direccion']; ?></td>
                                                 <td>
@@ -343,8 +355,14 @@
                             <input type="text" minlength="3" maxlength="50" pattern="[A-Za-z0-9\s]{3,}" title="Ingrese solo texto, entre 3 y 50 caracteres" name="nombre" class="form-control" placeholder="Nombre" required />
                         </div>
                         <div class="col-md-6">
-                            <label for="rif" class="form-label">Razon social</label>
-                            <input type="text" minlength="5" maxlength="15" title="Ingrese solo texto/numeros" name="rif" class="form-control" placeholder="Razon social" required />
+                            <label for="apellido" class="form-label">Apellido</label>
+                            <input type="text" minlength="3" maxlength="50" pattern="[A-Za-z0-9\s]{3,}" title="Ingrese solo texto, entre 3 y 50 caracteres" name="apellido" class="form-control" placeholder="Apellido" required />
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label for="razon_social" class="form-label">Razon social</label>
+                            <input type="text" minlength="5" maxlength="15" title="Ingrese solo texto/numeros" name="razon_social" class="form-control" placeholder="Razon social" required />
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -367,14 +385,20 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="telefono" class="form-label">Teléfono</label>
-                            <input type="tel" class="form-control phone-input" inputmode="tel" title="Ingrese un teléfono válido" name="telefono" placeholder="Teléfono" required />
+                            <input type="tel" class="form-control phone-input" inputmode="tel" title="Ingrese un teléfono válido" name="telefono" required />
                             <span class="error-msg text-danger small" style="display: none; margin-top: 5px;"></span>
                             <span class="valid-msg text-success small" style="display: none; margin-top: 5px;">✓ Válido</span>
                         </div>
                         <div class="col-md-6">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" name="email" placeholder="Email" required />
+                            <label for="telefono" class="form-label">Teléfono 2 (Opcional)</label>
+                            <input type="tel" class="form-control phone-input" inputmode="tel" title="Ingrese un teléfono válido" name="telefono2"/>
+                            <span class="error-msg text-danger small" style="display: none; margin-top: 5px;"></span>
+                            <span class="valid-msg text-success small" style="display: none; margin-top: 5px;">✓ Válido</span>
                         </div>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" name="email" placeholder="Email" required />
                     </div>
 
                     <div class="row mb-3">

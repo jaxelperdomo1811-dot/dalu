@@ -68,6 +68,7 @@
                                         <tr>
                                             <th scope="col">Categoria</th>
                                             <th scope="col">Nombre</th>
+                                            <th scope="col">Miniatura</th>
                                             <th scope="col">Descripción</th>
                                             <th scope="col">Precio($)</th>
                                             <th scope="col">Stock</th>
@@ -78,24 +79,29 @@
                                     <tbody>
                                         <?php foreach ($productos as $p): ?>
                                         <tr>
-                                            <td><?php echo $p['categoria']; ?></td>
+                                            <td><?php echo $p['categoria_nombre'] ?? $p['categoria']; ?></td>
                                             <td><?php echo $p['nombre']; ?></td>
+                                            <td>
+                                                <?php $thumb = !empty($p['imagen_principal']) ? $p['imagen_principal'] : 'assets/img/products/default.jpeg'; ?>
+                                                <img src="<?= htmlspecialchars($thumb) ?>" alt="miniatura" class="img-thumbnail product-thumb" style="width:56px;height:56px;object-fit:cover;cursor:pointer;" data-src="<?= htmlspecialchars($thumb) ?>" />
+                                            </td>
                                             <td><?php echo $p['descripcion']; ?></td>
-                                            <td><?php echo $p['precio']; ?></td>
-                                            <td><?php echo $p['stock']; ?></td>
+                                            <td><?php echo $p['precio_venta'] ?? $p['precio']; ?></td>
+                                            <td><?php echo $p['stock_total'] ?? $p['stock']; ?></td>
                                             <td><?php echo $p['fecha_registro']; ?></td>
                                             <td>
                                                 <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
                                                     data-bs-target="#modalEditar<?= $p['id'] ?>">Editar</button>
+                                                <button type="button" class="btn btn-sm btn-info view-variants-btn" data-id="<?= $p['id'] ?>">Variantes (<?= $p['total_variantes'] ?? 0 ?>)</button>
                                                 <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
-                                                    data-bs-target="#modalConfirmarEliminar<?= $p['id'] ?>">Eliminar</button>
+                                                    data-bs-target="#modalConfirmarEliminar<?= $p['id'] ?>">Desactivar</button>
                                             </td>
                                         </tr>
                                         <!-- Modal Editar -->
                                         <div class="modal fade" id="modalEditar<?= $p['id'] ?>" tabindex="-1">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
-                                                    <form action="?c=productos&accion=update" method="POST">
+                                                    <form action="?c=productos&accion=update" method="POST" enctype="multipart/form-data">
                                                         <input type="hidden" name="id" value="<?= $p['id'] ?>">
                                                         <div class="modal-header">
                                                             <h5 class="modal-title">Editar Producto</h5>
@@ -106,11 +112,20 @@
                                                             <div class="col-md-12">
                                                                 <label for="categoria" class="form-label">Categoría</label>
                                                                 <select class="form-select" name="id_categoria" id="categoria" required>
-                                                                    <option value="<?= $p['id_categoria'] ?>" selected><?= $p['categoria'] ?></option>
+                                                                    <option value="<?= $p['id_categoria'] ?>" selected><?= $p['categoria_nombre'] ?? $p['categoria'] ?></option>
                                                                     <?php foreach ($categorias as $categoria): ?>
                                                                         <option value="<?= $categoria['id'] ?>"><?= htmlspecialchars($categoria['nombre']) ?></option>
                                                                     <?php endforeach; ?>
                                                                 </select>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <?php $currentThumb = !empty($p['imagen_principal']) ? $p['imagen_principal'] : 'assets/img/products/default.png'; ?>
+                                                                <label class="form-label">Imagen actual</label>
+                                                                <div class="mb-2">
+                                                                    <img src="<?= htmlspecialchars($currentThumb) ?>" alt="imagen actual" class="img-thumbnail product-thumb" style="width:100px;height:100px;object-fit:cover;cursor:pointer;" data-src="<?= htmlspecialchars($currentThumb) ?>" />
+                                                                </div>
+                                                                <label class="form-label">Cambiar imagen</label>
+                                                                <input type="file" name="imagen" accept="image/*" class="form-control" />
                                                             </div>
                                                             <div class="mb-3">
                                                                 <label for="nombre" class="form-label">Nombre</label>
@@ -168,6 +183,7 @@
                                         <tr>
                                             <th scope="col">Categoria</th>
                                             <th scope="col">Nombre</th>
+                                            <th scope="col">Miniatura</th>
                                             <th scope="col">Descripción</th>
                                             <th scope="col">Precio($)</th>
                                             <th scope="col">Stock</th>
@@ -178,15 +194,20 @@
                                     <tbody>
                                         <?php foreach ($productosInactivos as $pIN): ?>
                                         <tr>
-                                            <td><?php echo $pIN['categoria']; ?></td>
+                                            <td><?php echo $pIN['categoria_nombre'] ?? $pIN['categoria']; ?></td>
                                             <td><?php echo $pIN['nombre']; ?></td>
+                                            <td>
+                                                <?php $thumbIN = !empty($pIN['imagen_principal']) ? $pIN['imagen_principal'] : 'assets/img/products/default.jpeg'; ?>
+                                                <img src="<?= htmlspecialchars($thumbIN) ?>" alt="miniatura" class="img-thumbnail product-thumb" style="width:56px;height:56px;object-fit:cover;cursor:pointer;" data-src="<?= htmlspecialchars($thumbIN) ?>" />
+                                            </td>
                                             <td><?php echo $pIN['descripcion']; ?></td>
-                                            <td><?php echo $pIN['precio']; ?></td>
-                                            <td><?php echo $pIN['stock']; ?></td>
+                                            <td><?php echo $pIN['precio_venta'] ?? $pIN['precio']; ?></td>
+                                            <td><?php echo $pIN['stock_total'] ?? $pIN['stock']; ?></td>
                                             <td><?php echo $pIN['fecha_registro']; ?></td>
                                             <td>
                                                 <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
                                                     data-bs-target="#modalEditar<?= $pIN['id'] ?>">Editar</button>
+                                                <button type="button" class="btn btn-sm btn-info view-variants-btn" data-id="<?= $pIN['id'] ?>">Variantes (<?= $pIN['total_variantes'] ?? 0 ?>)</button>
                                                 <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal"
                                                     data-bs-target="#modalConfirmarActivar<?= $pIN['id'] ?>">Activar</button>
                                             </td>
@@ -195,7 +216,7 @@
                                         <div class="modal fade" id="modalEditar<?= $pIN['id'] ?>" tabindex="-1">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
-                                                    <form action="?c=productos&accion=update" method="POST">
+                                                    <form action="?c=productos&accion=update" method="POST" enctype="multipart/form-data">
                                                         <input type="hidden" name="id" value="<?= $pIN['id'] ?>">
                                                         <div class="modal-header">
                                                             <h5 class="modal-title">Editar Producto</h5>
@@ -206,7 +227,7 @@
                                                             <div class="col-md-12">
                                                                 <label for="categoria" class="form-label">Categoría</label>
                                                                 <select class="form-select" name="id_categoria" id="categoria" required>
-                                                                    <option value="<?= $pIN['id_categoria'] ?>" selected><?= $pIN['categoria'] ?></option>
+                                                                    <option value="<?= $pIN['id_categoria'] ?>" selected><?= $pIN['categoria_nombre'] ?? $pIN['categoria'] ?></option>
                                                                     <?php foreach ($categorias as $categoria): ?>
                                                                         <option value="<?= $categoria['id'] ?>"><?= htmlspecialchars($categoria['nombre']) ?></option>
                                                                     <?php endforeach; ?>
@@ -220,6 +241,15 @@
                                                                 <label for="descripcion" class="form-label">Descripción</label>
                                                                 <textarea class="form-control" id="descripcion" name="descripcion"
                                                                     rows="3"><?= $pIN['descripcion'] ?></textarea>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <?php $currentThumbIN = !empty($pIN['imagen_principal']) ? $pIN['imagen_principal'] : 'assets/img/products/default.png'; ?>
+                                                                <label class="form-label">Imagen actual</label>
+                                                                <div class="mb-2">
+                                                                    <img src="<?= htmlspecialchars($currentThumbIN) ?>" alt="imagen actual" class="img-thumbnail product-thumb" style="width:100px;height:100px;object-fit:cover;cursor:pointer;" data-src="<?= htmlspecialchars($currentThumbIN) ?>" />
+                                                                </div>
+                                                                <label class="form-label">Cambiar imagen</label>
+                                                                <input type="file" name="imagen" accept="image/*" class="form-control" />
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
@@ -305,7 +335,7 @@
                                                     <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
                                                         data-bs-target="#modalEditarCategoria<?= $c['id'] ?>">Editar</button>
                                                     <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
-                                                        data-bs-target="#modalConfirmarEliminarCategoria<?= $c['id'] ?>">Eliminar</button>
+                                                        data-bs-target="#modalConfirmarEliminarCategoria<?= $c['id'] ?>">Desactivar</button>
                                                 </td>
                                             </tr>
                                             <!-- Modal Editar -->
@@ -467,21 +497,27 @@
                             <thead>
                                 <tr>
                                     <th scope="col">Categoría</th>
-                                    <th scope="col">Nombre del Producto</th>
-                                    <th scope="col">Stock Actual</th>
+                                            <th scope="col">Nombre del Producto</th>
+                                            <th scope="col">Miniatura</th>
+                                            <th scope="col">Stock Actual</th>
                                     <th scope="col">Estado</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php foreach ($productos as $p): ?>
                                 <tr>
-                                    <td><?php echo $p['categoria']; ?></td>
-                                    <td><?php echo $p['nombre']; ?></td>
-                                    <td><span class="fs-5 fw-bold"><?php echo $p['stock']; ?></span></td>
+                                    <td><?php echo $p['categoria_nombre'] ?? $p['categoria']; ?></td>
+                                            <td><?php echo $p['nombre']; ?></td>
+                                            <td>
+                                                <?php $thumbInv = !empty($p['imagen_principal']) ? $p['imagen_principal'] : 'assets/img/products/default.png'; ?>
+                                                <img src="<?= htmlspecialchars($thumbInv) ?>" alt="miniatura" class="img-thumbnail product-thumb" style="width:56px;height:56px;object-fit:cover;cursor:pointer;" data-src="<?= htmlspecialchars($thumbInv) ?>" />
+                                            </td>
+                                            <td><span class="fs-5 fw-bold"><?php echo $p['stock_total'] ?? $p['stock']; ?></span></td>
                                     <td>
-                                        <?php if($p['stock'] <= 5): ?>
+                                        <?php $stockVal = $p['stock_total'] ?? $p['stock']; ?>
+                                        <?php if($stockVal <= 5): ?>
                                             <span class="badge bg-danger">Bajo Stock</span>
-                                        <?php elseif($p['stock'] <= 15): ?>
+                                        <?php elseif($stockVal <= 15): ?>
                                             <span class="badge bg-warning text-dark">Stock Medio</span>
                                         <?php else: ?>
                                             <span class="badge bg-success">Stock Óptimo</span>
@@ -501,7 +537,7 @@
     <!-- Modal Agregar Producto -->
     <div class="modal fade" id="modalAgregar" tabindex="-1">
         <div class="modal-dialog">
-            <form action="?c=productos&accion=insert" method="POST" class="modal-content">
+            <form action="?c=productos&accion=insert" method="POST" enctype="multipart/form-data" class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Agregar Producto</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -516,6 +552,8 @@
                                     <option value="<?= $categoria['id'] ?>"><?= htmlspecialchars($categoria['nombre']) ?></option>
                                 <?php endforeach; ?>
                             </select>
+                            <!-- Contenedor para campos dinámicos según categoría -->
+                            <div id="dynamic-attributes" class="mt-3"></div>
                         </div>
                     </div>
 
@@ -529,7 +567,7 @@
                         </div>
                         <div class="col-md-6">
                             <label for="precio" class="form-label">Precio</label>
-                            <input type="number" step="0.01" min="0" name="precio" class="form-control"
+                            <input type="number" step="0.01" min="0" name="precio_venta" class="form-control"
                                 id="precio" placeholder="Precio" required />
                         </div>
                     </div>
@@ -576,6 +614,38 @@
             </form>
         </div>
     </div>
-</body>
+        <!-- Modal para ver imagen en tamaño completo -->
+        <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-body p-0">
+                        <button type="button" class="btn-close m-2 position-absolute end-0" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                        <img id="imageModalImg" src="" alt="Imagen" style="width:100%;height:auto;display:block;" />
+                    </div>
+                </div>
+            </div>
+        </div>
 
-</html>
+        <!-- Modal para ver variantes de un producto -->
+        <div class="modal fade" id="variantsModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Variantes</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="variantsModalBody">Cargando...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exponer categorías a JS y cargar script de productos -->
+        <script>
+            window.productosCategories = <?php echo json_encode($categorias); ?> || [];
+        </script>
+        <script src="assets/js/pages/productos.js" defer></script>
+    </body>
+
+    </html>

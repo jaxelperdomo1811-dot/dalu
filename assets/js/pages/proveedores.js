@@ -29,6 +29,10 @@ document.addEventListener('DOMContentLoaded', () => {
             nationalMode: false,
             showSelectedDialCode: true,
             preferredCountries: ['ve', 'us', 'co'],
+            hiddenInputs: {
+                phone: "phone_full",
+                country: "country_iso2"
+            },
             utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/js/utils.js"
         });
 
