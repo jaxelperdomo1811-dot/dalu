@@ -9,8 +9,19 @@ $accion = $_GET['accion'] ?? $_POST['accion'] ?? 'view';
 
 switch($accion) {
     case "view":
-        $productos = (new Productos())->search();
-        $productosInactivos = (new Productos())->searchInactive();
+        $productoModel = new Productos();
+        $productos = $productoModel->search();
+        foreach ($productos as &$p) {
+            $p['variantes'] = $productoModel->getVariantesByProducto($p['id']);
+        }
+        unset($p);
+        
+        $productosInactivos = $productoModel->searchInactive();
+        foreach ($productosInactivos as &$pIN) {
+            $pIN['variantes'] = $productoModel->getVariantesByProducto($pIN['id']);
+        }
+        unset($pIN);
+
         $categorias = (new Categorias())->search();
         $categoriasInactivas = (new Categorias())->searchInactive();
         require_once __DIR__ . "/../Views/V_Productos.php";
@@ -169,7 +180,47 @@ case "update":
     }
     
     if ($producto->update()) {
-        $_SESSION['success'] = "Producto actualizado exitosamente.";
+        // ========== PROCESAR VARIANTES ELIMINADAS ==========
+        if (isset($_POST['deleted_variants']) && is_array($_POST['deleted_variants'])) {
+            foreach ($_POST['deleted_variants'] as $variante_id) {
+                if (!empty($variante_id)) {
+                    $producto->deleteVariante($variante_id);
+                }
+            }
+        }
+
+        // ========== PROCESAR VARIANTES (ACTUALIZAR O AGREGAR NUEVAS) ==========
+        if (isset($_POST['variantes']) && is_array($_POST['variantes'])) {
+            foreach ($_POST['variantes'] as $v) {
+                if (!empty($v['nombre_variante']) && isset($v['stock'])) {
+                    $atributos = [];
+                    if (!empty($v['talla'])) $atributos['talla'] = $v['talla'];
+                    if (!empty($v['color'])) $atributos['color'] = $v['color'];
+                    if (!empty($v['volumen_ml'])) $atributos['volumen_ml'] = $v['volumen_ml'];
+                    if (!empty($v['spf'])) $atributos['spf'] = $v['spf'];
+                    if (!empty($v['fragancia'])) $atributos['fragancia'] = $v['fragancia'];
+                    if (!empty($v['tipo_piel'])) $atributos['tipo_piel'] = $v['tipo_piel'];
+
+                    $variante_data = [
+                        'nombre_variante' => $v['nombre_variante'],
+                        'atributos' => $atributos,
+                        'precio_adicional' => $v['precio_adicional'] ?? 0,
+                        'stock' => $v['stock'],
+                        'imagen_variante' => $v['imagen_variante'] ?? null
+                    ];
+
+                    if (!empty($v['id'])) {
+                        // Actualizar variante existente
+                        $producto->updateVariante($v['id'], $variante_data);
+                    } else {
+                        // Agregar nueva variante
+                        $producto->addVariante($_POST['id'], $variante_data);
+                    }
+                }
+            }
+        }
+
+        $_SESSION['success'] = "Producto y sus variantes actualizados exitosamente.";
     } else {
         $_SESSION['error'] = "Error al actualizar el producto.";
     }
