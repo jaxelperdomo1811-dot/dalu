@@ -85,19 +85,23 @@ use Lenovo\Dalu\Models\Conexion;
             
             foreach ($this->detalles as $detalle) {
                 $status = !empty($detalle['id_producto']) ? 'vinculado' : 'pendiente';
-                
-                $stmt->bindParam(":id_pedido", $pedido_id);
-                $stmt->bindParam(":tipo", $detalle['tipo']);
-                $stmt->bindParam(":imagen", $detalle['imagen']);
-                $stmt->bindParam(":link", $detalle['link']);
-                $stmt->bindParam(":nombre_producto", $detalle['nombre_producto']);
-                $stmt->bindParam(":cantidad", $detalle['cantidad']);
-                $stmt->bindParam(":precio_unitario", $detalle['precio_unitario']);
-                $stmt->bindParam(":descripcion_producto", $detalle['descripcion_producto']);
-                $stmt->bindParam(":id_producto", $detalle['id_producto']);
-                $stmt->bindParam(":id_variante", $detalle['id_variante']);
-                $stmt->bindParam(":status_inventario", $status);
-                $stmt->execute();
+                $params = [
+                    ':id_pedido' => $pedido_id,
+                    ':tipo' => $detalle['tipo'] ?? 'proveedor',
+                    ':imagen' => $detalle['imagen'] ?? '',
+                    ':link' => $detalle['link'] ?? '',
+                    ':nombre_producto' => $detalle['nombre_producto'] ?? null,
+                    ':cantidad' => !empty($detalle['cantidad']) ? $detalle['cantidad'] : 1,
+                    ':precio_unitario' => $detalle['precio_unitario'] ?? null,
+                    ':descripcion_producto' => $detalle['descripcion_producto'] ?? null,
+                    ':id_producto' => !empty($detalle['id_producto']) ? $detalle['id_producto'] : null,
+                    ':id_variante' => !empty($detalle['id_variante']) ? $detalle['id_variante'] : null,
+                    ':status_inventario' => $status,
+                ];
+
+                if (!$stmt->execute($params)) {
+                    error_log('Error en insertDetalles: ' . json_encode($stmt->errorInfo()));
+                }
             }
             
             return true;

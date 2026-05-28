@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
             row.setAttribute('data-index', idx);
             row.innerHTML = `
                 <input type="hidden" name="detalles[${idx}][tipo]" value="producto">
+                <input type="hidden" name="detalles[${idx}][estado]" value="pendiente">
                 <select name="detalles[${idx}][id_producto]" class="form-select form-select-sm">${prodOpts}</select>
                 <input type="text" name="detalles[${idx}][nombre_producto]" class="form-control" placeholder="Nombre producto (opcional)">
                 <input type="number" name="detalles[${idx}][cantidad]" class="form-control" placeholder="Cantidad" min="1" value="1">
@@ -86,4 +87,36 @@ document.addEventListener('DOMContentLoaded', () => {
     initDetalles('detallesContainerCliente','addDetalleCliente');
     validateDetallesOnSubmit('form[action="?c=pedidos&accion=insertTienda"]','detallesContainerTienda');
     validateDetallesOnSubmit('form[action="?c=pedidos&accion=insertCliente"]','detallesContainerCliente');
+
+    function initPedidoDetalles() {
+        const modalEl = document.getElementById('modalDetallesPedido');
+        const modalBody = document.getElementById('modalDetallesPedidoBody');
+        const modalTitle = document.getElementById('modalDetallesPedidoTitulo');
+        if (!modalEl || !modalBody || !modalTitle) return;
+
+        const bsModal = new bootstrap.Modal(modalEl);
+
+        document.body.addEventListener('click', (event) => {
+            const button = event.target.closest('.btn-ver-detalles');
+            if (!button) return;
+
+            const pedidoId = button.getAttribute('data-id');
+            if (!pedidoId) return;
+
+            modalTitle.textContent = 'Detalle del pedido #' + pedidoId;
+            modalBody.innerHTML = '<div class="text-center py-4"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div><p class="mt-3">Cargando detalle del pedido...</p></div>';
+            bsModal.show();
+
+            fetch(`?c=pedidos&accion=view_detalles&id=${encodeURIComponent(pedidoId)}`)
+                .then(response => response.text())
+                .then(html => {
+                    modalBody.innerHTML = html;
+                })
+                .catch(() => {
+                    modalBody.innerHTML = '<div class="alert alert-danger">Error al cargar los detalles del pedido.</div>';
+                });
+        });
+    }
+
+    initPedidoDetalles();
 });

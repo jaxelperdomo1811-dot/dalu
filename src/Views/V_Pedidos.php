@@ -69,11 +69,16 @@
                                             <tr>
                                                 <td><?php echo htmlspecialchars($p['id']); ?></td>
                                                 <td><?php echo htmlspecialchars($p['nombre_proveedor']); ?></td>
-                                                <td><?php echo htmlspecialchars($p['fecha_pedido']); ?></td>
+                                                <td><?php echo htmlspecialchars($p['fecha_registro']); ?></td>
                                                 <td><?php echo htmlspecialchars($p['estado']); ?></td>
                                                 <td>
+                                                    <button type="button" class="btn btn-sm btn-info m-1 btn-ver-detalles" data-id="<?= $p['id'] ?>">Detalles</button>
                                                     <button class="btn btn-sm btn-primary m-1" data-bs-toggle="modal" data-bs-target="#modalEditarTienda<?= $p['id'] ?>">Editar</button>
-                                                    <button type="button" class="btn btn-sm btn-danger m-1" data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminarTienda<?= $p['id'] ?>">Desactivar</button>
+                                                    <form action="?c=pedidos&accion=avanzarEstado" method="POST" class="d-inline">
+                                                        <input type="hidden" name="id" value="<?= $p['id'] ?>">
+                                                        <button type="submit" class="btn btn-sm btn-warning m-1"<?= in_array($p['estado'], ['entregado','cancelado']) ? ' disabled' : '' ?>>Siguiente estado</button>
+                                                    </form>
+                                                    <button type="button" class="btn btn-sm btn-danger m-1" data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminarTienda<?= $p['id'] ?>">Cancelar</button>
                                                 </td>
                                             </tr>
                                             <!-- Modal Confirmar Eliminación -->
@@ -175,26 +180,37 @@
                                         <td><?php echo htmlspecialchars($p['fecha_pedido']); ?></td>
                                         <td><?php echo htmlspecialchars($p['estado']); ?></td>
                                         <td>
+                                            <button type="button" class="btn btn-sm btn-info m-1 btn-ver-detalles" data-id="<?= $p['id'] ?>">Detalles</button>
                                             <button class="btn btn-sm btn-primary m-1" data-bs-toggle="modal" data-bs-target="#modalEditarCliente<?= $p['id'] ?>">Editar</button>
-                                            <button type="button" class="btn btn-sm btn-danger m-1" data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminarCliente<?= $p['id'] ?>">Desactivar</button>
+                                            <form action="?c=pedidos&accion=avanzarEstado" method="POST" class="d-inline">
+                                                <input type="hidden" name="id" value="<?= $p['id'] ?>">
+                                                <button type="submit" class="btn btn-sm btn-warning m-1"<?= in_array($p['estado'], ['entregado','cancelado']) ? ' disabled' : '' ?>>Siguiente estado</button>
+                                            </form>
+                                            <button type="button" class="btn btn-sm btn-danger m-1" data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminarCliente<?= $p['id'] ?>">Cancel
+                                            <button class="btn btn-sm btn-primary m-1" data-bs-toggle="modal" data-bs-target="#modalEditarCliente<?= $p['id'] ?>">Editar</button>
+                                            <form action="?c=pedidos&accion=avanzarEstado" method="POST" class="d-inline">
+                                                <input type="hidden" name="id" value="<?= $p['id'] ?>">
+                                                <button type="submit" class="btn btn-sm btn-warning m-1"<?= in_array($p['estado'], ['entregado','cancelado']) ? ' disabled' : '' ?>>Siguiente estado</button>
+                                            </form>
+                                            <button type="button" class="btn btn-sm btn-danger m-1" data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminarCliente<?= $p['id'] ?>">Cancelar</button>
                                         </td>
-                                    </tr>
+                                    </tr>cliente'] ?? $p['nombre_
                                     <!-- Modal Confirmar Eliminación -->
                                     <div class="modal fade" id="modalConfirmarEliminarCliente<?= $p['id'] ?>" tabindex="-1">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
-                                                <form action="?c=usuarios&accion=delete" method="POST">
+                                                <form action="?c=pedidos&accion=cancelarPedido" method="POST">
                                                     <input type="hidden" name="id" value="<?= $p['id'] ?>">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title">Confirmar eliminación</h5>
+                                                        <h5 class="modal-title">Cancelar pedido</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        ¿Estás seguro de que deseas cambiar el estado del pedido nro <?= htmlspecialchars($p['id']) ?> de <?= htmlspecialchars($p['nombre_proveedor']) ?>?
+                                                        ¿Estás seguro de que deseas cancelar el pedido nro <?= htmlspecialchars($p['id']) ?> de <?= htmlspecialchars($p['nombre_proveedor']) ?>?
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                        <button type="submit" class="btn btn-danger">Aceptar</button>
+                                                        <button type="submit" class="btn btn-danger">Confirmar</button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -260,5 +276,28 @@
             </div>
         </div>
     </main>
+
+    <!-- Modal Detalles del Pedido -->
+    <div class="modal fade" id="modalDetallesPedido" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalDetallesPedidoTitulo">Detalles del pedido</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body" id="modalDetallesPedidoBody">
+                    <div class="text-center py-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <p class="mt-3">Cargando detalle del pedido...</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
