@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
             row.setAttribute('data-index', idx);
             row.innerHTML = `
                 <input type="hidden" name="detalles[${idx}][tipo]" value="producto">
+                <input type="hidden" name="detalles[${idx}][estado]" value="pendiente">
                 <select name="detalles[${idx}][id_producto]" class="form-select form-select-sm">${prodOpts}</select>
                 <input type="text" name="detalles[${idx}][nombre_producto]" class="form-control" placeholder="Nombre producto (opcional)">
                 <input type="number" name="detalles[${idx}][cantidad]" class="form-control" placeholder="Cantidad" min="1" value="1">

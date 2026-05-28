@@ -4,6 +4,7 @@ namespace Lenovo\Dalu\Controllers;
 use Lenovo\Dalu\Models\Pedidos;
 use Lenovo\Dalu\Models\Clientes;
 use Lenovo\Dalu\Models\Proveedores;
+use Lenovo\Dalu\Models\Productos;
 
 $accion = $_GET['accion'] ?? $_POST['accion'] ?? 'view';
 
@@ -31,18 +32,38 @@ switch ($accion) {
                ->setNombreProveedor(trim($_POST['nombre_proveedor']));
 
         // Procesar detalles opcionales
+        $productosModel = new Productos();
         $detalles = [];
         if (isset($_POST['detalles']) && is_array($_POST['detalles'])) {
-            foreach ($_POST['detalles'] as $d) {
-                $hasDetalle = !empty($d['id_producto']) || !empty($d['nombre_producto']) || !empty($d['link']) || !empty($d['imagen']);
+            foreach ($_POST['detalles'] as $index => $d) {
+                $hasFile = isset($_FILES['detalleImagens']['tmp_name'][$index]) && $_FILES['detalleImagens']['error'][$index] === UPLOAD_ERR_OK;
+                $hasDetalle = !empty($d['id_producto']) || !empty($d['nombre_producto']) || !empty($d['link']) || $hasFile;
                 if ($hasDetalle) {
+                    $imagenRuta = '';
+                    if ($hasFile) {
+                        $categoriaNombre = !empty($d['id_producto']) ? $productosModel->getNombreCategoria($d['id_producto']) : 'sin_categoria';
+                        $nombreImagen = !empty($d['nombre_producto']) ? $d['nombre_producto'] : 'detalle_' . $index;
+                        $fileData = [
+                            'name' => $_FILES['detalleImagens']['name'][$index],
+                            'type' => $_FILES['detalleImagens']['type'][$index],
+                            'tmp_name' => $_FILES['detalleImagens']['tmp_name'][$index],
+                            'error' => $_FILES['detalleImagens']['error'][$index],
+                            'size' => $_FILES['detalleImagens']['size'][$index],
+                        ];
+                        $imagenRuta = $productosModel->subirImagen($fileData, $categoriaNombre, $nombreImagen) ?? '';
+                    }
+
                     $detalles[] = [
                         'tipo' => $d['tipo'] ?? 'producto',
-                        'imagen' => $d['imagen'] ?? '',
-                        'link' => $d['link'] ?? '',
+                        'imagen' => $imagenRuta,
+                        'link' => trim($d['link'] ?? ''),
                         'estado' => $d['estado'] ?? 'pendiente',
-                        'nombre_producto' => $d['nombre_producto'] ?? null,
-                        'id_producto' => $d['id_producto'] ?? null
+                        'nombre_producto' => trim($d['nombre_producto'] ?? '') ?: null,
+                        'id_producto' => $d['id_producto'] ?? null,
+                        'cantidad' => !empty($d['cantidad']) ? (int) $d['cantidad'] : 1,
+                        'precio_unitario' => null,
+                        'descripcion_producto' => null,
+                        'id_variante' => null,
                     ];
                 }
             }
@@ -73,18 +94,38 @@ switch ($accion) {
                ->setNombreProveedor(null);
 
         // Procesar detalles opcionales
+        $productosModel = new Productos();
         $detalles = [];
         if (isset($_POST['detalles']) && is_array($_POST['detalles'])) {
-            foreach ($_POST['detalles'] as $d) {
-                $hasDetalle = !empty($d['id_producto']) || !empty($d['nombre_producto']) || !empty($d['link']) || !empty($d['imagen']);
+            foreach ($_POST['detalles'] as $index => $d) {
+                $hasFile = isset($_FILES['detalleImagens']['tmp_name'][$index]) && $_FILES['detalleImagens']['error'][$index] === UPLOAD_ERR_OK;
+                $hasDetalle = !empty($d['id_producto']) || !empty($d['nombre_producto']) || !empty($d['link']) || $hasFile;
                 if ($hasDetalle) {
+                    $imagenRuta = '';
+                    if ($hasFile) {
+                        $categoriaNombre = !empty($d['id_producto']) ? $productosModel->getNombreCategoria($d['id_producto']) : 'sin_categoria';
+                        $nombreImagen = !empty($d['nombre_producto']) ? $d['nombre_producto'] : 'detalle_' . $index;
+                        $fileData = [
+                            'name' => $_FILES['detalleImagens']['name'][$index],
+                            'type' => $_FILES['detalleImagens']['type'][$index],
+                            'tmp_name' => $_FILES['detalleImagens']['tmp_name'][$index],
+                            'error' => $_FILES['detalleImagens']['error'][$index],
+                            'size' => $_FILES['detalleImagens']['size'][$index],
+                        ];
+                        $imagenRuta = $productosModel->subirImagen($fileData, $categoriaNombre, $nombreImagen) ?? '';
+                    }
+
                     $detalles[] = [
                         'tipo' => $d['tipo'] ?? 'producto',
-                        'imagen' => $d['imagen'] ?? '',
-                        'link' => $d['link'] ?? '',
+                        'imagen' => $imagenRuta,
+                        'link' => trim($d['link'] ?? ''),
                         'estado' => $d['estado'] ?? 'pendiente',
-                        'nombre_producto' => $d['nombre_producto'] ?? null,
-                        'id_producto' => $d['id_producto'] ?? null
+                        'nombre_producto' => trim($d['nombre_producto'] ?? '') ?: null,
+                        'id_producto' => $d['id_producto'] ?? null,
+                        'cantidad' => !empty($d['cantidad']) ? (int) $d['cantidad'] : 1,
+                        'precio_unitario' => null,
+                        'descripcion_producto' => null,
+                        'id_variante' => null,
                     ];
                 }
             }
@@ -115,15 +156,38 @@ switch ($accion) {
                ->setNombreProveedor(null);
 
         // Procesar detalles opcionales
+        $productosModel = new Productos();
         $detalles = [];
         if (isset($_POST['detalles']) && is_array($_POST['detalles'])) {
-            foreach ($_POST['detalles'] as $d) {
-                if (!empty($d['tipo'])) {
+            foreach ($_POST['detalles'] as $index => $d) {
+                $hasFile = isset($_FILES['detalleImagens']['tmp_name'][$index]) && $_FILES['detalleImagens']['error'][$index] === UPLOAD_ERR_OK;
+                $hasDetalle = !empty($d['id_producto']) || !empty($d['nombre_producto']) || !empty($d['link']) || $hasFile;
+                if ($hasDetalle) {
+                    $imagenRuta = '';
+                    if ($hasFile) {
+                        $categoriaNombre = !empty($d['id_producto']) ? $productosModel->getNombreCategoria($d['id_producto']) : 'sin_categoria';
+                        $nombreImagen = !empty($d['nombre_producto']) ? $d['nombre_producto'] : 'detalle_' . $index;
+                        $fileData = [
+                            'name' => $_FILES['detalleImagens']['name'][$index],
+                            'type' => $_FILES['detalleImagens']['type'][$index],
+                            'tmp_name' => $_FILES['detalleImagens']['tmp_name'][$index],
+                            'error' => $_FILES['detalleImagens']['error'][$index],
+                            'size' => $_FILES['detalleImagens']['size'][$index],
+                        ];
+                        $imagenRuta = $productosModel->subirImagen($fileData, $categoriaNombre, $nombreImagen) ?? '';
+                    }
+
                     $detalles[] = [
-                        'tipo' => $d['tipo'],
-                        'imagen' => $d['imagen'] ?? '',
-                        'link' => $d['link'] ?? '',
-                        'estado' => $d['estado'] ?? 'pendiente'
+                        'tipo' => $d['tipo'] ?? 'producto',
+                        'imagen' => $imagenRuta,
+                        'link' => trim($d['link'] ?? ''),
+                        'estado' => $d['estado'] ?? 'pendiente',
+                        'nombre_producto' => trim($d['nombre_producto'] ?? '') ?: null,
+                        'id_producto' => $d['id_producto'] ?? null,
+                        'cantidad' => !empty($d['cantidad']) ? (int) $d['cantidad'] : 1,
+                        'precio_unitario' => null,
+                        'descripcion_producto' => null,
+                        'id_variante' => null,
                     ];
                 }
             }
