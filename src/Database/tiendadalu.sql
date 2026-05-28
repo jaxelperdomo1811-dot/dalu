@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 28-05-2026 a las 06:30:26
+-- Tiempo de generación: 29-05-2026 a las 01:45:08
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -99,10 +99,10 @@ CREATE TABLE `detalles_pedido` (
   `id_pedido` int(11) NOT NULL,
   `id_producto` int(11) DEFAULT NULL,
   `tipo` enum('cliente','proveedor') NOT NULL,
-  `imagen` varchar(60) NOT NULL,
-  `link` text NOT NULL,
+  `imagen` varchar(60) DEFAULT NULL,
+  `link` text DEFAULT NULL,
   `fecha_registro` timestamp NOT NULL DEFAULT current_timestamp(),
-  `estado` enum('pendiente','recibido','entregado','') NOT NULL,
+  `estado` enum('pendiente','recibido','entregado','') DEFAULT 'pendiente',
   `nombre_producto` varchar(150) DEFAULT NULL COMMENT 'Para productos vagos',
   `cantidad` int(11) NOT NULL DEFAULT 1,
   `precio_unitario` decimal(10,2) DEFAULT NULL,
@@ -110,6 +110,14 @@ CREATE TABLE `detalles_pedido` (
   `id_variante` int(11) DEFAULT NULL,
   `status_inventario` enum('pendiente','vinculado','creado','ignorado') DEFAULT 'pendiente'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `detalles_pedido`
+--
+
+INSERT INTO `detalles_pedido` (`id`, `id_pedido`, `id_producto`, `tipo`, `imagen`, `link`, `fecha_registro`, `estado`, `nombre_producto`, `cantidad`, `precio_unitario`, `descripcion_producto`, `id_variante`, `status_inventario`) VALUES
+(5, 7, NULL, 'proveedor', 'assets/img/products/sin_categoria/test6.jpeg', '', '2026-05-28 22:03:00', 'pendiente', 'test6', 1, NULL, NULL, NULL, 'pendiente'),
+(6, 7, NULL, 'proveedor', '', 'https://chat.deepseek.com/', '2026-05-28 22:03:00', 'pendiente', 'test7', 2, NULL, NULL, NULL, 'pendiente');
 
 -- --------------------------------------------------------
 
@@ -162,7 +170,12 @@ CREATE TABLE `pedidos` (
 
 INSERT INTO `pedidos` (`id`, `id_proveedor`, `nombre proveedor`, `id_cliente`, `tipo`, `fecha_registro`, `estado`) VALUES
 (1, NULL, 'prueba', NULL, 'propios', '2026-05-28 04:27:15', 'pendiente'),
-(2, NULL, NULL, 1, 'cliente', '2026-05-28 04:28:24', 'pendiente');
+(2, NULL, NULL, 1, 'cliente', '2026-05-28 04:28:24', 'pendiente'),
+(3, NULL, 'prueba2', NULL, 'propios', '2026-05-28 04:37:19', 'pendiente'),
+(4, NULL, 'shein', NULL, 'propios', '2026-05-28 21:43:50', 'pendiente'),
+(5, NULL, 'test4', NULL, 'propios', '2026-05-28 21:52:07', 'pendiente'),
+(6, NULL, 'test5', NULL, 'propios', '2026-05-28 21:57:44', 'pendiente'),
+(7, NULL, 'test6', NULL, 'propios', '2026-05-28 22:03:00', 'pendiente');
 
 -- --------------------------------------------------------
 
@@ -476,7 +489,7 @@ ALTER TABLE `detalles_entrada`
 -- AUTO_INCREMENT de la tabla `detalles_pedido`
 --
 ALTER TABLE `detalles_pedido`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `entradas`
@@ -494,7 +507,7 @@ ALTER TABLE `metodos_pago`
 -- AUTO_INCREMENT de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `preguntas_seguridad`
