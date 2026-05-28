@@ -10,8 +10,6 @@
     <link rel="icon" href="assets/img/dalulisto.png">
     <link rel="stylesheet" href="assets/DataTablet/datatables.css">
     <script src="assets/js/js.js" defer></script>
-    <script src="assets/js/servicios.js" defer></script>
-    <script src="assets/js/especialidades.js" defer></script>
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script src="assets/DataTablet/datatables.min.js" defer></script>
     <script src="assets/DataTablet/tabla.js" defer></script>
@@ -98,8 +96,11 @@
                                             </td>
                                         </tr>
                                         <!-- Modal Editar -->
-                                        <div class="modal fade" id="modalEditar<?= $p['id'] ?>" tabindex="-1">
-                                            <div class="modal-dialog">
+                                        <div class="modal fade modal-edit-product" id="modalEditar<?= $p['id'] ?>" tabindex="-1" 
+                                             data-variantes="<?= htmlspecialchars(json_encode($p['variantes'] ?? []), ENT_QUOTES) ?>"
+                                             data-precio-oferta="<?= htmlspecialchars($p['precio_oferta'] ?? '') ?>"
+                                             data-stock-minimo="<?= htmlspecialchars($p['stock_minimo'] ?? '3') ?>">
+                                            <div class="modal-dialog modal-lg">
                                                 <div class="modal-content">
                                                     <form action="?c=productos&accion=update" method="POST" enctype="multipart/form-data">
                                                         <input type="hidden" name="id" value="<?= $p['id'] ?>">
@@ -109,31 +110,47 @@
                                                                 data-bs-dismiss="modal"></button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <div class="col-md-12">
-                                                                <label for="categoria" class="form-label">Categoría</label>
-                                                                <select class="form-select" name="id_categoria" id="categoria" required>
+                                                            <div class="col-md-12 mb-3">
+                                                                <label for="categoria_<?= $p['id'] ?>" class="form-label">Categoría</label>
+                                                                <select class="form-select" name="id_categoria" id="categoria_<?= $p['id'] ?>" required>
                                                                     <option value="<?= $p['id_categoria'] ?>" selected><?= $p['categoria_nombre'] ?? $p['categoria'] ?></option>
                                                                     <?php foreach ($categorias as $categoria): ?>
                                                                         <option value="<?= $categoria['id'] ?>"><?= htmlspecialchars($categoria['nombre']) ?></option>
                                                                     <?php endforeach; ?>
                                                                 </select>
+                                                                <!-- Contenedor para campos dinámicos según categoría -->
+                                                                <div id="dynamic-attributes-edit-<?= $p['id'] ?>" class="mt-3"></div>
                                                             </div>
                                                             <div class="mb-3">
-                                                                <?php $currentThumb = !empty($p['imagen_principal']) ? $p['imagen_principal'] : 'assets/img/products/default.png'; ?>
+                                                                <?php $currentThumb = !empty($p['imagen_principal']) ? $p['imagen_principal'] : 'assets/img/products/default.jpeg'; ?>
                                                                 <label class="form-label">Imagen actual</label>
                                                                 <div class="mb-2">
                                                                     <img src="<?= htmlspecialchars($currentThumb) ?>" alt="imagen actual" class="img-thumbnail product-thumb" style="width:100px;height:100px;object-fit:cover;cursor:pointer;" data-src="<?= htmlspecialchars($currentThumb) ?>" />
                                                                 </div>
-                                                                <label class="form-label">Cambiar imagen</label>
-                                                                <input type="file" name="imagen" accept="image/*" class="form-control" />
                                                             </div>
                                                             <div class="mb-3">
-                                                                <label for="nombre" class="form-label">Nombre</label>
-                                                                <input type="text" class="form-control" id="nombre" name="nombre" value="<?= $p['nombre'] ?>" required />
+                                                                <label for="nombre_<?= $p['id'] ?>" class="form-label">Nombre</label>
+                                                                <input type="text" class="form-control" id="nombre_<?= $p['id'] ?>" name="nombre" value="<?= $p['nombre'] ?>" required />
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-md-6">
+                                                                    <label for="precio_venta_<?= $p['id'] ?>" class="form-label">Precio</label>
+                                                                    <input type="number" step="0.01" min="0" id="precio_venta_<?= $p['id'] ?>" name="precio_venta" class="form-control" value="<?= htmlspecialchars($p['precio_venta'] ?? $p['precio'] ?? '') ?>" required />
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <label for="precio_compra_<?= $p['id'] ?>" class="form-label">Precio compra</label>
+                                                                    <input type="number" step="0.01" min="0" id="precio_compra_<?= $p['id'] ?>" name="precio_compra" class="form-control" value="<?= htmlspecialchars($p['precio_compra'] ?? '') ?>" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-md-6">
+                                                                    <label for="marca_<?= $p['id'] ?>" class="form-label">Marca</label>
+                                                                    <input type="text" id="marca_<?= $p['id'] ?>" name="marca" class="form-control" value="<?= htmlspecialchars($p['marca'] ?? '') ?>" />
+                                                                </div>
                                                             </div>
                                                             <div class="mb-3">
-                                                                <label for="descripcion" class="form-label">Descripción</label>
-                                                                <textarea class="form-control" id="descripcion" name="descripcion"
+                                                                <label for="descripcion_<?= $p['id'] ?>" class="form-label">Descripción</label>
+                                                                <textarea class="form-control" id="descripcion_<?= $p['id'] ?>" name="descripcion"
                                                                     rows="3"><?= $p['descripcion'] ?></textarea>
                                                             </div>
                                                         </div>
@@ -213,8 +230,11 @@
                                             </td>
                                         </tr>
                                         <!-- Modal Editar -->
-                                        <div class="modal fade" id="modalEditar<?= $pIN['id'] ?>" tabindex="-1">
-                                            <div class="modal-dialog">
+                                        <div class="modal fade modal-edit-product" id="modalEditar<?= $pIN['id'] ?>" tabindex="-1" 
+                                             data-variantes="<?= htmlspecialchars(json_encode($pIN['variantes'] ?? []), ENT_QUOTES) ?>"
+                                             data-precio-oferta="<?= htmlspecialchars($pIN['precio_oferta'] ?? '') ?>"
+                                             data-stock-minimo="<?= htmlspecialchars($pIN['stock_minimo'] ?? '3') ?>">
+                                            <div class="modal-dialog modal-lg">
                                                 <div class="modal-content">
                                                     <form action="?c=productos&accion=update" method="POST" enctype="multipart/form-data">
                                                         <input type="hidden" name="id" value="<?= $pIN['id'] ?>">
@@ -224,32 +244,48 @@
                                                                 data-bs-dismiss="modal"></button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <div class="col-md-12">
-                                                                <label for="categoria" class="form-label">Categoría</label>
-                                                                <select class="form-select" name="id_categoria" id="categoria" required>
+                                                            <div class="col-md-12 mb-3">
+                                                                <label for="categoria_<?= $pIN['id'] ?>" class="form-label">Categoría</label>
+                                                                <select class="form-select" name="id_categoria" id="categoria_<?= $pIN['id'] ?>" required>
                                                                     <option value="<?= $pIN['id_categoria'] ?>" selected><?= $pIN['categoria_nombre'] ?? $pIN['categoria'] ?></option>
                                                                     <?php foreach ($categorias as $categoria): ?>
                                                                         <option value="<?= $categoria['id'] ?>"><?= htmlspecialchars($categoria['nombre']) ?></option>
                                                                     <?php endforeach; ?>
                                                                 </select>
+                                                                <!-- Contenedor para campos dinámicos según categoría -->
+                                                                <div id="dynamic-attributes-edit-<?= $pIN['id'] ?>" class="mt-3"></div>
                                                             </div>
                                                             <div class="mb-3">
-                                                                <label for="nombre" class="form-label">Nombre</label>
-                                                                <input type="text" class="form-control" id="nombre" name="nombre" value="<?= $pIN['nombre'] ?>" required />
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label for="descripcion" class="form-label">Descripción</label>
-                                                                <textarea class="form-control" id="descripcion" name="descripcion"
-                                                                    rows="3"><?= $pIN['descripcion'] ?></textarea>
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <?php $currentThumbIN = !empty($pIN['imagen_principal']) ? $pIN['imagen_principal'] : 'assets/img/products/default.png'; ?>
+                                                                <?php $currentThumbIN = !empty($pIN['imagen_principal']) ? $pIN['imagen_principal'] : 'assets/img/products/default.jpeg'; ?>
                                                                 <label class="form-label">Imagen actual</label>
                                                                 <div class="mb-2">
                                                                     <img src="<?= htmlspecialchars($currentThumbIN) ?>" alt="imagen actual" class="img-thumbnail product-thumb" style="width:100px;height:100px;object-fit:cover;cursor:pointer;" data-src="<?= htmlspecialchars($currentThumbIN) ?>" />
                                                                 </div>
-                                                                <label class="form-label">Cambiar imagen</label>
-                                                                <input type="file" name="imagen" accept="image/*" class="form-control" />
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="nombre_<?= $pIN['id'] ?>" class="form-label">Nombre</label>
+                                                                <input type="text" class="form-control" id="nombre_<?= $pIN['id'] ?>" name="nombre" value="<?= $pIN['nombre'] ?>" required />
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-md-6">
+                                                                    <label for="precio_venta_<?= $pIN['id'] ?>" class="form-label">Precio</label>
+                                                                    <input type="number" step="0.01" min="0" id="precio_venta_<?= $pIN['id'] ?>" name="precio_venta" class="form-control" value="<?= htmlspecialchars($pIN['precio_venta'] ?? $pIN['precio'] ?? '') ?>" required />
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <label for="precio_compra_<?= $pIN['id'] ?>" class="form-label">Precio compra</label>
+                                                                    <input type="number" step="0.01" min="0" id="precio_compra_<?= $pIN['id'] ?>" name="precio_compra" class="form-control" value="<?= htmlspecialchars($pIN['precio_compra'] ?? '') ?>" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-md-6">
+                                                                    <label for="marca_<?= $pIN['id'] ?>" class="form-label">Marca</label>
+                                                                    <input type="text" id="marca_<?= $pIN['id'] ?>" name="marca" class="form-control" value="<?= htmlspecialchars($pIN['marca'] ?? '') ?>" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="descripcion_<?= $pIN['id'] ?>" class="form-label">Descripción</label>
+                                                                <textarea class="form-control" id="descripcion_<?= $pIN['id'] ?>" name="descripcion"
+                                                                    rows="3"><?= $pIN['descripcion'] ?></textarea>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
@@ -509,7 +545,7 @@
                                     <td><?php echo $p['categoria_nombre'] ?? $p['categoria']; ?></td>
                                             <td><?php echo $p['nombre']; ?></td>
                                             <td>
-                                                <?php $thumbInv = !empty($p['imagen_principal']) ? $p['imagen_principal'] : 'assets/img/products/default.png'; ?>
+                                                <?php $thumbInv = !empty($p['imagen_principal']) ? $p['imagen_principal'] : 'assets/img/products/default.jpeg'; ?>
                                                 <img src="<?= htmlspecialchars($thumbInv) ?>" alt="miniatura" class="img-thumbnail product-thumb" style="width:56px;height:56px;object-fit:cover;cursor:pointer;" data-src="<?= htmlspecialchars($thumbInv) ?>" />
                                             </td>
                                             <td><span class="fs-5 fw-bold"><?php echo $p['stock_total'] ?? $p['stock']; ?></span></td>
@@ -643,7 +679,7 @@
 
         <!-- Exponer categorías a JS y cargar script de productos -->
         <script>
-            window.productosCategories = <?php echo json_encode($categorias); ?> || [];
+            window.productosCategories = <?php echo json_encode($categorias ?? [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?: '[]'; ?>;
         </script>
         <script src="assets/js/pages/productos.js" defer></script>
     </body>
