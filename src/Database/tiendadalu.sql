@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-05-2026 a las 01:45:08
+-- Tiempo de generación: 29-05-2026 a las 04:24:25
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -88,6 +88,14 @@ CREATE TABLE `detalles_entrada` (
   `precio_compra` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `detalles_entrada`
+--
+
+INSERT INTO `detalles_entrada` (`id`, `id_entrada`, `id_producto`, `cantidad`, `precio_compra`) VALUES
+(1, 1, 2, 1, 0.00),
+(2, 2, 2, 1, 0.00);
+
 -- --------------------------------------------------------
 
 --
@@ -99,10 +107,10 @@ CREATE TABLE `detalles_pedido` (
   `id_pedido` int(11) NOT NULL,
   `id_producto` int(11) DEFAULT NULL,
   `tipo` enum('cliente','proveedor') NOT NULL,
-  `imagen` varchar(60) DEFAULT NULL,
-  `link` text DEFAULT NULL,
+  `imagen` varchar(60) NOT NULL,
+  `link` text NOT NULL,
   `fecha_registro` timestamp NOT NULL DEFAULT current_timestamp(),
-  `estado` enum('pendiente','recibido','entregado','') DEFAULT 'pendiente',
+  `estado` enum('pendiente','recibido','entregado','') NOT NULL,
   `nombre_producto` varchar(150) DEFAULT NULL COMMENT 'Para productos vagos',
   `cantidad` int(11) NOT NULL DEFAULT 1,
   `precio_unitario` decimal(10,2) DEFAULT NULL,
@@ -116,8 +124,11 @@ CREATE TABLE `detalles_pedido` (
 --
 
 INSERT INTO `detalles_pedido` (`id`, `id_pedido`, `id_producto`, `tipo`, `imagen`, `link`, `fecha_registro`, `estado`, `nombre_producto`, `cantidad`, `precio_unitario`, `descripcion_producto`, `id_variante`, `status_inventario`) VALUES
-(5, 7, NULL, 'proveedor', 'assets/img/products/sin_categoria/test6.jpeg', '', '2026-05-28 22:03:00', 'pendiente', 'test6', 1, NULL, NULL, NULL, 'pendiente'),
-(6, 7, NULL, 'proveedor', '', 'https://chat.deepseek.com/', '2026-05-28 22:03:00', 'pendiente', 'test7', 2, NULL, NULL, NULL, 'pendiente');
+(1, 3, NULL, 'proveedor', 'assets/img/products/sin_categoria/franela.png', '', '2026-05-28 23:19:45', 'pendiente', 'franela', 1, NULL, NULL, NULL, 'pendiente'),
+(2, 3, NULL, 'proveedor', '', 'facebook.com', '2026-05-28 23:19:45', 'pendiente', 'jean', 1, NULL, NULL, NULL, 'pendiente'),
+(3, 4, 2, 'proveedor', 'assets/img/products/sin_categoria/franela.png', '', '2026-05-29 00:00:22', 'pendiente', 'franela', 1, NULL, NULL, NULL, 'vinculado'),
+(4, 5, NULL, 'proveedor', 'assets/img/products/sin_categoria/jean.png', '', '2026-05-29 01:04:15', 'pendiente', 'jean', 1, NULL, NULL, NULL, 'ignorado'),
+(5, 5, 2, 'proveedor', '', 'https://us.shein.com/Women-s-Vest-Brasil-South-America-Flag-Print-Design-Exquisite-Elegant-And-Fashionable-Exuding-Feminine-Charm-Perfect-For-Holiday-Gifts-Mother-s-Day-Coachella-Music-Festival-Memorial-Day-Suitable-For-Spring-And-Summer-Suitable-For-Casual-Sports-Vacation-Travel-Beach-Wear-And-Daily-Wear-Widely-Versatile-Applicable-To-Various-Occasions-Ladies-Elegant-Suits-Blouses-Summer-Outfits-Vacation-Outfits-Women-Travel-Wear-Tank-Top-p-444142921.html?src_identifier=on%3DONE_THIRD_COMPONENT%60cn%3DONE_THIRD_COMPONENT_2%60hz%3D-%60jc%3DsheinPicks_10751%60ps%3D1_4&src_module=all&src_tab_page_id=page_home1780016622648&mallCode=1&pageListType=4&detailBusinessFrom=0-1_444142921%7C0-2', '2026-05-29 01:04:15', 'pendiente', 'franela brasil', 1, NULL, NULL, NULL, 'vinculado');
 
 -- --------------------------------------------------------
 
@@ -134,6 +145,14 @@ CREATE TABLE `entradas` (
   `fecha_registro` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `entradas`
+--
+
+INSERT INTO `entradas` (`id`, `id_proveedor`, `numero_lote`, `fecha_ingreso`, `total`, `fecha_registro`) VALUES
+(1, 1, 'LOTE-PED-4-20260529', '2026-05-29', 0.00, '2026-05-29 00:36:04'),
+(2, 4, 'LOTE-PED-5-20260529', '2026-05-29', 0.00, '2026-05-29 01:08:41');
+
 -- --------------------------------------------------------
 
 --
@@ -147,6 +166,23 @@ CREATE TABLE `metodos_pago` (
   `imagen` varchar(30) NOT NULL,
   `activo` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pagos`
+--
+
+CREATE TABLE `pagos` (
+  `id` int(11) NOT NULL,
+  `id_metodo_pago` int(11) NOT NULL,
+  `monto` decimal(10,2) NOT NULL,
+  `fecha` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `tasa` decimal(10,2) NOT NULL,
+  `comprobante` varchar(500) DEFAULT NULL,
+  `referencia` varchar(500) DEFAULT NULL,
+  `estado` enum('por verificar','verificado','','') NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 -- --------------------------------------------------------
 
@@ -169,13 +205,11 @@ CREATE TABLE `pedidos` (
 --
 
 INSERT INTO `pedidos` (`id`, `id_proveedor`, `nombre proveedor`, `id_cliente`, `tipo`, `fecha_registro`, `estado`) VALUES
-(1, NULL, 'prueba', NULL, 'propios', '2026-05-28 04:27:15', 'pendiente'),
-(2, NULL, NULL, 1, 'cliente', '2026-05-28 04:28:24', 'pendiente'),
-(3, NULL, 'prueba2', NULL, 'propios', '2026-05-28 04:37:19', 'pendiente'),
-(4, NULL, 'shein', NULL, 'propios', '2026-05-28 21:43:50', 'pendiente'),
-(5, NULL, 'test4', NULL, 'propios', '2026-05-28 21:52:07', 'pendiente'),
-(6, NULL, 'test5', NULL, 'propios', '2026-05-28 21:57:44', 'pendiente'),
-(7, NULL, 'test6', NULL, 'propios', '2026-05-28 22:03:00', 'pendiente');
+(1, NULL, 'prueba', NULL, 'propios', '2026-05-28 04:27:15', 'entregado'),
+(2, NULL, NULL, 1, 'cliente', '2026-05-28 04:28:24', 'cancelado'),
+(3, NULL, 'shein', NULL, 'propios', '2026-05-28 23:19:45', 'entregado'),
+(4, NULL, 'shein', NULL, 'propios', '2026-05-29 00:00:22', 'recibido'),
+(5, NULL, 'amazon', NULL, 'propios', '2026-05-29 01:04:15', 'recibido');
 
 -- --------------------------------------------------------
 
@@ -230,7 +264,8 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`id`, `id_categoria`, `nombre`, `descripcion`, `precio_venta`, `precio_oferta`, `stock_total`, `stock_minimo`, `marca`, `imagen_principal`, `activo`, `ventas_totales`, `fecha_registro`) VALUES
-(1, 2, 'sueter champions', 'sueter', 12.00, 0.00, 10, 3, NULL, NULL, 1, 0, '2026-05-27 23:18:05');
+(1, 2, 'sueter champions', 'sueter champions', 12.00, NULL, 1, 3, NULL, NULL, 0, 0, '2026-05-27 23:18:05'),
+(2, 2, 'Franela', 'franelas', 10.00, NULL, 2, 3, NULL, NULL, 1, 0, '2026-05-28 22:57:39');
 
 -- --------------------------------------------------------
 
@@ -254,7 +289,10 @@ CREATE TABLE `producto_variantes` (
 --
 
 INSERT INTO `producto_variantes` (`id`, `id_producto`, `nombre_variante`, `atributos`, `precio_adicional`, `stock`, `imagen_variante`, `activo`) VALUES
-(1, 1, 'Principal', '{\"talla\":\"s\",\"color\":\"rojo\"}', 0.00, 10, '', 1);
+(1, 1, 'Principal', '{\"talla\":\"s\",\"color\":\"rojo\"}', 0.00, 10, '', 0),
+(2, 2, 'Franela BLANCA', '{\"talla\":\"xl\",\"color\":\"BLANCA\"}', 0.00, 1, NULL, 1),
+(3, 2, 'franela verde', '{\"talla\":\"s\",\"color\":\"verde\"}', 0.00, 1, NULL, 1),
+(4, 1, 'Principal', '{\"talla\":\"l\",\"color\":\"gris\"}', 0.00, 1, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -266,6 +304,7 @@ CREATE TABLE `proveedores` (
   `id` int(11) NOT NULL,
   `razon_social` varchar(20) NOT NULL,
   `documento_identidad` varchar(15) NOT NULL,
+  `rif` varchar(20) DEFAULT NULL,
   `nombre` varchar(50) NOT NULL DEFAULT '0',
   `apellido` varchar(11) NOT NULL,
   `telefono_1` varchar(25) DEFAULT NULL,
@@ -274,6 +313,14 @@ CREATE TABLE `proveedores` (
   `active` tinyint(1) NOT NULL DEFAULT 1,
   `direccion` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `proveedores`
+--
+
+INSERT INTO `proveedores` (`id`, `razon_social`, `documento_identidad`, `rif`, `nombre`, `apellido`, `telefono_1`, `telefono_2`, `correo`, `active`, `direccion`) VALUES
+(1, 'shein', 'N/A', NULL, 'shein', '', NULL, NULL, 'sin_correo@ejemplo.com', 1, NULL),
+(4, 'amazon', 'N/A', NULL, 'amazon', '', NULL, NULL, 'sin_correo@ejemplo.com', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -327,6 +374,25 @@ INSERT INTO `roles` (`id`, `nombre`, `descripcion`, `activo`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `tasa`
+--
+
+CREATE TABLE `tasa` (
+  `id` int(11) NOT NULL,
+  `valor` decimal(10,2) NOT NULL,
+  `fecha_actualizacion` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
+
+--
+-- Volcado de datos para la tabla `tasa`
+--
+
+INSERT INTO `tasa` (`id`, `valor`, `fecha_actualizacion`) VALUES
+(2, 544.58, '2026-05-28 21:02:50');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `usuarios`
 --
 
@@ -344,10 +410,10 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `id_rol`, `nombre`, `usuario`, `clave`, `estado`) VALUES
-(1, 1, 'Administrador', 'admin', 'c775e7b757ede630cd0aa1113bd102661ab38829ca52a6422ab782862f268646', 1),
+(1, 1, 'Administrador', 'admin', 'c775e7b757ede630cd0aa1113bd102661ab38829ca52a6422ab782862f268646', 0),
 (2, 2, 'Vendedor', 'ventas', 'c775e7b757ede630cd0aa1113bd102661ab38829ca52a6422ab782862f268646', 0),
 (3, NULL, 'Rafael', 'kesto', 'c775e7b757ede630cd0aa1113bd102661ab38829ca52a6422ab782862f268646', 1),
-(4, 1, 'Userrrrrt', 'kestico2', 'c775e7b757ede630cd0aa1113bd102661ab38829ca52a6422ab782862f268646', 1),
+(4, 1, 'Userrrrrt', 'kestico2', 'c775e7b757ede630cd0aa1113bd102661ab38829ca52a6422ab782862f268646', 0),
 (5, 1, 'rollinera', 'rollinera', 'adba3cd291eab6784a2ff059fdb770a94d821e92fbbe1fe075649cc90d2e0711', 1),
 (6, 3, 'PEPE', 'PEPEM', '8a9bcf1e51e812d0af8465a8dbcc9f741064bf0af3b3d08e6b0246437c19f7fb', 1);
 
@@ -402,6 +468,13 @@ ALTER TABLE `metodos_pago`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `pagos`
+--
+ALTER TABLE `pagos`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idMetodoPago` (`id_metodo_pago`);
+
+--
 -- Indices de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
@@ -436,8 +509,6 @@ ALTER TABLE `producto_variantes`
 --
 ALTER TABLE `proveedores`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `correo` (`correo`),
-  ADD UNIQUE KEY `documento_identidad` (`documento_identidad`),
   ADD UNIQUE KEY `telefono_1` (`telefono_1`),
   ADD UNIQUE KEY `telefono_2` (`telefono_2`);
 
@@ -453,6 +524,12 @@ ALTER TABLE `respuestas_seguridad`
 -- Indices de la tabla `roles`
 --
 ALTER TABLE `roles`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `tasa`
+--
+ALTER TABLE `tasa`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -483,19 +560,19 @@ ALTER TABLE `clientes`
 -- AUTO_INCREMENT de la tabla `detalles_entrada`
 --
 ALTER TABLE `detalles_entrada`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `detalles_pedido`
 --
 ALTER TABLE `detalles_pedido`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `entradas`
 --
 ALTER TABLE `entradas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `metodos_pago`
@@ -504,10 +581,16 @@ ALTER TABLE `metodos_pago`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT de la tabla `pagos`
+--
+ALTER TABLE `pagos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=107;
+
+--
 -- AUTO_INCREMENT de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `preguntas_seguridad`
@@ -519,19 +602,19 @@ ALTER TABLE `preguntas_seguridad`
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `producto_variantes`
 --
 ALTER TABLE `producto_variantes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `proveedores`
 --
 ALTER TABLE `proveedores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `respuestas_seguridad`
@@ -544,6 +627,12 @@ ALTER TABLE `respuestas_seguridad`
 --
 ALTER TABLE `roles`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `tasa`
+--
+ALTER TABLE `tasa`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
@@ -575,6 +664,12 @@ ALTER TABLE `detalles_pedido`
 --
 ALTER TABLE `entradas`
   ADD CONSTRAINT `entradas_ibfk_1` FOREIGN KEY (`id_proveedor`) REFERENCES `proveedores` (`id`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `pagos`
+--
+ALTER TABLE `pagos`
+  ADD CONSTRAINT `pagos_ibfk_1` FOREIGN KEY (`id_metodo_pago`) REFERENCES `metodos_pago` (`id`);
 
 --
 -- Filtros para la tabla `pedidos`

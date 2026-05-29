@@ -1,0 +1,73 @@
+RAW INPUT:
+
+
+POST Data:
+Array
+(
+    [id] => 2
+    [id_categoria] => 2
+    [precio_oferta] => 
+    [stock_minimo] => 3
+    [variantes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 2
+                    [nombre_variante] => Franela roja
+                    [stock] => 1
+                    [precio_adicional] => 0.00
+                    [imagen_variante] => 
+                    [talla] => xxl
+                    [color] => Rojo
+                )
+
+            [1] => Array
+                (
+                    [id] => 3
+                    [nombre_variante] => franela verde
+                    [stock] => 1
+                    [precio_adicional] => 0.00
+                    [imagen_variante] => 
+                    [talla] => s
+                    [color] => verde
+                )
+
+        )
+
+    [nombre] => Franela
+    [precio_venta] => 10.00
+    [precio_compra] => 
+    [marca] => 
+    [descripcion] => franelas
+)
+
+Data to save: Array
+(
+    [nombre_variante] => Franela roja
+    [atributos] => Array
+        (
+            [talla] => xxl
+            [color] => Rojo
+        )
+
+    [precio_adicional] => 0.00
+    [stock] => 1
+    [imagen_variante] => 
+)
+
+Update variante 2: OK
+Data to save: Array
+(
+    [nombre_variante] => franela verde
+    [atributos] => Array
+        (
+            [talla] => s
+            [color] => verde
+        )
+
+    [precio_adicional] => 0.00
+    [stock] => 1
+    [imagen_variante] => 
+)
+
+Update variante 3: OK
