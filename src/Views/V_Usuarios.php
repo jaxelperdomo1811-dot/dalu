@@ -479,7 +479,7 @@
                         </select>
                     <div class="mb-3 mt-3">
                         <label for="respuesta1Agregar" class="form-label">Respuesta 1</label>
-                        <input type="text" maxlength="20" pattern="[a-z\s]{3,}" title="Ingrese solo texto en minuscula, entre 3 y 20 caracteres" name="respuesta_s_1" class="form-control" id="respuesta1Agregar" placeholder="Respuesta" required />
+                        <input type="text" maxlength="20" pattern="[a-z0-9\s]{3,}" title="Ingrese solo letras, números o espacios, entre 3 y 20 caracteres" name="respuesta_s_1" class="form-control" id="respuesta1Agregar" placeholder="Respuesta" required />
                     </div>
                     </div>
                     <div class="col-md-12 mb-3">
@@ -492,7 +492,7 @@
                         </select>
                     <div class="mb-3 mt-3">
                         <label for="respuesta2Agregar" class="form-label">Respuesta 2</label>
-                        <input type="text" maxlength="20" pattern="[a-z\s]{3,}" title="Ingrese solo texto en minuscula, entre 3 y 20 caracteres" name="respuesta_s_2" class="form-control" id="respuesta2Agregar" placeholder="Respuesta" required />
+                        <input type="text" maxlength="20" pattern="[a-z0-9\s]{3,}" title="Ingrese solo letras, números o espacios, entre 3 y 20 caracteres" name="respuesta_s_2" class="form-control" id="respuesta2Agregar" placeholder="Respuesta" required />
                     </div>
                     </div>
                     <div class="col-md-12 mb-3">
@@ -505,7 +505,7 @@
                         </select>
                     <div class="mb-3 mt-3">
                         <label for="respuesta3Agregar" class="form-label">Respuesta 3</label>
-                        <input type="text" maxlength="20" pattern="[a-z\s]{3,}" title="Ingrese solo texto en minuscula, entre 3 y 20 caracteres" name="respuesta_s_3" class="form-control" id="respuesta3Agregar" placeholder="Respuesta" required />
+                        <input type="text" maxlength="20" pattern="[a-z0-9\s]{3,}" title="Ingrese solo texto en minuscula, entre 3 y 20 caracteres" name="respuesta_s_3" class="form-control" id="respuesta3Agregar" placeholder="Respuesta" required />
                     </div>
                     </div>
                 </div>
