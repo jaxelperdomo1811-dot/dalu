@@ -8,6 +8,11 @@ use Exception;
 $accion = $_GET['accion'] ?? $_POST['accion'] ?? 'view';
 
 switch($accion) {
+    case "log_form":
+        $input = file_get_contents('php://input');
+        file_put_contents('debug_browser_form.txt', "BROWSER LOG:\n" . print_r(json_decode($input, true), true) . "\n", FILE_APPEND);
+        exit();
+
     case "view":
         $productoModel = new Productos();
         $productos = $productoModel->search();
@@ -41,13 +46,13 @@ case "insert":
         $_POST['nombre'],               // nombre
         $_POST['descripcion'],          // descripcion
         $_POST['precio_venta'],         // precio_venta
-        $_POST['precio_compra'] ?? 0,   // precio_compra
-        $_POST['marca'] ?? null         // marca
+        !empty($_POST['precio_compra']) ? $_POST['precio_compra'] : 0,   // precio_compra
+        !empty($_POST['marca']) ? $_POST['marca'] : null         // marca
     );
     
     // Configurar opciones adicionales
-    $producto->setPrecioOferta($_POST['precio_oferta'] ?? null)
-             ->setStockMinimo($_POST['stock_minimo'] ?? 3);
+    $producto->setPrecioOferta($_POST['precio_oferta'] !== '' ? $_POST['precio_oferta'] : null)
+             ->setStockMinimo($_POST['stock_minimo'] !== '' ? $_POST['stock_minimo'] : 3);
     
     // ========== PROCESAR IMAGEN PRINCIPAL CON CATEGORÍA DINÁMICA ==========
     if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
@@ -99,9 +104,9 @@ case "insert":
                 $variantes[] = [
                     'nombre_variante' => $variante['nombre_variante'],
                     'atributos' => $atributos,
-                    'precio_adicional' => $variante['precio_adicional'] ?? 0,
-                    'stock' => $variante['stock'],
-                    'imagen_variante' => $variante['imagen_variante'] ?? null,
+                    'precio_adicional' => $variante['precio_adicional'] !== '' ? $variante['precio_adicional'] : 0,
+                    'stock' => $variante['stock'] !== '' ? $variante['stock'] : 0,
+                    'imagen_variante' => !empty($variante['imagen_variante']) ? $variante['imagen_variante'] : null,
                     'activo' => 1
                 ];
             }
@@ -132,11 +137,11 @@ case "update":
              ->setIdCategoria($_POST['id_categoria'])
              ->setNombre($_POST['nombre'])
              ->setDescripcion($_POST['descripcion'])
-             ->setPrecioCompra($_POST['precio_compra'] ?? 0)
+             ->setPrecioCompra($_POST['precio_compra'] !== '' ? $_POST['precio_compra'] : 0)
              ->setPrecioVenta($_POST['precio_venta'])
-             ->setPrecioOferta($_POST['precio_oferta'] ?? null)
-             ->setStockMinimo($_POST['stock_minimo'] ?? 3)
-             ->setMarca($_POST['marca'] ?? null);
+             ->setPrecioOferta($_POST['precio_oferta'] !== '' ? $_POST['precio_oferta'] : null)
+             ->setStockMinimo($_POST['stock_minimo'] !== '' ? $_POST['stock_minimo'] : 3)
+             ->setMarca(!empty($_POST['marca']) ? $_POST['marca'] : null);
     
     // ========== PROCESAR NUEVA IMAGEN SI SE SUBIÓ ==========
     if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
@@ -180,6 +185,7 @@ case "update":
     }
     
     if ($producto->update()) {
+        file_put_contents('debug_variantes.txt', "RAW INPUT:\n" . file_get_contents('php://input') . "\n\nPOST Data:\n" . print_r($_POST, true) . "\n");
         // ========== PROCESAR VARIANTES ELIMINADAS ==========
         if (isset($_POST['deleted_variants']) && is_array($_POST['deleted_variants'])) {
             foreach ($_POST['deleted_variants'] as $variante_id) {
@@ -204,20 +210,27 @@ case "update":
                     $variante_data = [
                         'nombre_variante' => $v['nombre_variante'],
                         'atributos' => $atributos,
-                        'precio_adicional' => $v['precio_adicional'] ?? 0,
-                        'stock' => $v['stock'],
-                        'imagen_variante' => $v['imagen_variante'] ?? null
+                        'precio_adicional' => isset($v['precio_adicional']) && $v['precio_adicional'] !== '' ? $v['precio_adicional'] : 0,
+                        'stock' => isset($v['stock']) && $v['stock'] !== '' ? $v['stock'] : 0,
+                        'imagen_variante' => !empty($v['imagen_variante']) ? $v['imagen_variante'] : null
                     ];
+                    file_put_contents('debug_variantes.txt', "Data to save: " . print_r($variante_data, true) . "\n", FILE_APPEND);
 
                     if (!empty($v['id'])) {
                         // Actualizar variante existente
-                        $producto->updateVariante($v['id'], $variante_data);
+                        $res = $producto->updateVariante($v['id'], $variante_data);
+                        file_put_contents('debug_variantes.txt', "Update variante {$v['id']}: " . ($res ? 'OK' : 'FAIL') . "\n", FILE_APPEND);
                     } else {
                         // Agregar nueva variante
-                        $producto->addVariante($_POST['id'], $variante_data);
+                        $res = $producto->addVariante($_POST['id'], $variante_data);
+                        file_put_contents('debug_variantes.txt', "Add variante: " . ($res ? 'OK' : 'FAIL') . "\n", FILE_APPEND);
                     }
+                } else {
+                    file_put_contents('debug_variantes.txt', "Variante ignorada: falta nombre o stock. Data: " . print_r($v, true) . "\n", FILE_APPEND);
                 }
             }
+        } else {
+            file_put_contents('debug_variantes.txt', "No se recibieron variantes en POST.\n", FILE_APPEND);
         }
 
         $_SESSION['success'] = "Producto y sus variantes actualizados exitosamente.";
@@ -310,9 +323,9 @@ case "update":
         $variante_data = [
             'nombre_variante' => $_POST['nombre_variante'],
             'atributos' => $atributos,
-            'precio_adicional' => $_POST['precio_adicional'] ?? 0,
-            'stock' => $_POST['stock'],
-            'imagen_variante' => $_POST['imagen_variante'] ?? null
+            'precio_adicional' => !empty($_POST['precio_adicional']) ? $_POST['precio_adicional'] : 0,
+            'stock' => !empty($_POST['stock']) ? $_POST['stock'] : 0,
+            'imagen_variante' => !empty($_POST['imagen_variante']) ? $_POST['imagen_variante'] : null
         ];
         
         $producto = new Productos();
@@ -346,9 +359,9 @@ case "update":
         $variante_data = [
             'nombre_variante' => $_POST['nombre_variante'],
             'atributos' => $atributos,
-            'precio_adicional' => $_POST['precio_adicional'] ?? 0,
-            'stock' => $_POST['stock'],
-            'imagen_variante' => $_POST['imagen_variante'] ?? null
+            'precio_adicional' => !empty($_POST['precio_adicional']) ? $_POST['precio_adicional'] : 0,
+            'stock' => !empty($_POST['stock']) ? $_POST['stock'] : 0,
+            'imagen_variante' => !empty($_POST['imagen_variante']) ? $_POST['imagen_variante'] : null
         ];
         
         $producto = new Productos();

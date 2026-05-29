@@ -105,6 +105,36 @@
             header("Location: ?c=clientes&accion=view");
             exit();
             break;
+        case 'consultarCedula':
+            header('Content-Type: application/json');
+            $tipoPersona = $_GET['tipo_persona'] ?? '';
+            $cedula = $_GET['cedula'] ?? '';
+            
+            $nacionalidad = str_replace('-', '', $tipoPersona);
+            
+            $envFile = __DIR__ . '/../../.env';
+            if (file_exists($envFile)) {
+                $env = parse_ini_file($envFile);
+                $app_id = $env['app_id'] ?? '';
+                $token = $env['token'] ?? '';
+                
+                $url = "https://api.cedula.com.ve/api/v1?app_id={$app_id}&token={$token}&nacionalidad={$nacionalidad}&cedula={$cedula}";
+                
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                $response = curl_exec($ch);
+                curl_close($ch);
+                
+                if ($response !== false) {
+                    echo $response;
+                    exit;
+                }
+            }
+            echo json_encode(['error' => 'No se pudo consultar la API']);
+            exit;
+            break;
         default:
             http_response_code(404);
             require_once __DIR__ . '/../Views/errors/404.php';

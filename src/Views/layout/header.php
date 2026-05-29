@@ -1,3 +1,9 @@
+<?php
+use Lenovo\Dalu\Models\Tasa;
+$tasaModel_header = new Tasa();
+$tasaActual_header = $tasaModel_header->getLatest();
+$tasaValor = $tasaActual_header ? number_format((float)$tasaActual_header['valor'], 2) : '0.00';
+?>
 <script>
 // Forzar recarga
 window.onpageshow = function(event) {
@@ -124,6 +130,12 @@ window.onpageshow = function(event) {
         d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z" />
     </svg>
 
+    <div class="d-flex align-items-center ms-auto me-4" id="bcvDiv" style="cursor:pointer;" data-bs-toggle="modal" data-bs-target="#modalTasa">
+        <img class="img-bcv me-2" src="assets/img/bcv2.png" alt="BCV" width="40">
+        <span class="text-dark fw-semibold me-2">Dólar BCV:</span>
+        <span class="text-success fw-bold" id="Dolar_bcv"><?= htmlspecialchars($tasaValor) ?> Bs</span>
+    </div>
+
     <form action="index.php?c=login&a=Logout" method="POST">
       <button type="submit" style="background: none; border: none; cursor: pointer;">
         <svg fill="#000000" height="30px" width="30px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
@@ -144,6 +156,92 @@ window.onpageshow = function(event) {
     </form>
   </nav>
   <!-- NAVBAR -->
+
+<!-- Modal Tasa -->
+<div class="modal fade" id="modalTasa" tabindex="-1" aria-labelledby="modalTasaLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="formTasa">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTasaLabel">Actualizar Tasa BCV</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="inputTasa" class="form-label">Valor actual (Bs):</label>
+            <input type="text" step="0.01" class="form-control" id="inputTasa" name="valor" required>
+            <input type="hidden" id="inputTasaId" name="id">
+          </div>
+          <div class="mb-2">
+            <button type="button" class="btn btn-outline-primary btn-sm" id="btnActualizarApi">Actualizar con API BCV</button>
+          </div>
+          <div>
+            <label class="form-label">Última actualización:</label>
+            <span id="fechaActualizacion" class="fw-bold"></span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Guardar</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Modal Tasa BCV
+    $('#modalTasa').on('show.bs.modal', function () {
+        $.get('?c=Home&accion=tasa', function(data) {
+            try {
+                let tasa = JSON.parse(data);
+                if (!tasa.error) {
+                    $('#inputTasa').val(tasa.valor);
+                    $('#inputTasaId').val(tasa.id);
+                    $('#fechaActualizacion').text(tasa.fecha_actualizacion);
+                } else {
+                    $('#inputTasa').val('');
+                    $('#inputTasaId').val('');
+                    $('#fechaActualizacion').text('No disponible');
+                }
+            } catch (e) {
+                console.error("Error al parsear JSON:", e);
+            }
+        });
+    });
+
+    $('#btnActualizarApi').on('click', function() {
+        fetch("https://ve.dolarapi.com/v1/dolares")
+            .then(res => res.json())
+            .then(data => {
+                $('#inputTasa').val(parseFloat(data[0].promedio).toFixed(2));
+            }).catch(err => {
+                console.error("Error al obtener la API del BCV", err);
+                alert("Error al obtener la tasa desde la API.");
+            });
+    });
+
+    $('#formTasa').on('submit', function(e) {
+        e.preventDefault();
+        $.post('?c=Home&accion=tasa', $(this).serialize(), function(response) {
+            try {
+                let data = JSON.parse(response);
+                if (!data.error) {
+                    $('#modalTasa').modal('hide');
+                    // Actualizar el valor en la UI
+                    let newVal = parseFloat($('#inputTasa').val()).toFixed(2);
+                    $('#Dolar_bcv').text(newVal + ' Bs');
+                } else {
+                    alert(data.message || 'Error al actualizar');
+                }
+            } catch (e) {
+                console.error("Error al guardar la tasa:", e);
+            }
+        });
+    });
+});
+</script>
 
   <?php if (isset($error) && $error !== ''): ?>
     <div class="container-fluid mt-3">

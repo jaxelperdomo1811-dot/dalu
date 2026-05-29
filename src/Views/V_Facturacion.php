@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="assets/bootstrap.min.css">
     <link rel="icon" href="assets/img/dalulisto.png">
     <script src="assets/js/js.js" defer></script>
-    <script src="assets/js/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/libs/jquery-3.7.1.min.js"></script>
 </head>
 
 <body>

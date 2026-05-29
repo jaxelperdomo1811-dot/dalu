@@ -14,7 +14,7 @@
     <script src="assets/js/citas.js" defer></script>
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script src="assets/DataTablet/datatables.min.js" defer></script>
-        <script src="assets/js/pages/pedidos2.js" defer></script>
+    <script src="assets/js/pages/pedidos2.js" defer></script>
     <script src="assets/DataTablet/tabla.js" defer></script>
     <title>Pedidos</title>
 </head>
@@ -28,6 +28,19 @@
         $clientes = $clientes ?? [];
         $proveedores = $proveedores ?? [];
         $productos = $productos ?? [];
+        
+        $ordenEstadosTienda = [
+            'pendiente' => 'confirmado',
+            'confirmado' => 'enviado',
+            'enviado' => 'recibido',
+        ];
+
+        $ordenEstadosCliente = [
+            'pendiente' => 'confirmado',
+            'confirmado' => 'enviado',
+            'enviado' => 'recibido',
+            'recibido' => 'entregado',
+        ];
     ?>
     <script>
         window.PRODUCTS = <?php echo json_encode($productos); ?>;
@@ -55,104 +68,38 @@
 
                     <div class="table-responsive">
                         <table id="tablaTienda" class="table-DT table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">Nro #</th>
-                                            <th scope="col">Nombre Proveedor</th>
-                                            <th scope="col">Fecha Pedido</th>
-                                            <th scope="col">Estado</th>
-                                            <th scope="col">Accion</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($pedidos as $p): ?>
-                                            <tr>
-                                                <td><?php echo htmlspecialchars($p['id']); ?></td>
-                                                <td><?php echo htmlspecialchars($p['nombre_proveedor']); ?></td>
-                                                <td><?php echo htmlspecialchars($p['fecha_registro']); ?></td>
-                                                <td><?php echo htmlspecialchars($p['estado']); ?></td>
-                                                <td>
-                                                    <button type="button" class="btn btn-sm btn-info m-1 btn-ver-detalles" data-id="<?= $p['id'] ?>">Detalles</button>
-                                                    <button class="btn btn-sm btn-primary m-1" data-bs-toggle="modal" data-bs-target="#modalEditarTienda<?= $p['id'] ?>">Editar</button>
-                                                    <form action="?c=pedidos&accion=avanzarEstado" method="POST" class="d-inline">
-                                                        <input type="hidden" name="id" value="<?= $p['id'] ?>">
-                                                        <button type="submit" class="btn btn-sm btn-warning m-1"<?= in_array($p['estado'], ['entregado','cancelado']) ? ' disabled' : '' ?>>Siguiente estado</button>
-                                                    </form>
-                                                    <button type="button" class="btn btn-sm btn-danger m-1" data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminarTienda<?= $p['id'] ?>">Cancelar</button>
-                                                </td>
-                                            </tr>
-                                            <!-- Modal Confirmar Eliminación -->
-                                            <div class="modal fade" id="modalConfirmarEliminarTienda<?= $p['id'] ?>" tabindex="-1">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <form action="?c=usuarios&accion=delete" method="POST">
-                                                            <input type="hidden" name="id" value="<?= $p['id'] ?>">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title">Confirmar eliminación</h5>
-                                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                ¿Estás seguro de que deseas cambiar el estado del pedido nro <?= htmlspecialchars($p['id']) ?> de <?= htmlspecialchars($p['nombre_proveedor']) ?>?
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                                <button type="submit" class="btn btn-danger">Aceptar</button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                                <!-- Modal Agregar pedido tienda -->
-                                <div class="modal fade" id="modalAgregarPT" tabindex="-1" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <form action="?c=pedidos&accion=insertTienda" method="POST" enctype="multipart/form-data" class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Agregar Pedido Tienda</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="mb-3">
-                                                    <label for="nombreProveedorTienda" class="form-label">Nombre del proveedor</label>
-                                                    <input type="text" name="nombre_proveedor" id="nombreProveedorTienda" class="form-control" placeholder="Proveedor" required />
-                                                </div>
-                                                <input type="hidden" name="estado" value="pendiente" />
-                                                <input type="hidden" name="tipo" value="propios" />
-
-                                                <!-- Detalle opcional -->
-                                                    
-                                                    <div id="detallesContainerTienda">
-                                                        <div class="detalle-row d-flex gap-2 mb-2" data-index="0">
-                                                            <input type="hidden" name="detalles[0][tipo]" value="producto">
-                                                            <select name="detalles[0][id_producto]" class="form-select form-select-sm">
-                                                                <option value="">-- Producto existente --</option>
-                                                                <?php foreach ($productos as $prod): ?>
-                                                                    <option value="<?= $prod['id'] ?>"><?= htmlspecialchars($prod['nombre']) ?></option>
-                                                                <?php endforeach; ?>
-                                                            </select>
-                                                            <input type="text" name="detalles[0][nombre_producto]" class="form-control" placeholder="Nombre producto (opcional)">
-                                                            <input type="number" name="detalles[0][cantidad]" class="form-control" placeholder="Cantidad" min="1" value="1">
-                                                            <input type="text" name="detalles[0][link]" class="form-control" placeholder="Link (opcional)">
-                                                            <input type="file" name="detalleImagens[0]" accept="image/*" class="form-control form-control-sm">
-                                                            <button type="button" class="btn btn-sm btn-danger btn-remove-detalle">Eliminar</button>
-                                                        </div>
-                                                    </div>
-                                                    <div class="d-flex gap-2 mt-2">
-                                                        <button type="button" class="btn btn-sm btn-secondary" id="addDetalleTienda">+ Agregar detalle</button>
-                                                    </div>
-                                                    <input type="hidden" name="detalles[0][estado]" value="pendiente" />
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                                <button type="submit" class="btn btn-primary">Guardar</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Nro #</th>
+                                    <th scope="col">Nombre Proveedor</th>
+                                    <th scope="col">Fecha Pedido</th>
+                                    <th scope="col">Estado</th>
+                                    <th scope="col">Accion</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($pedidos as $p): ?>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($p['id']); ?></td>
+                                        <td><?php echo htmlspecialchars($p['nombre_proveedor']); ?></td>
+                                        <td><?php echo htmlspecialchars($p['fecha_registro']); ?></td>
+                                        <td><?php echo htmlspecialchars($p['estado']); ?></td>
+                                        <td>
+                                            <button type="button" class="btn btn-sm btn-info m-1 btn-ver-detalles" data-id="<?= $p['id'] ?>">Detalles</button>
+                                            <button type="button" class="btn btn-sm btn-warning m-1" data-bs-toggle="modal" data-bs-target="#modalAvanzarEstadoTienda<?= $p['id'] ?>" <?= in_array($p['estado'], ['recibido','cancelado']) ? ' disabled' : '' ?>>Siguiente estado</button>
+                                            <?php if ($p['estado'] === 'recibido'): ?>
+                                                <a href="?c=entradas&accion=crearDesdePedido&pedido_id=<?= $p['id'] ?>" class="btn btn-sm btn-success m-1">Crear Entrada</a>
+                                            <?php else: ?>
+                                                <button type="button" class="btn btn-sm btn-success m-1" disabled title="El pedido debe estar en estado 'recibido'">Crear Entrada</button>
+                                            <?php endif; ?>
+                                            <button type="button" class="btn btn-sm btn-danger m-1" data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminarTienda<?= $p['id'] ?>">Cancelar</button>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
                 <!-- Modulo Clientes -->
                 <div class="tab-pane fade" id="modulo-clientes">
@@ -176,106 +123,222 @@
                                 <?php foreach ($pedidosC as $p): ?>
                                     <tr>
                                         <td><?php echo htmlspecialchars($p['id']); ?></td>
-                                        <td><?php echo htmlspecialchars($p['nombre_cliente']); ?></td>
-                                        <td><?php echo htmlspecialchars($p['fecha_pedido']); ?></td>
+                                        <td><?php echo htmlspecialchars($p['nombre_cliente'] ?? ''); ?></td>
+                                        <td><?php echo htmlspecialchars($p['fecha_pedido'] ?? ''); ?></td>
                                         <td><?php echo htmlspecialchars($p['estado']); ?></td>
                                         <td>
                                             <button type="button" class="btn btn-sm btn-info m-1 btn-ver-detalles" data-id="<?= $p['id'] ?>">Detalles</button>
-                                            <button class="btn btn-sm btn-primary m-1" data-bs-toggle="modal" data-bs-target="#modalEditarCliente<?= $p['id'] ?>">Editar</button>
-                                            <form action="?c=pedidos&accion=avanzarEstado" method="POST" class="d-inline">
-                                                <input type="hidden" name="id" value="<?= $p['id'] ?>">
-                                                <button type="submit" class="btn btn-sm btn-warning m-1"<?= in_array($p['estado'], ['entregado','cancelado']) ? ' disabled' : '' ?>>Siguiente estado</button>
-                                            </form>
-                                            <button type="button" class="btn btn-sm btn-danger m-1" data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminarCliente<?= $p['id'] ?>">Cancel
-                                            <button class="btn btn-sm btn-primary m-1" data-bs-toggle="modal" data-bs-target="#modalEditarCliente<?= $p['id'] ?>">Editar</button>
-                                            <form action="?c=pedidos&accion=avanzarEstado" method="POST" class="d-inline">
-                                                <input type="hidden" name="id" value="<?= $p['id'] ?>">
-                                                <button type="submit" class="btn btn-sm btn-warning m-1"<?= in_array($p['estado'], ['entregado','cancelado']) ? ' disabled' : '' ?>>Siguiente estado</button>
-                                            </form>
+                                            <button type="button" class="btn btn-sm btn-warning m-1" data-bs-toggle="modal" data-bs-target="#modalAvanzarEstadoCliente<?= $p['id'] ?>" <?= in_array($p['estado'], ['entregado','cancelado']) ? ' disabled' : '' ?>>Siguiente estado</button>
                                             <button type="button" class="btn btn-sm btn-danger m-1" data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminarCliente<?= $p['id'] ?>">Cancelar</button>
                                         </td>
-                                    </tr>cliente'] ?? $p['nombre_
-                                    <!-- Modal Confirmar Eliminación -->
-                                    <div class="modal fade" id="modalConfirmarEliminarCliente<?= $p['id'] ?>" tabindex="-1">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <form action="?c=pedidos&accion=cancelarPedido" method="POST">
-                                                    <input type="hidden" name="id" value="<?= $p['id'] ?>">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title">Cancelar pedido</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        ¿Estás seguro de que deseas cancelar el pedido nro <?= htmlspecialchars($p['id']) ?> de <?= htmlspecialchars($p['nombre_proveedor']) ?>?
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                        <button type="submit" class="btn btn-danger">Confirmar</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    </tr>
                                 <?php endforeach; ?>
                             </tbody>
                         </table>
-                    </div>
-                    <!-- Modal Agregar pedido cliente -->
-                    <div class="modal fade" id="modalAgregarPC" tabindex="-1" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <form action="?c=pedidos&accion=insertCliente" method="POST" enctype="multipart/form-data" class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Agregar Pedido de Cliente</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                                </div>
-                                <div class="modal-body">
-                                    
-                                        <div class="mb-3">
-                                            <label for="clientePedido" class="form-label">Cliente</label>
-                                            <select class="form-select" name="id_cliente" id="clientePedido" required>
-                                                <option value="" disabled selected>Seleccione un cliente</option>
-                                                <?php foreach ($clientes as $cliente): ?>
-                                                    <option value="<?= $cliente['id'] ?>"><?= htmlspecialchars($cliente['nombre'] . ' ' . $cliente['apellido']) ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </div>
-                                    <input type="hidden" name="estado" value="pendiente" />
-                                    <input type="hidden" name="tipo" value="cliente" />
-
-                                        <!-- Detalle opcional -->
-                                            
-                                            <div id="detallesContainerCliente">
-                                                <div class="detalle-row d-flex gap-2 mb-2" data-index="0">
-                                                    <input type="hidden" name="detalles[0][tipo]" value="producto">
-                                                    <select name="detalles[0][id_producto]" class="form-select form-select-sm">
-                                                        <option value="">-- Producto existente --</option>
-                                                        <?php foreach ($productos as $prod): ?>
-                                                            <option value="<?= $prod['id'] ?>"><?= htmlspecialchars($prod['nombre']) ?></option>
-                                                        <?php endforeach; ?>
-                                                    </select>
-                                                    <input type="text" name="detalles[0][nombre_producto]" class="form-control" placeholder="Nombre producto (opcional)">
-                                                    <input type="number" name="detalles[0][cantidad]" class="form-control" placeholder="Cantidad" min="1" value="1">
-                                                    <input type="text" name="detalles[0][link]" class="form-control" placeholder="Link (opcional)">
-                                                    <input type="file" name="detalleImagens[0]" accept="image/*" class="form-control form-control-sm">
-                                                    <button type="button" class="btn btn-sm btn-danger btn-remove-detalle">Eliminar</button>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex gap-2 mt-2">
-                                                <button type="button" class="btn btn-sm btn-secondary" id="addDetalleCliente">+ Agregar detalle</button>
-                                            </div>
-                                            <input type="hidden" name="detalles[0][estado]" value="pendiente" />
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                    <button type="submit" class="btn btn-primary">Guardar</button>
-                                </div>
-                            </form>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </main>
+
+    <!-- Modales para Tienda -->
+    <?php foreach ($pedidos as $p): 
+        $siguienteEstado = $ordenEstadosTienda[$p['estado']] ?? null;
+    ?>
+        <!-- Confirmar Siguiente Estado Tienda -->
+        <?php if ($siguienteEstado): ?>
+        <div class="modal fade" id="modalAvanzarEstadoTienda<?= $p['id'] ?>" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="?c=pedidos&accion=avanzarEstado" method="POST">
+                        <input type="hidden" name="id" value="<?= $p['id'] ?>">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Avanzar Estado del Pedido</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            ¿Estás seguro de que deseas cambiar el estado del pedido nro <?= htmlspecialchars($p['id']) ?> de <strong><?= htmlspecialchars($p['estado']) ?></strong> a <strong class="text-warning"><?= htmlspecialchars($siguienteEstado) ?></strong>?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-warning">Avanzar a <?= htmlspecialchars($siguienteEstado) ?></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
+
+        <!-- Confirmar Eliminación Tienda -->
+        <div class="modal fade" id="modalConfirmarEliminarTienda<?= $p['id'] ?>" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="?c=pedidos&accion=cancelarPedido" method="POST">
+                        <input type="hidden" name="id" value="<?= $p['id'] ?>">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Cancelar pedido</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            ¿Estás seguro de que deseas cancelar el pedido nro <?= htmlspecialchars($p['id']) ?> de <?= htmlspecialchars($p['nombre_proveedor']) ?>?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-danger">Cancelar Pedido</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <?php endforeach; ?>
+
+    <!-- Modales para Clientes -->
+    <?php foreach ($pedidosC as $p): 
+        $siguienteEstado = $ordenEstadosCliente[$p['estado']] ?? null;
+    ?>
+        <!-- Confirmar Siguiente Estado Cliente -->
+        <?php if ($siguienteEstado): ?>
+        <div class="modal fade" id="modalAvanzarEstadoCliente<?= $p['id'] ?>" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="?c=pedidos&accion=avanzarEstado" method="POST">
+                        <input type="hidden" name="id" value="<?= $p['id'] ?>">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Avanzar Estado del Pedido</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            ¿Estás seguro de que deseas cambiar el estado del pedido nro <?= htmlspecialchars($p['id']) ?> de <strong><?= htmlspecialchars($p['estado']) ?></strong> a <strong class="text-warning"><?= htmlspecialchars($siguienteEstado) ?></strong>?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-warning">Avanzar a <?= htmlspecialchars($siguienteEstado) ?></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
+
+        <!-- Confirmar Eliminación Cliente -->
+        <div class="modal fade" id="modalConfirmarEliminarCliente<?= $p['id'] ?>" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="?c=pedidos&accion=cancelarPedido" method="POST">
+                        <input type="hidden" name="id" value="<?= $p['id'] ?>">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Cancelar pedido</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            ¿Estás seguro de que deseas cancelar el pedido nro <?= htmlspecialchars($p['id']) ?> de <?= htmlspecialchars($p['nombre_cliente'] ?? 'Cliente') ?>?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-danger">Cancelar Pedido</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <?php endforeach; ?>
+
+    <!-- Modal Agregar Pedido Tienda -->
+    <div class="modal fade" id="modalAgregarPT" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form action="?c=pedidos&accion=insertTienda" method="POST" enctype="multipart/form-data" class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Agregar Pedido Tienda</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="nombreProveedorTienda" class="form-label">Nombre del proveedor</label>
+                        <input type="text" name="nombre_proveedor" id="nombreProveedorTienda" class="form-control" placeholder="Proveedor" required />
+                    </div>
+                    <input type="hidden" name="estado" value="pendiente" />
+                    <input type="hidden" name="tipo" value="propios" />
+
+                    <!-- Detalle opcional -->
+                    <div id="detallesContainerTienda">
+                        <div class="detalle-row d-flex gap-2 mb-2" data-index="0">
+                            <input type="hidden" name="detalles[0][tipo]" value="producto">
+                            <select name="detalles[0][id_producto]" class="form-select form-select-sm">
+                                <option value="">-- Producto existente --</option>
+                                <?php foreach ($productos as $prod): ?>
+                                    <option value="<?= $prod['id'] ?>"><?= htmlspecialchars($prod['nombre']) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <input type="text" name="detalles[0][nombre_producto]" class="form-control" placeholder="Nombre producto (opcional)">
+                            <input type="number" name="detalles[0][cantidad]" class="form-control" placeholder="Cantidad" min="1" value="1">
+                            <input type="text" name="detalles[0][link]" class="form-control" placeholder="Link (opcional)">
+                            <input type="file" name="detalleImagens[0]" accept="image/*" class="form-control form-control-sm">
+                            <button type="button" class="btn btn-sm btn-danger btn-remove-detalle">Eliminar</button>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2 mt-2">
+                        <button type="button" class="btn btn-sm btn-secondary" id="addDetalleTienda">+ Agregar detalle</button>
+                    </div>
+                    <input type="hidden" name="detalles[0][estado]" value="pendiente" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Agregar Pedido Cliente -->
+    <div class="modal fade" id="modalAgregarPC" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form action="?c=pedidos&accion=insertCliente" method="POST" enctype="multipart/form-data" class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Agregar Pedido de Cliente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="clientePedido" class="form-label">Cliente</label>
+                        <select class="form-select" name="id_cliente" id="clientePedido" required>
+                            <option value="" disabled selected>Seleccione un cliente</option>
+                            <?php foreach ($clientes as $cliente): ?>
+                                <option value="<?= $cliente['id'] ?>"><?= htmlspecialchars($cliente['nombre'] . ' ' . $cliente['apellido']) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <input type="hidden" name="estado" value="pendiente" />
+                    <input type="hidden" name="tipo" value="cliente" />
+
+                    <!-- Detalle opcional -->
+                    <div id="detallesContainerCliente">
+                        <div class="detalle-row d-flex gap-2 mb-2" data-index="0">
+                            <input type="hidden" name="detalles[0][tipo]" value="producto">
+                            <select name="detalles[0][id_producto]" class="form-select form-select-sm">
+                                <option value="">-- Producto existente --</option>
+                                <?php foreach ($productos as $prod): ?>
+                                    <option value="<?= $prod['id'] ?>"><?= htmlspecialchars($prod['nombre']) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <input type="text" name="detalles[0][nombre_producto]" class="form-control" placeholder="Nombre producto (opcional)">
+                            <input type="number" name="detalles[0][cantidad]" class="form-control" placeholder="Cantidad" min="1" value="1">
+                            <input type="text" name="detalles[0][link]" class="form-control" placeholder="Link (opcional)">
+                            <input type="file" name="detalleImagens[0]" accept="image/*" class="form-control form-control-sm">
+                            <button type="button" class="btn btn-sm btn-danger btn-remove-detalle">Eliminar</button>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2 mt-2">
+                        <button type="button" class="btn btn-sm btn-secondary" id="addDetalleCliente">+ Agregar detalle</button>
+                    </div>
+                    <input type="hidden" name="detalles[0][estado]" value="pendiente" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- Modal Detalles del Pedido -->
     <div class="modal fade" id="modalDetallesPedido" tabindex="-1" aria-hidden="true">

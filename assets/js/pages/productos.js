@@ -14,10 +14,31 @@ document.addEventListener('DOMContentLoaded', () => {
             ? modal.querySelector(`#dynamic-attributes-edit-${productId}`)
             : modal.querySelector('#dynamic-attributes');
 
+        fetch('?c=productos&accion=log_form', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                log: 'initProductModal',
+                isEdit: isEdit,
+                productId: productId,
+                selectCatFound: !!selectCat,
+                dynamicContainerFound: !!dynamicContainer,
+                selectCatValue: selectCat ? selectCat.value : null
+            })
+        });
+
         if (!selectCat || !dynamicContainer) return;
 
-        // Cargar datos preexistentes si es el modal de edición
-        const existingVariants = isEdit ? JSON.parse(modal.getAttribute('data-variantes') || '[]') : [];
+        let existingVariants = [];
+        try {
+            existingVariants = isEdit ? JSON.parse(modal.getAttribute('data-variantes') || '[]') : [];
+        } catch(e) {
+            fetch('?c=productos&accion=log_form', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({log: 'JSON parse error', error: e.message, data: modal.getAttribute('data-variantes')})
+            });
+        }
         const precioOferta = isEdit ? modal.getAttribute('data-precio-oferta') : '';
         const stockMinimo = isEdit ? modal.getAttribute('data-stock-minimo') || '3' : '3';
 
@@ -213,14 +234,28 @@ document.addEventListener('DOMContentLoaded', () => {
     // Inicializar modal de agregar
     const addModal = document.getElementById('modalAgregar');
     if (addModal) {
-        initProductModal(addModal);
+        try {
+            initProductModal(addModal);
+        } catch (e) {
+            console.error('Error init addModal', e);
+        }
     }
 
     // Inicializar modales de editar
     const editModals = document.querySelectorAll('.modal-edit-product');
     editModals.forEach(modal => {
-        initProductModal(modal);
+        try {
+            initProductModal(modal);
+        } catch (e) {
+            fetch('?c=productos&accion=log_form', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({log: 'Crash in initProductModal', error: e.message, stack: e.stack, modalId: modal.id})
+            });
+            console.error('Error in initProductModal:', e);
+        }
     });
+
     // Mostrar imagen en modal al hacer click en miniatura (delegación)
     document.addEventListener('click', (e) => {
         const target = e.target;
@@ -232,6 +267,27 @@ document.addEventListener('DOMContentLoaded', () => {
             if (modalEl && typeof bootstrap !== 'undefined') {
                 const modal = new bootstrap.Modal(modalEl);
                 modal.show();
+            }
+        } else if (target && target.classList && target.classList.contains('view-variants-btn')) {
+            const productId = target.getAttribute('data-id');
+            const modalBody = document.getElementById('variantsModalBody');
+            const modalEl = document.getElementById('variantsModal');
+            
+            if (modalBody && modalEl && productId) {
+                modalBody.innerHTML = '<div class="text-center"><div class="spinner-border text-primary" role="status"></div><p class="mt-2">Cargando variantes...</p></div>';
+                
+                const modal = new bootstrap.Modal(modalEl);
+                modal.show();
+                
+                fetch(`?c=productos&accion=viewVariantes&id=${productId}`)
+                    .then(response => response.text())
+                    .then(html => {
+                        modalBody.innerHTML = html;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching variants:', error);
+                        modalBody.innerHTML = '<div class="alert alert-danger">Error al cargar las variantes.</div>';
+                    });
             }
         }
     });

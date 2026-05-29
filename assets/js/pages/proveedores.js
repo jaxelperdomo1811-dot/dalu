@@ -114,4 +114,59 @@ document.addEventListener('DOMContentLoaded', () => {
             phoneField.value = iti.getNumber();
         }
     }, true);
+
+    // API Cedula integration
+    const cedulaInput = document.getElementById('cedula');
+    const tipoPersonaSelect = document.getElementById('tipo_persona');
+    const nombreInput = document.getElementById('nombre');
+    const apellidoInput = document.getElementById('apellido');
+    const mensajeCedula = document.getElementById('mensaje-cedula');
+
+    if (cedulaInput && tipoPersonaSelect) {
+        cedulaInput.addEventListener('blur', async () => {
+            const cedula = cedulaInput.value.trim();
+            const tipo = tipoPersonaSelect.value;
+            
+            if (cedula.length >= 6 && tipo) {
+                try {
+                    mensajeCedula.style.color = 'blue';
+                    mensajeCedula.innerText = 'Consultando documento...';
+                    
+                    const response = await fetch(`?c=proveedores&accion=consultarCedula&tipo_persona=${tipo}&cedula=${cedula}`);
+                    const textData = await response.text();
+                    
+                    try {
+                        const data = JSON.parse(textData);
+                        if (data.data) {
+                            const persona = data.data;
+                            const modal = cedulaInput.closest('.modal') || document;
+                            const nInput = modal.querySelector('input[name="nombre"]');
+                            const aInput = modal.querySelector('input[name="apellido"]');
+                            const rInput = modal.querySelector('input[name="rif"]');
+                            
+                            if (nInput) nInput.value = `${persona.primer_nombre || ''} ${persona.segundo_nombre || ''}`.trim();
+                            if (aInput) aInput.value = `${persona.primer_apellido || ''} ${persona.segundo_apellido || ''}`.trim();
+                            if (rInput && persona.rif) rInput.value = persona.rif;
+                            
+                            mensajeCedula.style.color = 'green';
+                            mensajeCedula.innerText = 'Datos encontrados.';
+                        } else {
+                            mensajeCedula.style.color = 'red';
+                            mensajeCedula.innerText = 'Documento no encontrado.';
+                        }
+                    } catch (e) {
+                        console.error('Invalid JSON response', textData);
+                        mensajeCedula.style.color = 'red';
+                        mensajeCedula.innerText = 'Error al parsear la respuesta.';
+                    }
+                } catch (error) {
+                    console.error('Error al consultar documento:', error);
+                    mensajeCedula.style.color = 'red';
+                    mensajeCedula.innerText = 'Error al conectar con la API.';
+                }
+            } else {
+                mensajeCedula.innerText = '';
+            }
+        });
+    }
 });

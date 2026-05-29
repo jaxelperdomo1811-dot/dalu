@@ -4,6 +4,7 @@ namespace Lenovo\Dalu\Controllers;
 use Lenovo\Dalu\Models\Clientes;
 use Lenovo\Dalu\Models\Productos;
 use Lenovo\Dalu\Models\Usuarios;
+use Lenovo\Dalu\Models\Tasa;
 
 // Obtener la acción desde GET o POST, o establecer un valor por defecto
 $accion = $_GET['accion'] ?? $_POST['accion'] ?? 'view';
@@ -43,6 +44,33 @@ switch($accion) {
         }
         
         require_once __DIR__ . "/../Views/home/contacto.php";
+        break;
+        
+    case "tasa":
+        $tasaModel = new Tasa();
+        
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $valor = $_POST['valor'] ?? null;
+            $id = $_POST['id'] ?? null;
+            
+            if ($valor !== null) {
+                if ($tasaModel->update($id, $valor)) {
+                    echo json_encode(['error' => false, 'message' => 'Tasa actualizada correctamente.']);
+                } else {
+                    echo json_encode(['error' => true, 'message' => 'Error al actualizar la tasa.']);
+                }
+            } else {
+                echo json_encode(['error' => true, 'message' => 'Valor requerido.']);
+            }
+        } else {
+            $tasaActual = $tasaModel->getLatest();
+            if ($tasaActual) {
+                $tasaActual['error'] = false;
+                echo json_encode($tasaActual);
+            } else {
+                echo json_encode(['error' => true]);
+            }
+        }
         break;
         
     default:

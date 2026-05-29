@@ -69,6 +69,7 @@
                                             <th scope="col">Nombre</th>
                                             <th scope="col">Apellido</th>
                                             <th scope="col">Razon social</th>
+                                            <th scope="col">RIF</th>
                                             <th scope="col">Documento de identidad</th>
                                             <th scope="col">Teléfono</th>
                                             <th scope="col">Teléfono 2</th>
@@ -83,6 +84,7 @@
                                                 <td class="align-items-center"><?php echo $p['nombre']; ?></td>
                                                 <td class="align-items-center"><?php echo $p['apellido']; ?></td>
                                                 <td class="align-items-center"><?php echo $p['razon_social']; ?></td>
+                                                <td class="align-items-center"><?php echo $p['rif']; ?></td>
                                                 <td class="align-items-center"><?php echo $p['documento_identidad']; ?></td>
                                                 <td class="align-items-center"><?php echo $p['telefono']; ?></td>
                                                 <td class="align-items-center"><?php echo $p['telefono2']; ?></td>
@@ -111,8 +113,15 @@
                                                                         <input type="text" minlength="3" maxlength="50" pattern="[A-Za-z0-9\s]{3,}" title="Ingrese solo texto, entre 3 y 50 caracteres" name="nombre" class="form-control" placeholder="Nombre" value="<?php echo $p['nombre'] ?>" required />
                                                                     </div>
                                                                     <div class="col-md-6">
-                                                                        <label for="rif" class="form-label">Razon social</label>
-                                                                        <input type="text" minlength="5" maxlength="15" title="Ingrese solo texto/numeros" name="rif" class="form-control" placeholder="Razon social" value="<?php echo $p['rif'] ?>" required />
+                                                                        <label for="razon_social" class="form-label">Razon social</label>
+                                                                        <input type="text" minlength="5" maxlength="50" title="Ingrese razon social" name="razon_social" class="form-control" placeholder="Razon social" value="<?php echo $p['razon_social'] ?>" required />
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                                <div class="row mb-3">
+                                                                    <div class="col-md-6">
+                                                                        <label for="rif" class="form-label">RIF</label>
+                                                                        <input type="text" minlength="5" maxlength="15" title="Ingrese solo texto/numeros" name="rif" class="form-control" placeholder="RIF" value="<?php echo $p['rif'] ?>" required />
                                                                     </div>
                                                                 </div>
 
@@ -181,6 +190,7 @@
                                             <th scope="col">Nombre</th>
                                             <th scope="col">Apellido</th>
                                             <th scope="col">Razon social</th>
+                                            <th scope="col">RIF</th>
                                             <th scope="col">Documento de identidad</th>
                                             <th scope="col">Teléfono</th>
                                             <th scope="col">Teléfono 2 </th>
@@ -195,6 +205,7 @@
                                                 <td><?php echo $pIN['nombre']; ?></t
                                                 <td><?php echo $p['apellido']; ?></td>d>
                                                 <td><?php echo $pIN['razon_social']; ?></td>
+                                                <td><?php echo $pIN['rif']; ?></td>
                                                 <td><?php echo $pIN['documento_identidad']; ?></td>
                                                 <td><?php echo $pIN['telefono']; ?></td>
                                                 <td><?php echo $pIN['telefono2']; ?></td>
@@ -223,8 +234,14 @@
                                                                         <input type="text" minlength="3" maxlength="50" pattern="[A-Za-z0-9\s]{3,}" title="Ingrese solo texto, entre 3 y 50 caracteres" name="nombre" class="form-control" placeholder="Nombre" value="<?php echo $pIN['nombre'] ?>" required />
                                                                     </div>
                                                                     <div class="col-md-6">
-                                                                        <label for="rif" class="form-label">Razon social</label>
-                                                                        <input type="text" minlength="5" maxlength="15" title="Ingrese solo texto/numeros" name="rif" class="form-control" placeholder="Razon social" value="<?php echo $pIN['rif'] ?>" required />
+                                                                        <label for="razon_social" class="form-label">Razon social</label>
+                                                                        <input type="text" minlength="5" maxlength="50" title="Ingrese razon social" name="razon_social" class="form-control" placeholder="Razon social" value="<?php echo $pIN['razon_social'] ?>" required />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row mb-3">
+                                                                    <div class="col-md-6">
+                                                                        <label for="rif" class="form-label">RIF</label>
+                                                                        <input type="text" minlength="5" maxlength="15" title="Ingrese solo texto/numeros" name="rif" class="form-control" placeholder="RIF" value="<?php echo $pIN['rif'] ?>" required />
                                                                     </div>
                                                                 </div>
 
@@ -360,9 +377,13 @@
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <label for="razon_social" class="form-label">Razon social</label>
-                            <input type="text" minlength="5" maxlength="15" title="Ingrese solo texto/numeros" name="razon_social" class="form-control" placeholder="Razon social" required />
+                            <input type="text" minlength="5" maxlength="50" title="Ingrese razon social" name="razon_social" class="form-control" placeholder="Razon social" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label for="rif" class="form-label">RIF</label>
+                            <input type="text" minlength="5" maxlength="15" title="Ingrese RIF" name="rif" class="form-control" placeholder="RIF" required />
                         </div>
                     </div>
                     <div class="row mb-3">

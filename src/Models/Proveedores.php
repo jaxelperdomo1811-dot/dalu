@@ -12,8 +12,9 @@
         private $telefono2;
         private $email;
         private $direccion;
+        private $rif;
 
-        public function __construct($id = null, $nombre = null, $apellido =null, $razon_social = null, $documento_identidad = null, $telefono = null, $telefono2 = null, $email = null, $direccion = null) {
+        public function __construct($id = null, $nombre = null, $apellido =null, $razon_social = null, $documento_identidad = null, $telefono = null, $telefono2 = null, $email = null, $direccion = null, $rif = null) {
             parent::__construct();
             $this->id = $id;
             $this->nombre = $nombre;
@@ -24,6 +25,7 @@
             $this->telefono2 = $telefono2;
             $this->email = $email;
             $this->direccion = $direccion;
+            $this->rif = $rif;
         }
 
         public function setId($id) { $this->id = $id; return $this; }
@@ -35,6 +37,7 @@
         public function setTelefono2($telefono2) { $this->telefono2 = $telefono2; return $this; }
         public function setEmail($email) { $this->email = $email; return $this; }
         public function setDireccion($direccion) { $this->direccion = $direccion; return $this; }
+        public function setRif($rif) { $this->rif = $rif; return $this; }
 
         public function getId() { return $this->id; }
         public function getNombre() { return $this->nombre; }
@@ -45,12 +48,14 @@
         public function getTelefono2() { return $this->telefono2; }
         public function getEmail() { return $this->email; }
         public function getDireccion() { return $this->direccion; }
+        public function getRif() { return $this->rif; }
 
         public function insert() {
-            $sql = "INSERT INTO proveedores (razon_social, documento_identidad, nombre, apellido, telefono_1, telefono_2, correo, direccion, active) 
-                    VALUES (:razon_social, :documento_identidad, :nombre, :apellido, :telefono, :telefono2, :email, :direccion, 1)";
+            $sql = "INSERT INTO proveedores (razon_social, rif, documento_identidad, nombre, apellido, telefono_1, telefono_2, correo, direccion, active) 
+                    VALUES (:razon_social, :rif, :documento_identidad, :nombre, :apellido, :telefono, :telefono2, :email, :direccion, 1)";
             $stmt = $this->prepare($sql);
             $stmt->bindParam(":razon_social", $this->razon_social);
+            $stmt->bindParam(":rif", $this->rif);
             $stmt->bindParam(":documento_identidad", $this->documento_identidad);
             $stmt->bindParam(":nombre", $this->nombre);
             $stmt->bindParam(":apellido",$this->apellido);
@@ -68,7 +73,7 @@
 
         public function search() {
             // Selecting DB columns but aliasing them to match view expectations
-            $sql = "SELECT id, razon_social as razon_social, documento_identidad, nombre, apellido, telefono_1 as telefono, telefono_2 as telefono2, correo as email, direccion 
+            $sql = "SELECT id, razon_social as razon_social, rif, documento_identidad, nombre, apellido, telefono_1 as telefono, telefono_2 as telefono2, correo as email, direccion 
                     FROM proveedores WHERE active = 1";
             $stmt = $this->prepare($sql);
             $stmt->execute();
@@ -76,7 +81,7 @@
         }
 
         public function searchInactive() {
-            $sql = "SELECT id, razon_social as razon_social, documento_identidad, nombre, apellido, telefono_1 as telefono, telefono_2 as telefono2, correo as email, direccion 
+            $sql = "SELECT id, razon_social as razon_social, rif, documento_identidad, nombre, apellido, telefono_1 as telefono, telefono_2 as telefono2, correo as email, direccion 
                     FROM proveedores WHERE active = 0";
             $stmt = $this->prepare($sql);
             $stmt->execute();
@@ -85,10 +90,11 @@
 
         public function update() {
             $sql = "UPDATE proveedores 
-                    SET razon_social = :razon_social, documento_identidad = :documento_identidad, nombre = :nombre, apellido = :apellido, telefono_1 = :telefono, telefono_2 = :telefono2, correo = :email, direccion = :direccion 
+                    SET razon_social = :razon_social, rif = :rif, documento_identidad = :documento_identidad, nombre = :nombre, apellido = :apellido, telefono_1 = :telefono, telefono_2 = :telefono2, correo = :email, direccion = :direccion 
                     WHERE id = :id";
             $stmt = $this->prepare($sql);
             $stmt->bindParam(":razon_social", $this->razon_social);
+            $stmt->bindParam(":rif", $this->rif);
             $stmt->bindParam(":documento_identidad", $this->documento_identidad);
             $stmt->bindParam(":nombre", $this->nombre);
             $stmt->bindParam(":apellido", $this->apellido);

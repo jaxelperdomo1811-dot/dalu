@@ -328,6 +328,111 @@ switch ($accion) {
         echo $html;
         break;
 
+    case 'resolverDetalles':
+        $pedidoId = $_GET['id'] ?? null;
+        if (!$pedidoId) {
+            $_SESSION['error'] = 'ID de pedido inválido.';
+            header('Location: ?c=pedidos&accion=view');
+            exit();
+        }
+        
+        $pedidoModel = new Pedidos();
+        $pedido = $pedidoModel->getPedidoConDetallesPendientes($pedidoId);
+        
+        if (!$pedido) {
+            $_SESSION['error'] = 'Pedido no encontrado.';
+            header('Location: ?c=pedidos&accion=view');
+            exit();
+        }
+        
+        if (empty($pedido['detalles_pendientes'])) {
+            $_SESSION['success'] = 'Todos los detalles del pedido ya están resueltos.';
+            // En caso de que ya estén resueltos, podría redirigir de vuelta o a crear entrada
+            header('Location: ?c=pedidos&accion=view');
+            exit();
+        }
+        
+        $productos = (new Productos())->search(); // Para el buscador de productos existentes
+        $categorias = (new \Lenovo\Dalu\Models\Categorias())->search(); // Para el modal de nuevo producto
+        
+        require_once __DIR__ . '/../Views/V_ResolverDetalles.php';
+        break;
+
+    case 'vincularDetalleAjax':
+        header('Content-Type: application/json');
+        $detalleId = $_POST['detalle_id'] ?? null;
+        $idProducto = $_POST['id_producto'] ?? null;
+        $idVariante = !empty($_POST['id_variante']) ? $_POST['id_variante'] : null;
+        
+        if (!$detalleId || !$idProducto) {
+            echo json_encode(['success' => false, 'error' => 'Faltan datos requeridos']);
+            exit();
+        }
+        
+        $pedidoModel = new Pedidos();
+        $success = $pedidoModel->vincularDetalleAProducto($detalleId, $idProducto, $idVariante);
+        
+        echo json_encode(['success' => $success]);
+        exit();
+        break;
+
+    case 'crearProductoDesdeDetalleAjax':
+        header('Content-Type: application/json');
+        $detalleId = $_POST['detalle_id'] ?? null;
+        
+        $productoData = [
+            'nombre' => $_POST['nombre'] ?? '',
+            'id_categoria' => $_POST['id_categoria'] ?? null,
+            'precio_venta' => $_POST['precio_venta'] ?? 0,
+            'precio_compra' => $_POST['precio_compra'] ?? 0,
+            'cantidad' => $_POST['cantidad'] ?? 1,
+            'marca' => $_POST['marca'] ?? null,
+            'descripcion' => $_POST['descripcion'] ?? '',
+            'atributos' => !empty($_POST['atributos']) ? json_decode($_POST['atributos'], true) : []
+        ];
+        
+        // Manejo de imagen opcional si viene en FormData
+        if (isset($_FILES['imagen_producto']) && $_FILES['imagen_producto']['error'] === UPLOAD_ERR_OK) {
+            $productosModel = new Productos();
+            $categoriaNombre = $productosModel->getNombreCategoria($productoData['id_categoria']);
+            $fileData = [
+                'name' => $_FILES['imagen_producto']['name'],
+                'type' => $_FILES['imagen_producto']['type'],
+                'tmp_name' => $_FILES['imagen_producto']['tmp_name'],
+                'error' => $_FILES['imagen_producto']['error'],
+                'size' => $_FILES['imagen_producto']['size'],
+            ];
+            $productoData['imagen'] = $productosModel->subirImagen($fileData, $categoriaNombre, $productoData['nombre']);
+        }
+        
+        if (!$detalleId || !$productoData['nombre'] || !$productoData['id_categoria']) {
+            echo json_encode(['success' => false, 'error' => 'Faltan datos obligatorios del producto']);
+            exit();
+        }
+        
+        $pedidoModel = new Pedidos();
+        $success = $pedidoModel->crearProductoDesdeDetalle($detalleId, $productoData);
+        
+        echo json_encode(['success' => $success !== false]);
+        exit();
+        break;
+
+    case 'ignorarDetalleAjax':
+        header('Content-Type: application/json');
+        $detalleId = $_POST['detalle_id'] ?? null;
+        
+        if (!$detalleId) {
+            echo json_encode(['success' => false, 'error' => 'ID de detalle inválido']);
+            exit();
+        }
+        
+        $pedidoModel = new Pedidos();
+        $success = $pedidoModel->ignorarDetalle($detalleId);
+        
+        echo json_encode(['success' => $success]);
+        exit();
+        break;
+
     default:
         http_response_code(404);
         require_once __DIR__ . '/../Views/errors/404.php';

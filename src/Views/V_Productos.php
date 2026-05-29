@@ -95,7 +95,198 @@
                                                     data-bs-target="#modalConfirmarEliminar<?= $p['id'] ?>">Desactivar</button>
                                             </td>
                                         </tr>
-                                        <!-- Modal Editar -->
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Productos Inactivos -->
+                        <div class="tab-pane fade" id="inactivos">
+                            <div class="table-responsive">
+                                <table id="tablaInactivos" class="table-DT table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Categoria</th>
+                                            <th scope="col">Nombre</th>
+                                            <th scope="col">Miniatura</th>
+                                            <th scope="col">Descripción</th>
+                                            <th scope="col">Precio($)</th>
+                                            <th scope="col">Stock</th>
+                                            <th scope="col">Fecha de registro</th>
+                                            <th scope="col">Accion</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($productosInactivos as $pIN): ?>
+                                        <tr>
+                                            <td><?php echo $pIN['categoria_nombre'] ?? $pIN['categoria']; ?></td>
+                                            <td><?php echo $pIN['nombre']; ?></td>
+                                            <td>
+                                                <?php $thumbIN = !empty($pIN['imagen_principal']) ? $pIN['imagen_principal'] : 'assets/img/products/default.jpeg'; ?>
+                                                <img src="<?= htmlspecialchars($thumbIN) ?>" alt="miniatura" class="img-thumbnail product-thumb" style="width:56px;height:56px;object-fit:cover;cursor:pointer;" data-src="<?= htmlspecialchars($thumbIN) ?>" />
+                                            </td>
+                                            <td><?php echo $pIN['descripcion']; ?></td>
+                                            <td><?php echo $pIN['precio_venta'] ?? $pIN['precio']; ?></td>
+                                            <td><?php echo $pIN['stock_total'] ?? $pIN['stock']; ?></td>
+                                            <td><?php echo $pIN['fecha_registro']; ?></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                                    data-bs-target="#modalEditar<?= $pIN['id'] ?>">Editar</button>
+                                                <button type="button" class="btn btn-sm btn-info view-variants-btn" data-id="<?= $pIN['id'] ?>">Variantes (<?= $pIN['total_variantes'] ?? 0 ?>)</button>
+                                                <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal"
+                                                    data-bs-target="#modalConfirmarActivar<?= $pIN['id'] ?>">Activar</button>
+                                            </td>
+                                        </tr>
+                                        <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Categorias Inactivas -->
+                            <div class="tab-pane fade" id="catInactivos">
+                                <div class="table-responsive">
+                                    <table id="tablaInactivos" class="table-DT table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Nombre</th>
+                                                <th scope="col">Descripción</th>
+                                                <th scope="col">Fecha de registro</th>
+                                                <th scope="col">Accion</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($categoriasInactivas as $cIN): ?>
+                                            <tr>
+                                                <td><?php echo $cIN['nombre']; ?></td>
+                                                <td><?php echo $cIN['descripcion']; ?></td>
+                                                <td><?php echo $cIN['fecha_registro']; ?></td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                                        data-bs-target="#modalEditarCategoria<?= $cIN['id'] ?>">Editar</button>
+                                                    <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal"
+                                                        data-bs-target="#modalConfirmarActivarCategoria<?= $cIN['id'] ?>">Activar</button>
+                                                </td>
+                                            </tr>
+                                            <!-- Modal Editar -->
+                                            <div class="modal fade" id="modalEditarCategoria<?= $cIN['id'] ?>" tabindex="-1">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <form action="?c=categorias&accion=update" method="POST">
+                                                            <input type="hidden" name="id" value="<?= $cIN['id'] ?>">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Editar Categoría</h5>
+                                                                <button type="button" class="btn-close"
+                                                                    data-bs-dismiss="modal"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="mb-3">
+                                                                    <label for="nombre" class="form-label">Nombre</label>
+                                                                    <input type="text" class="form-control" id="nombre" name="nombre" value="<?= $cIN['nombre'] ?>" required />
+                                                                </div>
+                                                                <div class="mb-3">
+                                                                    <label for="descripcion" class="form-label">Descripción</label>
+                                                                    <textarea class="form-control" id="descripcion" name="descripcion"
+                                                                        rows="3"><?= $cIN['descripcion'] ?></textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary"
+                                                                    data-bs-dismiss="modal">Cerrar</button>
+                                                                <button type="submit" class="btn btn-primary">Guardar</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Modal Confirmar Activación -->
+                                            <div class="modal fade" id="modalConfirmarActivarCategoria<?= $cIN['id'] ?>" tabindex="-1">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <form action="?c=categorias&accion=active" method="POST">
+                                                            <input type="hidden" name="id" value="<?= $cIN['id'] ?>">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Confirmar activación</h5>
+                                                                <button type="button" class="btn-close"
+                                                                    data-bs-dismiss="modal"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                ¿Estás seguro de que deseas habilitar la categoria <?= htmlspecialchars($cIN['nombre']) ?>?
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary"
+                                                                    data-bs-dismiss="modal">Cancelar</button>
+                                                                <button type="submit" class="btn btn-success">Activar</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Inventario -->
+                <div class="tab-pane fade" id="inventario">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h1 class="titulo text-black">Inventario de Productos</h1>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table id="tablaInventario" class="table-DT table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Categoría</th>
+                                            <th scope="col">Nombre del Producto</th>
+                                            <th scope="col">Miniatura</th>
+                                            <th scope="col">Stock Actual</th>
+                                    <th scope="col">Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($productos as $p): ?>
+                                <tr>
+                                    <td><?php echo $p['categoria_nombre'] ?? $p['categoria']; ?></td>
+                                            <td><?php echo $p['nombre']; ?></td>
+                                            <td>
+                                                <?php $thumbInv = !empty($p['imagen_principal']) ? $p['imagen_principal'] : 'assets/img/products/default.jpeg'; ?>
+                                                <img src="<?= htmlspecialchars($thumbInv) ?>" alt="miniatura" class="img-thumbnail product-thumb" style="width:56px;height:56px;object-fit:cover;cursor:pointer;" data-src="<?= htmlspecialchars($thumbInv) ?>" />
+                                            </td>
+                                            <td><span class="fs-5 fw-bold"><?php echo $p['stock_total'] ?? $p['stock']; ?></span></td>
+                                    <td>
+                                        <?php $stockVal = $p['stock_total'] ?? $p['stock']; ?>
+                                        <?php if($stockVal <= 5): ?>
+                                            <span class="badge bg-danger">Bajo Stock</span>
+                                        <?php elseif($stockVal <= 15): ?>
+                                            <span class="badge bg-warning text-dark">Stock Medio</span>
+                                        <?php else: ?>
+                                            <span class="badge bg-success">Stock Óptimo</span>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- TEST -->
+    
+
+</main>
+
+<!-- MODALES EXTRAÍDOS PARA EVITAR CONFLICTOS DE DOM -->
+<?php foreach ($productos as $p): ?>
+<!-- Modal Editar -->
                                         <div class="modal fade modal-edit-product" id="modalEditar<?= $p['id'] ?>" tabindex="-1" 
                                              data-variantes="<?= htmlspecialchars(json_encode($p['variantes'] ?? []), ENT_QUOTES) ?>"
                                              data-precio-oferta="<?= htmlspecialchars($p['precio_oferta'] ?? '') ?>"
@@ -186,50 +377,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <!-- Productos Inactivos -->
-                        <div class="tab-pane fade" id="inactivos">
-                            <div class="table-responsive">
-                                <table id="tablaInactivos" class="table-DT table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">Categoria</th>
-                                            <th scope="col">Nombre</th>
-                                            <th scope="col">Miniatura</th>
-                                            <th scope="col">Descripción</th>
-                                            <th scope="col">Precio($)</th>
-                                            <th scope="col">Stock</th>
-                                            <th scope="col">Fecha de registro</th>
-                                            <th scope="col">Accion</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($productosInactivos as $pIN): ?>
-                                        <tr>
-                                            <td><?php echo $pIN['categoria_nombre'] ?? $pIN['categoria']; ?></td>
-                                            <td><?php echo $pIN['nombre']; ?></td>
-                                            <td>
-                                                <?php $thumbIN = !empty($pIN['imagen_principal']) ? $pIN['imagen_principal'] : 'assets/img/products/default.jpeg'; ?>
-                                                <img src="<?= htmlspecialchars($thumbIN) ?>" alt="miniatura" class="img-thumbnail product-thumb" style="width:56px;height:56px;object-fit:cover;cursor:pointer;" data-src="<?= htmlspecialchars($thumbIN) ?>" />
-                                            </td>
-                                            <td><?php echo $pIN['descripcion']; ?></td>
-                                            <td><?php echo $pIN['precio_venta'] ?? $pIN['precio']; ?></td>
-                                            <td><?php echo $pIN['stock_total'] ?? $pIN['stock']; ?></td>
-                                            <td><?php echo $pIN['fecha_registro']; ?></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#modalEditar<?= $pIN['id'] ?>">Editar</button>
-                                                <button type="button" class="btn btn-sm btn-info view-variants-btn" data-id="<?= $pIN['id'] ?>">Variantes (<?= $pIN['total_variantes'] ?? 0 ?>)</button>
-                                                <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal"
-                                                    data-bs-target="#modalConfirmarActivar<?= $pIN['id'] ?>">Activar</button>
-                                            </td>
-                                        </tr>
-                                        <!-- Modal Editar -->
+                                        
+<!-- Modal Editar -->
                                         <div class="modal fade modal-edit-product" id="modalEditar<?= $pIN['id'] ?>" tabindex="-1" 
                                              data-variantes="<?= htmlspecialchars(json_encode($pIN['variantes'] ?? []), ENT_QUOTES) ?>"
                                              data-precio-oferta="<?= htmlspecialchars($pIN['precio_oferta'] ?? '') ?>"
@@ -429,148 +578,8 @@
                                                 </div>
                                             </div>
                                             <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
 
-                            <!-- Categorias Inactivas -->
-                            <div class="tab-pane fade" id="catInactivos">
-                                <div class="table-responsive">
-                                    <table id="tablaInactivos" class="table-DT table table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Nombre</th>
-                                                <th scope="col">Descripción</th>
-                                                <th scope="col">Fecha de registro</th>
-                                                <th scope="col">Accion</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php foreach ($categoriasInactivas as $cIN): ?>
-                                            <tr>
-                                                <td><?php echo $cIN['nombre']; ?></td>
-                                                <td><?php echo $cIN['descripcion']; ?></td>
-                                                <td><?php echo $cIN['fecha_registro']; ?></td>
-                                                <td>
-                                                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                                                        data-bs-target="#modalEditarCategoria<?= $cIN['id'] ?>">Editar</button>
-                                                    <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal"
-                                                        data-bs-target="#modalConfirmarActivarCategoria<?= $cIN['id'] ?>">Activar</button>
-                                                </td>
-                                            </tr>
-                                            <!-- Modal Editar -->
-                                            <div class="modal fade" id="modalEditarCategoria<?= $cIN['id'] ?>" tabindex="-1">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <form action="?c=categorias&accion=update" method="POST">
-                                                            <input type="hidden" name="id" value="<?= $cIN['id'] ?>">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title">Editar Categoría</h5>
-                                                                <button type="button" class="btn-close"
-                                                                    data-bs-dismiss="modal"></button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <div class="mb-3">
-                                                                    <label for="nombre" class="form-label">Nombre</label>
-                                                                    <input type="text" class="form-control" id="nombre" name="nombre" value="<?= $cIN['nombre'] ?>" required />
-                                                                </div>
-                                                                <div class="mb-3">
-                                                                    <label for="descripcion" class="form-label">Descripción</label>
-                                                                    <textarea class="form-control" id="descripcion" name="descripcion"
-                                                                        rows="3"><?= $cIN['descripcion'] ?></textarea>
-                                                                </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                    data-bs-dismiss="modal">Cerrar</button>
-                                                                <button type="submit" class="btn btn-primary">Guardar</button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- Modal Confirmar Activación -->
-                                            <div class="modal fade" id="modalConfirmarActivarCategoria<?= $cIN['id'] ?>" tabindex="-1">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <form action="?c=categorias&accion=active" method="POST">
-                                                            <input type="hidden" name="id" value="<?= $cIN['id'] ?>">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title">Confirmar activación</h5>
-                                                                <button type="button" class="btn-close"
-                                                                    data-bs-dismiss="modal"></button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                ¿Estás seguro de que deseas habilitar la categoria <?= htmlspecialchars($cIN['nombre']) ?>?
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                    data-bs-dismiss="modal">Cancelar</button>
-                                                                <button type="submit" class="btn btn-success">Activar</button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Inventario -->
-                <div class="tab-pane fade" id="inventario">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h1 class="titulo text-black">Inventario de Productos</h1>
-                    </div>
-
-                    <div class="table-responsive">
-                        <table id="tablaInventario" class="table-DT table table-striped">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Categoría</th>
-                                            <th scope="col">Nombre del Producto</th>
-                                            <th scope="col">Miniatura</th>
-                                            <th scope="col">Stock Actual</th>
-                                    <th scope="col">Estado</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($productos as $p): ?>
-                                <tr>
-                                    <td><?php echo $p['categoria_nombre'] ?? $p['categoria']; ?></td>
-                                            <td><?php echo $p['nombre']; ?></td>
-                                            <td>
-                                                <?php $thumbInv = !empty($p['imagen_principal']) ? $p['imagen_principal'] : 'assets/img/products/default.jpeg'; ?>
-                                                <img src="<?= htmlspecialchars($thumbInv) ?>" alt="miniatura" class="img-thumbnail product-thumb" style="width:56px;height:56px;object-fit:cover;cursor:pointer;" data-src="<?= htmlspecialchars($thumbInv) ?>" />
-                                            </td>
-                                            <td><span class="fs-5 fw-bold"><?php echo $p['stock_total'] ?? $p['stock']; ?></span></td>
-                                    <td>
-                                        <?php $stockVal = $p['stock_total'] ?? $p['stock']; ?>
-                                        <?php if($stockVal <= 5): ?>
-                                            <span class="badge bg-danger">Bajo Stock</span>
-                                        <?php elseif($stockVal <= 15): ?>
-                                            <span class="badge bg-warning text-dark">Stock Medio</span>
-                                        <?php else: ?>
-                                            <span class="badge bg-success">Stock Óptimo</span>
-                                        <?php endif; ?>
-                                    </td>
-                                </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- TEST -->
-    <!-- Modal Agregar Producto -->
+<!-- Modal Agregar Producto -->
     <div class="modal fade" id="modalAgregar" tabindex="-1">
         <div class="modal-dialog">
             <form action="?c=productos&accion=insert" method="POST" enctype="multipart/form-data" class="modal-content">
@@ -681,6 +690,27 @@
         <script>
             window.productosCategories = <?php echo json_encode($categorias ?? [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?: '[]'; ?>;
         </script>
+    <script>
+        document.addEventListener('submit', function(e) {
+            if (e.target && e.target.tagName === 'FORM') {
+                const formData = new FormData(e.target);
+                const data = {};
+                for (let [key, value] of formData.entries()) {
+                    if (value instanceof File) {
+                        data[key] = value.name + ' (File)';
+                    } else {
+                        data[key] = value;
+                    }
+                }
+                // Send it to a logging endpoint
+                fetch('?c=productos&accion=log_form', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+            }
+        });
+    </script>
         <script src="assets/js/pages/productos.js" defer></script>
     </body>
 

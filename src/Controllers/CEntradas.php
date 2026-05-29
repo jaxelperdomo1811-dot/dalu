@@ -73,6 +73,31 @@ switch ($accion) {
         }
         break;
 
+    case 'crearDesdePedido':
+        $pedido_id = $_POST['pedido_id'] ?? $_GET['pedido_id'] ?? null;
+        if (!$pedido_id) {
+            $_SESSION['error'] = 'ID de pedido inválido.';
+            header('Location: ?c=pedidos&accion=view');
+            exit();
+        }
+        
+        $entradasModel = new Entradas();
+        $resultado = $entradasModel->crearDesdePedido($pedido_id);
+        
+        if (isset($resultado['error'])) {
+            $_SESSION['error'] = $resultado['error'];
+            if (isset($resultado['pendientes'])) {
+                header("Location: ?c=pedidos&accion=resolverDetalles&id=$pedido_id");
+            } else {
+                header("Location: ?c=pedidos&accion=view");
+            }
+        } else {
+            $_SESSION['success'] = 'Entrada creada correctamente.';
+            header("Location: ?c=proveedores&tab=entradas");
+        }
+        exit();
+        break;
+
     default:
         http_response_code(404);
         require_once __DIR__ . '/../Views/errors/404.php';

@@ -381,6 +381,19 @@ use Lenovo\Dalu\Models\Conexion;
         }
         
         /**
+         * Obtener pedido completo con solo los detalles pendientes
+         */
+        public function getPedidoConDetallesPendientes($pedido_id) {
+            $pedido = $this->getById($pedido_id);
+            if (!$pedido) return false;
+            
+            $this->setId($pedido_id);
+            $pedido['detalles_pendientes'] = $this->getDetallesPendientes();
+            
+            return $pedido;
+        }
+        
+        /**
          * Vincular un detalle vago a un producto existente
          */
         public function vincularDetalleAProducto($detalle_id, $id_producto, $id_variante = null) {
