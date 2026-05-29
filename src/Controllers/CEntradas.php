@@ -15,6 +15,7 @@ switch ($accion) {
         
         // Arrays from dynamic form
         $productos = $_POST['id_producto'] ?? [];
+        $variantes = $_POST['id_variante'] ?? [];
         $cantidades = $_POST['cantidad'] ?? [];
         $precios = $_POST['precio_compra'] ?? [];
 
@@ -23,6 +24,7 @@ switch ($accion) {
             if (!empty($productos[$i]) && !empty($cantidades[$i]) && !empty($precios[$i])) {
                 $detalles[] = [
                     'id_producto' => $productos[$i],
+                    'id_variante' => !empty($variantes[$i]) ? $variantes[$i] : null,
                     'cantidad' => $cantidades[$i],
                     'precio_compra' => $precios[$i]
                 ];
@@ -53,20 +55,21 @@ switch ($accion) {
                 echo "<div class='alert alert-info'>No hay detalles registrados para esta entrada.</div>";
             } else {
                 $html = "<table class='table table-bordered table-striped'>";
-                $html .= "<thead><tr class='table-dark'><th>Producto</th><th>Cantidad</th><th>Precio Compra ($)</th><th>Subtotal ($)</th></tr></thead><tbody>";
+                $html .= "<thead><tr class='table-dark'><th>Producto</th><th>Variante</th><th>Cantidad</th><th>Precio Compra ($)</th><th>Subtotal ($)</th></tr></thead><tbody>";
                 $total_general = 0;
                 foreach ($detalles as $det) {
                     $subtotal = $det['cantidad'] * $det['precio_compra'];
                     $total_general += $subtotal;
                     $html .= "<tr>";
                     $html .= "<td>" . htmlspecialchars($det['producto_nombre']) . "</td>";
+                    $html .= "<td>" . htmlspecialchars($det['nombre_variante'] ?? 'N/A') . "</td>";
                     $html .= "<td>" . htmlspecialchars($det['cantidad']) . "</td>";
                     $html .= "<td>" . number_format($det['precio_compra'], 2) . "</td>";
                     $html .= "<td>" . number_format($subtotal, 2) . "</td>";
                     $html .= "</tr>";
                 }
                 $html .= "</tbody>";
-                $html .= "<tfoot><tr><th colspan='3' class='text-end'>TOTAL:</th><th>" . number_format($total_general, 2) . "</th></tr></tfoot>";
+                $html .= "<tfoot><tr><th colspan='4' class='text-end'>TOTAL:</th><th>" . number_format($total_general, 2) . "</th></tr></tfoot>";
                 $html .= "</table>";
                 echo $html;
             }

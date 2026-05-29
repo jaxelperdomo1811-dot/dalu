@@ -474,8 +474,8 @@
                         <h5>Productos</h5>
                         <div id="productos_container">
                             <div class="row mb-2 producto-row">
-                                <div class="col-md-5">
-                                    <select class="form-select" name="id_producto[]" required>
+                                <div class="col-md-4">
+                                    <select class="form-select producto-select" name="id_producto[]" required>
                                         <option value="" disabled selected>Seleccione un producto</option>
                                         <?php if(isset($productosDisponibles)) { foreach ($productosDisponibles as $prod): ?>
                                             <option value="<?= $prod['id'] ?>"><?= htmlspecialchars($prod['nombre']) ?></option>
@@ -483,9 +483,17 @@
                                     </select>
                                 </div>
                                 <div class="col-md-3">
+                                    <div class="input-group">
+                                        <select class="form-select variante-select" name="id_variante[]" required>
+                                            <option value="" disabled selected>Seleccione variante</option>
+                                        </select>
+                                        <button type="button" class="btn btn-outline-secondary btn-add-variante" title="Nueva Variante">+</button>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
                                     <input type="number" class="form-control" name="cantidad[]" placeholder="Cantidad" min="1" required>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <input type="number" step="0.01" class="form-control" name="precio_compra[]" placeholder="Precio ($)" min="0.01" required>
                                 </div>
                                 <div class="col-md-1">
@@ -513,6 +521,37 @@
                 </div>
                 <div class="modal-body" id="contenidoEntradasInsumo">
                     
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Agregar Variante Rápida -->
+    <div class="modal fade" id="modalAgregarVarianteRapida" tabindex="-1" aria-hidden="true" style="z-index: 1060;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Nueva Variante</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formVarianteRapida">
+                        <input type="hidden" name="id_producto" id="vr_id_producto">
+                        <input type="hidden" name="ajax" value="1">
+                        <div class="mb-3">
+                            <label class="form-label">Nombre de Variante *</label>
+                            <input type="text" class="form-control" name="nombre_variante" required>
+                        </div>
+                        <div id="dynamicVariantFields"></div>
+                        <div class="mb-3">
+                            <label class="form-label">Stock Inicial *</label>
+                            <input type="number" class="form-control" name="stock" value="0" min="0" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnGuardarVarianteRapida">Guardar</button>
                 </div>
             </div>
         </div>

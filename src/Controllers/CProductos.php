@@ -376,6 +376,11 @@ case "update":
     case "addVariante":
         // Agregar variante a producto existente
         if (empty($_POST['id_producto']) || empty($_POST['nombre_variante']) || !isset($_POST['stock'])) {
+            if (isset($_POST['ajax'])) {
+                header('Content-Type: application/json');
+                echo json_encode(['error' => 'Datos incompletos para agregar variante.']);
+                exit();
+            }
             $_SESSION['error'] = "Datos incompletos para agregar variante.";
             header("Location: ?c=productos&accion=view");
             exit();
@@ -399,6 +404,16 @@ case "update":
         
         $producto = new Productos();
         $variante_id = $producto->addVariante($_POST['id_producto'], $variante_data);
+        
+        if (isset($_POST['ajax'])) {
+            header('Content-Type: application/json');
+            if ($variante_id) {
+                echo json_encode(['success' => true, 'variante' => array_merge(['id' => $variante_id], $variante_data)]);
+            } else {
+                echo json_encode(['error' => 'Error al agregar la variante.']);
+            }
+            exit();
+        }
         
         if ($variante_id) {
             $_SESSION['success'] = "Variante agregada exitosamente.";
@@ -519,7 +534,11 @@ case "update":
             exit();
         }
         
-        $producto = (new Productos())->getById($_GET['id']);
+        $pModel = new Productos();
+        $producto = $pModel->getById($_GET['id']);
+        if ($producto) {
+            $producto['categoria_nombre'] = $pModel->getNombreCategoria($producto['id']);
+        }
         header('Content-Type: application/json');
         echo json_encode($producto);
         exit();

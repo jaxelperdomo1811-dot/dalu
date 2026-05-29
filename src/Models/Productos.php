@@ -129,12 +129,12 @@ class Productos extends Conexion {
                         id_categoria, nombre, descripcion, 
                         precio_venta, precio_oferta,
                         stock_minimo, marca, imagen_principal, 
-                        activo, ventas_totales, stock_total
+                        activo, ventas_totales
                     ) VALUES (
                         :id_categoria, :nombre, :descripcion,
                         :precio_venta, :precio_oferta,
                         :stock_minimo, :marca, :imagen_principal,
-                        :activo, :ventas_totales, :stock_total
+                        :activo, :ventas_totales
                     )";
             
             $stmt = $this->prepare($sql);
@@ -172,11 +172,7 @@ class Productos extends Conexion {
     }
     
     public function search() {
-        $sql = "SELECT 
-                    p.*, 
-                    c.nombre AS categoria_nombre,
-                    (SELECT COUNT(*) FROM producto_variantes WHERE id_producto = p.id AND activo = 1) as total_variantes
-                FROM productos p 
+        $sql = "SELECT p.*, c.nombre AS categoria_nombre, (SELECT COUNT(*) FROM producto_variantes WHERE id_producto = p.id AND activo = 1) as total_variantes, (SELECT COALESCE(SUM(v.stock), 0) FROM producto_variantes v WHERE v.id_producto = p.id AND v.activo = 1) AS stock_total FROM productos p 
                 JOIN categorias c ON p.id_categoria = c.id 
                 WHERE p.activo = 1 
                 ORDER BY p.fecha_registro DESC";
@@ -187,10 +183,7 @@ class Productos extends Conexion {
     }
     
     public function searchInactive() {
-        $sql = "SELECT 
-                    p.*, 
-                    c.nombre AS categoria_nombre 
-                FROM productos p 
+        $sql = "SELECT p.*, c.nombre AS categoria_nombre, (SELECT COALESCE(SUM(v.stock), 0) FROM producto_variantes v WHERE v.id_producto = p.id AND v.activo = 1) AS stock_total FROM productos p 
                 JOIN categorias c ON p.id_categoria = c.id 
                 WHERE p.activo = 0 
                 ORDER BY p.fecha_registro DESC";
@@ -200,7 +193,7 @@ class Productos extends Conexion {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     public function getById($id) {
-        $sql = "SELECT * FROM productos WHERE id = :id";
+        $sql = "SELECT p.*, (SELECT COALESCE(SUM(v.stock), 0) FROM producto_variantes v WHERE v.id_producto = p.id AND v.activo = 1) AS stock_total FROM productos p WHERE p.id = :id";
         $stmt = $this->prepare($sql);
         $stmt->bindParam(":id", $id);
         $stmt->execute();
@@ -610,8 +603,8 @@ class Productos extends Conexion {
         $sql = "SELECT p.*, c.nombre as categoria_nombre
                 FROM productos p
                 JOIN categorias c ON p.id_categoria = c.id
-                WHERE p.stock_total <= p.stock_minimo AND p.activo = 1
-                ORDER BY p.stock_total ASC";
+                WHERE (SELECT COALESCE(SUM(v.stock), 0) FROM producto_variantes v WHERE v.id_producto = p.id AND v.activo = 1) <= p.stock_minimo AND p.activo = 1
+                ORDER BY stock_total ASC";
         
         $stmt = $this->prepare($sql);
         $stmt->execute();

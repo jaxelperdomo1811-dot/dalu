@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <label class="form-label">Imagen variante (Opcional)</label>
                             ${values.imagen_variante ? `
                                 <div class="mb-2">
-                                    <img src="${escapeHtml(values.imagen_variante)}" alt="imagen variante" class="img-thumbnail product-thumb" style="width:100px;height:100px;object-fit:cover;cursor:pointer;" data-src="${escapeHtml(values.imagen_variante)}" />
+                                    <img src="${escapeHtml(values.imagen_variante)}" onerror="this.src='assets/img/products/default.jpeg'" alt="imagen variante" class="img-thumbnail product-thumb" style="width:100px;height:100px;object-fit:cover;cursor:pointer;" data-src="${escapeHtml(values.imagen_variante)}" />
                                 </div>
                             ` : ''}
                             <input type="hidden" name="variantes[${index}][imagen_variante_actual]" value="${escapeHtml(values.imagen_variante || '')}" />

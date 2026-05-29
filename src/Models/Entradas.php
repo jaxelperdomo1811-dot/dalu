@@ -37,21 +37,26 @@ class Entradas extends Conexion {
             // Insertar detalles y actualizar stock
             foreach ($detalles as $detalle) {
                 // Insertar detalle
-                $sqlDetalle = "INSERT INTO detalles_entrada (id_entrada, id_producto, cantidad, precio_compra) 
-                               VALUES (:id_entrada, :id_producto, :cantidad, :precio_compra)";
+                $sqlDetalle = "INSERT INTO detalles_entrada (id_entrada, id_variante, cantidad, precio_compra) 
+                               VALUES (:id_entrada, :id_variante, :cantidad, :precio_compra)";
                 $stmtDetalle = $this->prepare($sqlDetalle);
                 $stmtDetalle->bindParam(":id_entrada", $id_entrada);
-                $stmtDetalle->bindParam(":id_producto", $detalle['id_producto']);
+                
+                $id_variante = !empty($detalle['id_variante']) ? $detalle['id_variante'] : null;
+                $stmtDetalle->bindParam(":id_variante", $id_variante);
+                
                 $stmtDetalle->bindParam(":cantidad", $detalle['cantidad']);
                 $stmtDetalle->bindParam(":precio_compra", $detalle['precio_compra']);
                 $stmtDetalle->execute();
 
-                // Actualizar stock del producto
-                $sqlUpdateStock = "UPDATE productos SET stock_total = stock_total + :cantidad WHERE id = :id_producto";
-                $stmtStock = $this->prepare($sqlUpdateStock);
-                $stmtStock->bindParam(":cantidad", $detalle['cantidad']);
-                $stmtStock->bindParam(":id_producto", $detalle['id_producto']);
-                $stmtStock->execute();
+                // Actualizar stock de la variante si aplica
+                if (!empty($detalle['id_variante'])) {
+                    $sqlUpdateVar = "UPDATE producto_variantes SET stock = stock + :cantidad WHERE id = :id_variante";
+                    $stmtVar = $this->prepare($sqlUpdateVar);
+                    $stmtVar->bindParam(":cantidad", $detalle['cantidad']);
+                    $stmtVar->bindParam(":id_variante", $detalle['id_variante']);
+                    $stmtVar->execute();
+                }
             }
 
             return true;
@@ -85,9 +90,10 @@ class Entradas extends Conexion {
      */
     public function getDetalles($id_entrada) {
         try {
-            $sql = "SELECT d.cantidad, d.precio_compra, p.nombre as producto_nombre 
+            $sql = "SELECT d.cantidad, d.precio_compra, p.nombre as producto_nombre, pv.nombre_variante 
                     FROM detalles_entrada d
-                    INNER JOIN productos p ON d.id_producto = p.id
+                    INNER JOIN producto_variantes pv ON d.id_variante = pv.id
+                    INNER JOIN productos p ON pv.id_producto = p.id
                     WHERE d.id_entrada = :id_entrada";
             $stmt = $this->prepare($sql);
             $stmt->bindParam(":id_entrada", $id_entrada);

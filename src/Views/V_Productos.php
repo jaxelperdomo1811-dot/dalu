@@ -463,7 +463,7 @@
                                                                 <?php $currentThumb = !empty($p['imagen_principal']) ? $p['imagen_principal'] : 'assets/img/products/default.jpeg'; ?>
                                                                 <label class="form-label">Imagen actual</label>
                                                                 <div class="mb-2">
-                                                                    <img src="<?= htmlspecialchars($currentThumb) ?>" alt="imagen actual" class="img-thumbnail product-thumb" style="width:100px;height:100px;object-fit:cover;cursor:pointer;" data-src="<?= htmlspecialchars($currentThumb) ?>" />
+                                                                    <img src="<?= htmlspecialchars($currentThumb) ?>" onerror="this.src='assets/img/products/default.jpeg'" alt="imagen actual" class="img-thumbnail product-thumb" style="width:100px;height:100px;object-fit:cover;cursor:pointer;" data-src="<?= htmlspecialchars($currentThumb) ?>" />
                                                                 </div>
                                                             </div>
                                                             <div class="mb-3">
@@ -589,7 +589,7 @@
                                                                 <?php $currentThumbIN = !empty($pIN['imagen_principal']) ? $pIN['imagen_principal'] : 'assets/img/products/default.jpeg'; ?>
                                                                 <label class="form-label">Imagen actual</label>
                                                                 <div class="mb-2">
-                                                                    <img src="<?= htmlspecialchars($currentThumbIN) ?>" alt="imagen actual" class="img-thumbnail product-thumb" style="width:100px;height:100px;object-fit:cover;cursor:pointer;" data-src="<?= htmlspecialchars($currentThumbIN) ?>" />
+                                                                    <img src="<?= htmlspecialchars($currentThumbIN) ?>" onerror="this.src='assets/img/products/default.jpeg'" alt="imagen actual" class="img-thumbnail product-thumb" style="width:100px;height:100px;object-fit:cover;cursor:pointer;" data-src="<?= htmlspecialchars($currentThumbIN) ?>" />
                                                                 </div>
                                                             </div>
                                                             <div class="mb-3">
