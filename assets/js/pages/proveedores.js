@@ -170,3 +170,31 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Ver detalles de entrada
+    const botonesVerDetalle = document.querySelectorAll('.ver-detalle-entrada');
+    const modalDetallesElement = document.getElementById('entradasInsumoModal');
+    if (modalDetallesElement) {
+        const modalDetalles = new bootstrap.Modal(modalDetallesElement);
+        const contenidoDetalles = document.getElementById('contenidoEntradasInsumo');
+
+        botonesVerDetalle.forEach(btn => {
+            btn.addEventListener('click', async function() {
+                const idEntrada = this.getAttribute('data-id');
+                contenidoDetalles.innerHTML = '<div class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div></div>';
+                modalDetalles.show();
+
+                try {
+                    const response = await fetch(`?c=entradas&accion=view_detalles&id=${idEntrada}`);
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    const html = await response.text();
+                    contenidoDetalles.innerHTML = html;
+                } catch (error) {
+                    console.error('Error al cargar detalles:', error);
+                    contenidoDetalles.innerHTML = '<div class="alert alert-danger">Error al cargar los detalles de la entrada.</div>';
+                }
+            });
+        });
+    }
+});
