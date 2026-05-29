@@ -340,6 +340,28 @@ class Productos extends Conexion {
         
         return $variantes;
     }
+
+    /**
+     * Obtener variantes inactivas de un producto
+     */
+    public function getInactiveVariantesByProducto($producto_id) {
+        $sql = "SELECT * FROM producto_variantes 
+                WHERE id_producto = :id_producto AND activo = 0 
+                ORDER BY id";
+        
+        $stmt = $this->prepare($sql);
+        $stmt->bindParam(":id_producto", $producto_id);
+        $stmt->execute();
+        
+        $variantes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Decodificar atributos JSON
+        foreach ($variantes as &$variante) {
+            $variante['atributos'] = json_decode($variante['atributos'], true);
+        }
+        
+        return $variantes;
+    }
     
     /**
      * Obtener una variante específica por ID
@@ -485,6 +507,37 @@ class Productos extends Conexion {
             
         } catch (PDOException $e) {
             error_log("Error en deleteVariante: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Reactivar variante
+     */
+    public function reactivateVariante($variante_id) {
+        try {
+            $sql = "UPDATE producto_variantes SET activo = 1 WHERE id = :id";
+            $stmt = $this->prepare($sql);
+            $stmt->bindParam(":id", $variante_id);
+            
+            if ($stmt->execute()) {
+                // Actualizar stock total para incluir esta variante nuevamente
+                // Nota: getVarianteById no filtra por activo=1, pero si lo hiciera, podriamos usar un query directo.
+                $sql_prod = "SELECT id_producto FROM producto_variantes WHERE id = :id";
+                $stmt_prod = $this->prepare($sql_prod);
+                $stmt_prod->bindParam(":id", $variante_id);
+                $stmt_prod->execute();
+                $res = $stmt_prod->fetch(PDO::FETCH_ASSOC);
+                
+                if ($res) {
+                    $this->actualizarStockTotal($res['id_producto']);
+                }
+                return true;
+            }
+            return false;
+            
+        } catch (PDOException $e) {
+            error_log("Error en reactivateVariante: " . $e->getMessage());
             return false;
         }
     }

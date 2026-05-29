@@ -18,12 +18,14 @@ switch($accion) {
         $productos = $productoModel->search();
         foreach ($productos as &$p) {
             $p['variantes'] = $productoModel->getVariantesByProducto($p['id']);
+            $p['variantes_inactivas'] = $productoModel->getInactiveVariantesByProducto($p['id']);
         }
         unset($p);
         
         $productosInactivos = $productoModel->searchInactive();
         foreach ($productosInactivos as &$pIN) {
             $pIN['variantes'] = $productoModel->getVariantesByProducto($pIN['id']);
+            $pIN['variantes_inactivas'] = $productoModel->getInactiveVariantesByProducto($pIN['id']);
         }
         unset($pIN);
 
@@ -101,12 +103,41 @@ case "insert":
                 if (!empty($variante['fragancia'])) $atributos['fragancia'] = $variante['fragancia'];
                 if (!empty($variante['tipo_piel'])) $atributos['tipo_piel'] = $variante['tipo_piel'];
                 
+                $imagen_variante = null;
+
+                if (isset($_FILES['imagen_variante']) && isset($_FILES['imagen_variante']['error'][$index]) && $_FILES['imagen_variante']['error'][$index] === UPLOAD_ERR_OK) {
+                    try {
+                        $fileArray = [
+                            'name' => $_FILES['imagen_variante']['name'][$index],
+                            'type' => $_FILES['imagen_variante']['type'][$index],
+                            'tmp_name' => $_FILES['imagen_variante']['tmp_name'][$index],
+                            'error' => $_FILES['imagen_variante']['error'][$index],
+                            'size' => $_FILES['imagen_variante']['size'][$index]
+                        ];
+                        
+                        $categoriaModel = new Categorias();
+                        $categoria = $categoriaModel->searchById($_POST['id_categoria']);
+                        $nombreCategoria = $categoria ? $categoria['nombre'] : 'sin_categoria';
+
+                        $rutaImagenVariante = $producto->subirImagen(
+                            $fileArray,
+                            $nombreCategoria,
+                            $_POST['nombre'] . '_' . $variante['nombre_variante']
+                        );
+                        if ($rutaImagenVariante) {
+                            $imagen_variante = $rutaImagenVariante;
+                        }
+                    } catch (Exception $e) {
+                        // Ignorar error de subida para no detener el proceso
+                    }
+                }
+                
                 $variantes[] = [
                     'nombre_variante' => $variante['nombre_variante'],
                     'atributos' => $atributos,
                     'precio_adicional' => $variante['precio_adicional'] !== '' ? $variante['precio_adicional'] : 0,
                     'stock' => $variante['stock'] !== '' ? $variante['stock'] : 0,
-                    'imagen_variante' => !empty($variante['imagen_variante']) ? $variante['imagen_variante'] : null,
+                    'imagen_variante' => $imagen_variante,
                     'activo' => 1
                 ];
             }
@@ -195,9 +226,18 @@ case "update":
             }
         }
 
+        // ========== PROCESAR VARIANTES REACTIVADAS ==========
+        if (isset($_POST['reactivate_variants']) && is_array($_POST['reactivate_variants'])) {
+            foreach ($_POST['reactivate_variants'] as $variante_id) {
+                if (!empty($variante_id)) {
+                    $producto->reactivateVariante($variante_id);
+                }
+            }
+        }
+
         // ========== PROCESAR VARIANTES (ACTUALIZAR O AGREGAR NUEVAS) ==========
         if (isset($_POST['variantes']) && is_array($_POST['variantes'])) {
-            foreach ($_POST['variantes'] as $v) {
+            foreach ($_POST['variantes'] as $index => $v) {
                 if (!empty($v['nombre_variante']) && isset($v['stock'])) {
                     $atributos = [];
                     if (!empty($v['talla'])) $atributos['talla'] = $v['talla'];
@@ -207,12 +247,41 @@ case "update":
                     if (!empty($v['fragancia'])) $atributos['fragancia'] = $v['fragancia'];
                     if (!empty($v['tipo_piel'])) $atributos['tipo_piel'] = $v['tipo_piel'];
 
+                    $imagen_variante = !empty($v['imagen_variante_actual']) ? $v['imagen_variante_actual'] : null;
+
+                    if (isset($_FILES['imagen_variante']) && isset($_FILES['imagen_variante']['error'][$index]) && $_FILES['imagen_variante']['error'][$index] === UPLOAD_ERR_OK) {
+                        try {
+                            $fileArray = [
+                                'name' => $_FILES['imagen_variante']['name'][$index],
+                                'type' => $_FILES['imagen_variante']['type'][$index],
+                                'tmp_name' => $_FILES['imagen_variante']['tmp_name'][$index],
+                                'error' => $_FILES['imagen_variante']['error'][$index],
+                                'size' => $_FILES['imagen_variante']['size'][$index]
+                            ];
+                            
+                            $categoriaModel = new Categorias();
+                            $categoria = $categoriaModel->searchById($_POST['id_categoria']);
+                            $nombreCategoria = $categoria ? $categoria['nombre'] : 'sin_categoria';
+
+                            $rutaImagenVariante = $producto->subirImagen(
+                                $fileArray,
+                                $nombreCategoria,
+                                $_POST['nombre'] . '_' . $v['nombre_variante']
+                            );
+                            if ($rutaImagenVariante) {
+                                $imagen_variante = $rutaImagenVariante;
+                            }
+                        } catch (Exception $e) {
+                            // Ignorar error
+                        }
+                    }
+
                     $variante_data = [
                         'nombre_variante' => $v['nombre_variante'],
                         'atributos' => $atributos,
                         'precio_adicional' => isset($v['precio_adicional']) && $v['precio_adicional'] !== '' ? $v['precio_adicional'] : 0,
                         'stock' => isset($v['stock']) && $v['stock'] !== '' ? $v['stock'] : 0,
-                        'imagen_variante' => !empty($v['imagen_variante']) ? $v['imagen_variante'] : null
+                        'imagen_variante' => $imagen_variante
                     ];
                     file_put_contents('debug_variantes.txt', "Data to save: " . print_r($variante_data, true) . "\n", FILE_APPEND);
 

@@ -128,8 +128,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-12">
-                            <label class="form-label">Imagen variante</label>
-                            <input type="text" name="variantes[${index}][imagen_variante]" class="form-control" placeholder="URL imagen variante" value="${escapeHtml(values.imagen_variante || '')}" />
+                            <label class="form-label">Imagen variante (Opcional)</label>
+                            ${values.imagen_variante ? `
+                                <div class="mb-2">
+                                    <img src="${escapeHtml(values.imagen_variante)}" alt="imagen variante" class="img-thumbnail product-thumb" style="width:100px;height:100px;object-fit:cover;cursor:pointer;" data-src="${escapeHtml(values.imagen_variante)}" />
+                                </div>
+                            ` : ''}
+                            <input type="hidden" name="variantes[${index}][imagen_variante_actual]" value="${escapeHtml(values.imagen_variante || '')}" />
+                            <input type="file" accept="image/*" name="imagen_variante[${index}]" class="form-control" />
                         </div>
                     </div>
                     <div class="variant-extra-fields">${getVariantExtrasHtml(category, index, values)}</div>
@@ -151,23 +157,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const reindexVariantRows = () => {
             const rows = Array.from(dynamicContainer.querySelectorAll('.variant-row'));
-            const values = rows.map((row) => {
-                const data = {};
-                const vId = row.getAttribute('data-variant-id');
-                if (vId) data.id = vId;
+            rows.forEach((row, newIndex) => {
+                row.setAttribute('data-index', newIndex);
+                
+                const header = row.querySelector('h6');
+                if (header) {
+                    header.textContent = `Variante ${newIndex + 1}`;
+                }
 
                 row.querySelectorAll('input, select').forEach((field) => {
                     const name = field.name;
-                    const match = name.match(/^variantes\[(\d+)\]\[(.+)\]$/);
+                    if (!name) return;
+                    let match = name.match(/^variantes\[(\d+)\]\[(.+)\]$/);
                     if (match) {
-                        data[match[2]] = field.value;
+                        field.name = `variantes[${newIndex}][${match[2]}]`;
+                    } else {
+                        match = name.match(/^imagen_variante\[(\d+)\]$/);
+                        if (match) {
+                            field.name = `imagen_variante[${newIndex}]`;
+                        }
                     }
                 });
-                return data;
             });
-
-            dynamicContainer.querySelector('.variant-rows').innerHTML = '';
-            values.forEach((variantValues) => addVariantRow(variantValues));
         };
 
         const updateVariantExtras = () => {

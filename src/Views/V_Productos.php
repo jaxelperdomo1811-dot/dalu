@@ -426,6 +426,38 @@
                                                                 </select>
                                                                 <!-- Contenedor para campos dinámicos según categoría -->
                                                                 <div id="dynamic-attributes-edit-<?= $p['id'] ?>" class="mt-3"></div>
+
+                                                                <?php if (!empty($p['variantes_inactivas'])): ?>
+                                                                    <div class="mt-4 mb-3 border rounded p-3 bg-light">
+                                                                        <h6 class="text-muted mb-3"><i class="fa fa-trash me-2"></i>Variantes Inactivas / Eliminadas</h6>
+                                                                        <div class="table-responsive">
+                                                                            <table class="table table-sm table-bordered mb-0 bg-white">
+                                                                                <thead class="table-light">
+                                                                                    <tr>
+                                                                                        <th>Variante</th>
+                                                                                        <th class="text-center">Stock</th>
+                                                                                        <th class="text-center">Acción</th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    <?php foreach ($p['variantes_inactivas'] as $vi): ?>
+                                                                                        <tr>
+                                                                                            <td class="align-middle text-muted text-decoration-line-through"><?= htmlspecialchars($vi['nombre_variante']) ?></td>
+                                                                                            <td class="align-middle text-center text-muted"><?= htmlspecialchars($vi['stock']) ?></td>
+                                                                                            <td class="align-middle text-center">
+                                                                                                <div class="form-check form-switch d-inline-block">
+                                                                                                    <input class="form-check-input" type="checkbox" name="reactivate_variants[]" value="<?= $vi['id'] ?>" id="reactivate_<?= $vi['id'] ?>">
+                                                                                                    <label class="form-check-label" for="reactivate_<?= $vi['id'] ?>">Restaurar</label>
+                                                                                                </div>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    <?php endforeach; ?>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
+                                                                        <small class="text-muted d-block mt-2">Marca la casilla "Restaurar" y guarda el producto para volver a activar la variante.</small>
+                                                                    </div>
+                                                                <?php endif; ?>
                                                             </div>
                                                             <div class="mb-3">
                                                                 <?php $currentThumb = !empty($p['imagen_principal']) ? $p['imagen_principal'] : 'assets/img/products/default.jpeg'; ?>
@@ -520,6 +552,38 @@
                                                                 </select>
                                                                 <!-- Contenedor para campos dinámicos según categoría -->
                                                                 <div id="dynamic-attributes-edit-<?= $pIN['id'] ?>" class="mt-3"></div>
+
+                                                                <?php if (!empty($pIN['variantes_inactivas'])): ?>
+                                                                    <div class="mt-4 mb-3 border rounded p-3 bg-light">
+                                                                        <h6 class="text-muted mb-3"><i class="fa fa-trash me-2"></i>Variantes Inactivas / Eliminadas</h6>
+                                                                        <div class="table-responsive">
+                                                                            <table class="table table-sm table-bordered mb-0 bg-white">
+                                                                                <thead class="table-light">
+                                                                                    <tr>
+                                                                                        <th>Variante</th>
+                                                                                        <th class="text-center">Stock</th>
+                                                                                        <th class="text-center">Acción</th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    <?php foreach ($pIN['variantes_inactivas'] as $vi): ?>
+                                                                                        <tr>
+                                                                                            <td class="align-middle text-muted text-decoration-line-through"><?= htmlspecialchars($vi['nombre_variante']) ?></td>
+                                                                                            <td class="align-middle text-center text-muted"><?= htmlspecialchars($vi['stock']) ?></td>
+                                                                                            <td class="align-middle text-center">
+                                                                                                <div class="form-check form-switch d-inline-block">
+                                                                                                    <input class="form-check-input" type="checkbox" name="reactivate_variants[]" value="<?= $vi['id'] ?>" id="reactivate_in_<?= $vi['id'] ?>">
+                                                                                                    <label class="form-check-label" for="reactivate_in_<?= $vi['id'] ?>">Restaurar</label>
+                                                                                                </div>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    <?php endforeach; ?>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
+                                                                        <small class="text-muted d-block mt-2">Marca la casilla "Restaurar" y guarda el producto para volver a activar la variante.</small>
+                                                                    </div>
+                                                                <?php endif; ?>
                                                             </div>
                                                             <div class="mb-3">
                                                                 <?php $currentThumbIN = !empty($pIN['imagen_principal']) ? $pIN['imagen_principal'] : 'assets/img/products/default.jpeg'; ?>
