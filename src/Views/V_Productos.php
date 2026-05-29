@@ -246,6 +246,8 @@
                                                 </div>
                                             </div>
                                             <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
 
@@ -335,90 +337,7 @@
                             </div>
                         </div>
 
-                        <!-- Categorias Inactivas -->
-                        <div class="tab-pane fade" id="catInactivos">
-                            <div class="table-responsive">
-                                <table id="tablaCatInactivos" class="table-DT table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">Nombre</th>
-                                            <th scope="col">Descripción</th>
-                                            <th scope="col">Fecha de registro</th>
-                                            <th scope="col">Accion</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                            <?php foreach ($categoriasInactivas as $cIN): ?>
-                                            <tr>
-                                                <td><?php echo $cIN['nombre']; ?></td>
-                                                <td><?php echo $cIN['descripcion']; ?></td>
-                                                <td><?php echo $cIN['fecha_registro']; ?></td>
-                                                <td>
-                                                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                                                        data-bs-target="#modalEditarCategoria<?= $cIN['id'] ?>">Editar</button>
-                                                    <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal"
-                                                        data-bs-target="#modalConfirmarActivarCategoria<?= $cIN['id'] ?>">Activar</button>
-                                                </td>
-                                            </tr>
-                                            <!-- Modal Editar -->
-                                            <div class="modal fade" id="modalEditarCategoria<?= $cIN['id'] ?>" tabindex="-1">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <form action="?c=categorias&accion=update" method="POST">
-                                                            <input type="hidden" name="id" value="<?= $cIN['id'] ?>">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title">Editar Categoría</h5>
-                                                                <button type="button" class="btn-close"
-                                                                    data-bs-dismiss="modal"></button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <div class="mb-3">
-                                                                    <label for="nombre_input" class="form-label">Nombre</label>
-                                                                    <input type="text" class="form-control" id="nombre_input" name="nombre" value="<?= $cIN['nombre'] ?>" required />
-                                                                </div>
-                                                                <div class="mb-3">
-                                                                    <label for="descripcion_input" class="form-label">Descripción</label>
-                                                                    <textarea class="form-control" id="descripcion_input" name="descripcion"
-                                                                        rows="3"><?= $cIN['descripcion'] ?></textarea>
-                                                                </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                    data-bs-dismiss="modal">Cerrar</button>
-                                                                <button type="submit" class="btn btn-primary">Guardar</button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- Modal Confirmar Activación -->
-                                            <div class="modal fade" id="modalConfirmarActivarCategoria<?= $cIN['id'] ?>" tabindex="-1">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <form action="?c=categorias&accion=active" method="POST">
-                                                            <input type="hidden" name="id" value="<?= $cIN['id'] ?>">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title">Confirmar activación</h5>
-                                                                <button type="button" class="btn-close"
-                                                                    data-bs-dismiss="modal"></button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                ¿Estás seguro de que deseas habilitar la categoria <?= htmlspecialchars($cIN['nombre']) ?>?
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                    data-bs-dismiss="modal">Cancelar</button>
-                                                                <button type="submit" class="btn btn-success">Activar</button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                </table>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
                 <!-- Inventario -->

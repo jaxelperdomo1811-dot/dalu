@@ -338,10 +338,6 @@
                                             </div>
 
                                             <?php endforeach; ?>
-                                        <?php else: ?>
-                                            <tr>
-                                                <td colspan="5" class="text-center">No hay roles activos.</td>
-                                            </tr>
                                         <?php endif; ?>
                                     </tbody>
                                 </table>
@@ -427,10 +423,6 @@
                                             </div>
 
                                             <?php endforeach; ?>
-                                        <?php else: ?>
-                                            <tr>
-                                                <td colspan="5" class="text-center">No hay roles inactivos.</td>
-                                            </tr>
                                         <?php endif; ?>
                                     </tbody>
                                 </table>
