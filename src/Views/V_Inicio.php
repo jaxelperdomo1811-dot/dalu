@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Dalu Boutique - Dashboard</title>
+    <title>Dalu Boutique - Inicio</title>
     <meta charset="utf-8">
     <link rel="stylesheet" href="assets/css/header.css">
     <link rel="stylesheet" href="assets/bootstrap.min.css">
@@ -119,7 +119,7 @@
 
     <main class="dashboard-container container-fluid">
         
-        <h1 class="welcome-header">Panel de Control</h1>
+        <h1 class="welcome-header">Inicio</h1>
 
         <div class="row g-4 mt-2">
             
