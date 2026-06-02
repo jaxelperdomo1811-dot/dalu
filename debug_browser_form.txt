@@ -1,0 +1,623 @@
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 
+    [productId] => 
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 25
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 6
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 2
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 2
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 1
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 2
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 
+    [productId] => 
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 25
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 6
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 2
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 2
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 1
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 2
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 
+    [productId] => 
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 25
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 6
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 2
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 2
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 1
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 2
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 
+    [productId] => 
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 25
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 6
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 1
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 2
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 2
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 2
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 
+    [productId] => 
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 25
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 6
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 2
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 2
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 1
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 2
+)
+
+BROWSER LOG:
+Array
+(
+    [id_categoria] => 2
+    [precio_oferta] => 
+    [stock_minimo] => 3
+    [imagen] =>  (File)
+    [nombre] => camisas
+    [precio_venta] => 10
+    [descripcion] => retro 4 black cat
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 
+    [productId] => 
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 34
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 2
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 1
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 2
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 25
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 6
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 2
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 2
+)
+
+BROWSER LOG:
+Array
+(
+    [id] => 34
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 
+    [productId] => 
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 25
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 6
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 2
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 2
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 34
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 2
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 1
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 2
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 
+    [productId] => 
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 2
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 2
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 1
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 2
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 34
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 2
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 25
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 6
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 
+    [productId] => 
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 25
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 6
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 2
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 2
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 1
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 2
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 34
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 2
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 
+    [productId] => 
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 25
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 6
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 34
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 2
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 2
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 2
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 1
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 2
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 
+    [productId] => 
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 25
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 6
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 2
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 2
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 1
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 2
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 34
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 2
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 
+    [productId] => 
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 25
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 6
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 2
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 2
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 34
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 2
+)
+
+BROWSER LOG:
+Array
+(
+    [log] => initProductModal
+    [isEdit] => 1
+    [productId] => 1
+    [selectCatFound] => 1
+    [dynamicContainerFound] => 1
+    [selectCatValue] => 2
+)
+

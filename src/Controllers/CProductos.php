@@ -8,11 +8,6 @@ use Exception;
 $accion = $_GET['accion'] ?? $_POST['accion'] ?? 'view';
 
 switch($accion) {
-    case "log_form":
-        $input = file_get_contents('php://input');
-        file_put_contents('debug_browser_form.txt', "BROWSER LOG:\n" . print_r(json_decode($input, true), true) . "\n", FILE_APPEND);
-        exit();
-
     case "view":
         $productoModel = new Productos();
         $productos = $productoModel->search();
@@ -185,7 +180,6 @@ case "update":
     }
     
     if ($producto->update()) {
-        file_put_contents('debug_variantes.txt', "RAW INPUT:\n" . file_get_contents('php://input') . "\n\nPOST Data:\n" . print_r($_POST, true) . "\n");
         // ========== PROCESAR VARIANTES ELIMINADAS ==========
         if (isset($_POST['deleted_variants']) && is_array($_POST['deleted_variants'])) {
             foreach ($_POST['deleted_variants'] as $variante_id) {
@@ -214,23 +208,16 @@ case "update":
                         'stock' => isset($v['stock']) && $v['stock'] !== '' ? $v['stock'] : 0,
                         'imagen_variante' => !empty($v['imagen_variante']) ? $v['imagen_variante'] : null
                     ];
-                    file_put_contents('debug_variantes.txt', "Data to save: " . print_r($variante_data, true) . "\n", FILE_APPEND);
 
                     if (!empty($v['id'])) {
                         // Actualizar variante existente
                         $res = $producto->updateVariante($v['id'], $variante_data);
-                        file_put_contents('debug_variantes.txt', "Update variante {$v['id']}: " . ($res ? 'OK' : 'FAIL') . "\n", FILE_APPEND);
                     } else {
                         // Agregar nueva variante
                         $res = $producto->addVariante($_POST['id'], $variante_data);
-                        file_put_contents('debug_variantes.txt', "Add variante: " . ($res ? 'OK' : 'FAIL') . "\n", FILE_APPEND);
                     }
-                } else {
-                    file_put_contents('debug_variantes.txt', "Variante ignorada: falta nombre o stock. Data: " . print_r($v, true) . "\n", FILE_APPEND);
                 }
             }
-        } else {
-            file_put_contents('debug_variantes.txt', "No se recibieron variantes en POST.\n", FILE_APPEND);
         }
 
         $_SESSION['success'] = "Producto y sus variantes actualizados exitosamente.";
