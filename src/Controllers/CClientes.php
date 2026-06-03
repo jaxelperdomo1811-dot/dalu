@@ -135,6 +135,81 @@
             echo json_encode(['error' => 'No se pudo consultar la API']);
             exit;
             break;
+        case 'buscarYRegistrarCedula':
+            header('Content-Type: application/json');
+            $tipoPersona = $_GET['tipo_persona'] ?? '';
+            $cedula = $_GET['cedula'] ?? '';
+            
+            if (empty($tipoPersona) || empty($cedula)) {
+                echo json_encode(['success' => false, 'error' => 'Faltan parámetros']);
+                exit;
+            }
+
+            $cedulaCompleta = trim($tipoPersona . $cedula);
+            $clienteModel = new Clientes();
+            $clienteExistente = $clienteModel->getByCedula($cedulaCompleta);
+
+            if ($clienteExistente) {
+                echo json_encode(['success' => true, 'source' => 'db', 'data' => [
+                    'id' => $clienteExistente['id'],
+                    'nombre_completo' => trim(($clienteExistente['nombre'] ?? '') . ' ' . ($clienteExistente['apellido'] ?? ''))
+                ]]);
+                exit;
+            }
+
+            $nacionalidad = str_replace('-', '', $tipoPersona);
+            $envFile = __DIR__ . '/../../.env';
+            if (file_exists($envFile)) {
+                $env = parse_ini_file($envFile);
+                $app_id = $env['app_id'] ?? '';
+                $token = $env['token'] ?? '';
+                
+                $url = "https://api.cedula.com.ve/api/v1?app_id={$app_id}&token={$token}&nacionalidad={$nacionalidad}&cedula={$cedula}";
+                
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                $response = curl_exec($ch);
+                curl_close($ch);
+                
+                if ($response !== false) {
+                    $apiData = json_decode($response, true);
+                    if (!empty($apiData['data'])) {
+                        $persona = $apiData['data'];
+                        $nombre = trim(($persona['primer_nombre'] ?? '') . ' ' . ($persona['segundo_nombre'] ?? ''));
+                        $apellido = trim(($persona['primer_apellido'] ?? '') . ' ' . ($persona['segundo_apellido'] ?? ''));
+                        
+                        $clienteModel->setNombre($nombre)
+                                     ->setApellido($apellido)
+                                     ->setCedula($cedulaCompleta)
+                                     ->setTelefono(null)
+                                     ->setCorreo(null)
+                                     ->setDireccion(null);
+                        
+                        try {
+                            if ($clienteModel->insert()) {
+                                $nuevoCliente = $clienteModel->getByCedula($cedulaCompleta);
+                                echo json_encode(['success' => true, 'source' => 'api_and_db', 'data' => [
+                                    'id' => $nuevoCliente['id'],
+                                    'nombre_completo' => trim($nombre . ' ' . $apellido)
+                                ]]);
+                                exit;
+                            } else {
+                                echo json_encode(['success' => false, 'error' => 'Error al guardar en BD']);
+                                exit;
+                            }
+                        } catch (\Exception $e) {
+                            echo json_encode(['success' => false, 'error' => 'Error BD: ' . $e->getMessage()]);
+                            exit;
+                        }
+                    }
+                }
+            }
+            
+            echo json_encode(['success' => false, 'error' => 'Cédula no encontrada']);
+            exit;
+            break;
         default:
             http_response_code(404);
             require_once __DIR__ . '/../Views/errors/404.php';

@@ -119,4 +119,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     initPedidoDetalles();
+
 });

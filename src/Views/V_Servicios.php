@@ -11,30 +11,21 @@
     <link rel="stylesheet" href="assets/DataTablet/datatables.css">
     <link rel="icon" href="assets/img/dalulisto.png">
     <script src="assets/js/js.js" defer></script>
-    <script src="assets/js/citas.js" defer></script>
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script src="assets/DataTablet/datatables.min.js" defer></script>
     <script src="assets/js/pages/pedidos2.js" defer></script>
+    <script src="assets/js/pages/servicios.js" defer></script>
     <script src="assets/DataTablet/tabla.js" defer></script>
-    <title>Pedidos</title>
+    <title>Servicios</title>
 </head>
 
 <body>
     <?php require_once __DIR__ . "/../Views/layout/header.php"; ?>
     <?php
-        $pedidos = $pedidos ?? [];
         $pedidosC = $pedidosC ?? [];
-        $pedidosP = $pedidosP ?? [];
         $clientes = $clientes ?? [];
-        $proveedores = $proveedores ?? [];
         $productos = $productos ?? [];
         
-        $ordenEstadosTienda = [
-            'pendiente' => 'confirmado',
-            'confirmado' => 'enviado',
-            'enviado' => 'recibido',
-        ];
-
         $ordenEstadosCliente = [
             'pendiente' => 'confirmado',
             'confirmado' => 'enviado',
@@ -50,57 +41,16 @@
             
             <ul class="nav nav-tabs mb-3" id="mainTabs" role="tablist">
                 <li class="nav-item">
-                    <button class="nav-link active" id="tab-tienda" data-bs-toggle="tab" data-bs-target="#modulo-tienda" type="button">Tienda</button>
+                    <button class="nav-link active" id="tab-clientes" data-bs-toggle="tab" data-bs-target="#modulo-clientes" type="button">Pedidos de Clientes</button>
                 </li>
-                
+                <li class="nav-item">
+                    <button class="nav-link" id="tab-almacen" data-bs-toggle="tab" data-bs-target="#modulo-almacen" type="button">Almacén de Pedidos</button>
+                </li>
             </ul>
 
             <div class="tab-content">
-                <!-- Modulo Tienda -->
-                <div class="tab-pane fade show active" id="modulo-tienda">
-                    
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h1 class="titulo text-black">Pedidos de la Tienda</h1>
-                        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarPT">+ Nuevo Pedido</button>
-                    </div>
-
-                    <div class="table-responsive">
-                        <table id="tablaTienda" class="table-DT table table-striped">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Nro #</th>
-                                    <th scope="col">Nombre Proveedor</th>
-                                    <th scope="col">Fecha Pedido</th>
-                                    <th scope="col">Estado</th>
-                                    <th scope="col">Accion</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($pedidos as $p): ?>
-                                    <tr>
-                                        <td><?php echo htmlspecialchars($p['id']); ?></td>
-                                        <td><?php echo htmlspecialchars($p['nombre_proveedor']); ?></td>
-                                        <td><?php echo htmlspecialchars($p['fecha_registro']); ?></td>
-                                        <td><?php echo htmlspecialchars($p['estado']); ?></td>
-                                        <td>
-                                            <button type="button" class="btn btn-sm btn-info m-1 btn-ver-detalles" data-id="<?= $p['id'] ?>">Detalles</button>
-                                            <button type="button" class="btn btn-sm btn-warning m-1" data-bs-toggle="modal" data-bs-target="#modalAvanzarEstadoTienda<?= $p['id'] ?>" <?= in_array($p['estado'], ['recibido','cancelado']) ? ' disabled' : '' ?>>Siguiente estado</button>
-                                            <?php if ($p['estado'] === 'recibido'): ?>
-                                                <a href="?c=entradas&accion=crearDesdePedido&pedido_id=<?= $p['id'] ?>" class="btn btn-sm btn-success m-1">Crear Entrada</a>
-                                            <?php else: ?>
-                                                <button type="button" class="btn btn-sm btn-success m-1" disabled title="El pedido debe estar en estado 'recibido'">Crear Entrada</button>
-                                            <?php endif; ?>
-                                            <button type="button" class="btn btn-sm btn-danger m-1" data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminarTienda<?= $p['id'] ?>">Cancelar</button>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
                 <!-- Modulo Clientes -->
-                <div class="tab-pane fade" id="modulo-clientes">
+                <div class="tab-pane fade show active" id="modulo-clientes">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h1 class="titulo text-black">Servicio de Pedidos para Clientes</h1>
                         <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarPC">+ Nuevo Pedido</button>
@@ -135,21 +85,57 @@
                         </table>
                     </div>
                 </div>
+
+                <!-- Modulo Almacen -->
+                <div class="tab-pane fade" id="modulo-almacen">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h1 class="titulo text-black">Almacén: Pedidos de Clientes</h1>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table id="tablaAlmacen" class="table-DT table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Nro #</th>
+                                    <th scope="col">Nombre Cliente</th>
+                                    <th scope="col">Fecha Pedido</th>
+                                    <th scope="col">Estado</th>
+                                    <th scope="col">Accion</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($pedidosC as $p): ?>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($p['id']); ?></td>
+                                        <td><?php echo htmlspecialchars($p['nombre_cliente'] ?? ''); ?></td>
+                                        <td><?php echo htmlspecialchars($p['fecha_pedido'] ?? ''); ?></td>
+                                        <td><?php echo htmlspecialchars($p['estado']); ?></td>
+                                        <td>
+                                            <button type="button" class="btn btn-sm btn-info m-1 btn-ver-detalles" data-id="<?= $p['id'] ?>">Ver Detalles de Almacén</button>
+                                            <!-- Se pueden agregar más acciones exclusivas de almacén aquí -->
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
 
-    <!-- Modales para Tienda -->
-    <?php foreach ($pedidos as $p): 
-        $siguienteEstado = $ordenEstadosTienda[$p['estado']] ?? null;
+    <!-- Modales para Clientes -->
+    <?php foreach ($pedidosC as $p): 
+        $siguienteEstado = $ordenEstadosCliente[$p['estado']] ?? null;
     ?>
-        <!-- Confirmar Siguiente Estado Tienda -->
+        <!-- Confirmar Siguiente Estado Cliente -->
         <?php if ($siguienteEstado): ?>
-        <div class="modal fade" id="modalAvanzarEstadoTienda<?= $p['id'] ?>" tabindex="-1">
+        <div class="modal fade" id="modalAvanzarEstadoCliente<?= $p['id'] ?>" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form action="?c=pedidos&accion=avanzarEstado" method="POST">
                         <input type="hidden" name="id" value="<?= $p['id'] ?>">
+                        <input type="hidden" name="from_servicios" value="1">
                         <div class="modal-header">
                             <h5 class="modal-title">Avanzar Estado del Pedido</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -167,18 +153,19 @@
         </div>
         <?php endif; ?>
 
-        <!-- Confirmar Eliminación Tienda -->
-        <div class="modal fade" id="modalConfirmarEliminarTienda<?= $p['id'] ?>" tabindex="-1">
+        <!-- Confirmar Eliminación Cliente -->
+        <div class="modal fade" id="modalConfirmarEliminarCliente<?= $p['id'] ?>" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form action="?c=pedidos&accion=cancelarPedido" method="POST">
                         <input type="hidden" name="id" value="<?= $p['id'] ?>">
+                        <input type="hidden" name="from_servicios" value="1">
                         <div class="modal-header">
                             <h5 class="modal-title">Cancelar pedido</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
                         <div class="modal-body">
-                            ¿Estás seguro de que deseas cancelar el pedido nro <?= htmlspecialchars($p['id']) ?> de <?= htmlspecialchars($p['nombre_proveedor']) ?>?
+                            ¿Estás seguro de que deseas cancelar el pedido nro <?= htmlspecialchars($p['id']) ?> de <?= htmlspecialchars($p['nombre_cliente'] ?? 'Cliente') ?>?
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -190,24 +177,38 @@
         </div>
     <?php endforeach; ?>
 
-    <!-- Modal Agregar Pedido Tienda -->
-    <div class="modal fade" id="modalAgregarPT" tabindex="-1" aria-hidden="true">
+    <!-- Modal Agregar Pedido Cliente -->
+    <div class="modal fade" id="modalAgregarPC" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
-            <form action="?c=pedidos&accion=insertTienda" method="POST" enctype="multipart/form-data" class="modal-content">
+            <form action="?c=servicios&accion=insertCliente" method="POST" enctype="multipart/form-data" class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Agregar Pedido Tienda</h5>
+                    <h5 class="modal-title">Agregar Pedido de Cliente</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="nombreProveedorTienda" class="form-label">Nombre del proveedor</label>
-                        <input type="text" name="nombre_proveedor" id="nombreProveedorTienda" class="form-control" placeholder="Proveedor" required />
+                        <label class="form-label">Cédula del Cliente</label>
+                        <div class="input-group">
+                            <select name="tipo_persona" class="form-select" id="pedido_tipo_persona" style="max-width: 80px;">
+                                <option value="V-">V-</option>
+                                <option value="E-">E-</option>
+                                <option value="J-">J-</option>
+                            </select>
+                            <input type="text" name="cedula_cliente" class="form-control" id="pedido_cedula_cliente" placeholder="Número de cédula" required>
+                        </div>
+                        <div id="mensaje_pedido_cedula" class="form-text"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nombre del Cliente</label>
+                        <input type="text" name="nombre_cliente" class="form-control" id="pedido_nombre_cliente" readonly placeholder="Se autocompletará al buscar o ingréselo manualmente...">
+                        <input type="hidden" name="id_cliente" id="pedido_id_cliente">
                     </div>
                     <input type="hidden" name="estado" value="pendiente" />
-                    <input type="hidden" name="tipo" value="propios" />
+                    <input type="hidden" name="tipo" value="cliente" />
+                    <input type="hidden" name="from_servicios" value="1">
 
                     <!-- Detalle opcional -->
-                    <div id="detallesContainerTienda">
+                    <div id="detallesContainerCliente">
                         <div class="detalle-row d-flex gap-2 mb-2" data-index="0">
                             <input type="hidden" name="detalles[0][tipo]" value="producto">
                             <select name="detalles[0][id_producto]" class="form-select form-select-sm">
@@ -224,7 +225,7 @@
                         </div>
                     </div>
                     <div class="d-flex gap-2 mt-2">
-                        <button type="button" class="btn btn-sm btn-secondary" id="addDetalleTienda">+ Agregar detalle</button>
+                        <button type="button" class="btn btn-sm btn-secondary" id="addDetalleCliente">+ Agregar detalle</button>
                     </div>
                     <input type="hidden" name="detalles[0][estado]" value="pendiente" />
                 </div>
@@ -236,5 +237,27 @@
         </div>
     </div>
 
-    </body>
+    <!-- Modal Detalles del Pedido -->
+    <div class="modal fade" id="modalDetallesPedido" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalDetallesPedidoTitulo">Detalles del pedido</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body" id="modalDetallesPedidoBody">
+                    <div class="text-center py-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <p class="mt-3">Cargando detalle del pedido...</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
 </html>

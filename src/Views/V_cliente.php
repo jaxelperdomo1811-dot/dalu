@@ -99,7 +99,7 @@
                                                         <div class="row mb-3">
                                                             <div class="col-md-6">
                                                                 <label for="telefono" class="form-label">Teléfono</label>
-                                                                <input type="tel" class="form-control phone-input" title="Ingrese un teléfono válido" id="telefono" name="telefono" placeholder="Teléfono" value="<?php echo $c['telefono'] ?>" required />
+                                                                <input type="tel" class="form-control phone-input" title="Ingrese un teléfono válido" id="telefono" name="telefono"  value="<?php echo $c['telefono'] ?>" required />
                                                                 <span class="error-msg text-danger small" style="display: none; margin-top: 5px;"></span>
                                                                 <span class="valid-msg text-success small" style="display: none; margin-top: 5px;">✓ Válido</span>
                                                             </div>
@@ -207,7 +207,7 @@
                                                         <div class="row mb-3">
                                                             <div class="col-md-6">
                                                                 <label for="telefono" class="form-label">Teléfono</label>
-                                                                <input type="tel" class="form-control phone-input" title="Ingrese un teléfono válido" id="telefono" name="telefono" placeholder="Teléfono" value="<?php echo $cIN['telefono'] ?>" required />
+                                                                <input type="tel" class="form-control phone-input" title="Ingrese un teléfono válido" id="telefono" name="telefono"  value="<?php echo $cIN['telefono'] ?>" required />
                                                                 <span class="error-msg text-danger small" style="display: none; margin-top: 5px;"></span>
                                                                 <span class="valid-msg text-success small" style="display: none; margin-top: 5px;">✓ Válido</span>
                                                             </div>
@@ -302,7 +302,7 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label for="telefono-agregar" class="form-label">Teléfono</label>
-                        <input type="tel" class="form-control phone-input" title="Ingrese un teléfono válido" id="telefono-agregar" name="telefono" placeholder="Teléfono" required />
+                        <input type="tel" class="form-control phone-input" title="Ingrese un teléfono válido" id="telefono-agregar" name="telefono"  required />
                         <span class="error-msg text-danger small" style="display: none; margin-top: 5px;"></span>
                         <span class="valid-msg text-success small" style="display: none; margin-top: 5px;">✓ Válido</span>
                     </div>

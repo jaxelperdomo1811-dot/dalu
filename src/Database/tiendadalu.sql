@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-05-2026 a las 22:45:24
+-- Tiempo de generación: 03-06-2026 a las 18:48:43
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -59,7 +59,7 @@ CREATE TABLE `clientes` (
   `id` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
   `apellido` varchar(100) NOT NULL,
-  `correo` varchar(150) NOT NULL,
+  `correo` varchar(150) DEFAULT NULL,
   `cedula` varchar(150) NOT NULL,
   `telefono` varchar(20) DEFAULT NULL,
   `direccion` varchar(255) DEFAULT NULL,
@@ -74,7 +74,10 @@ CREATE TABLE `clientes` (
 INSERT INTO `clientes` (`id`, `nombre`, `apellido`, `correo`, `cedula`, `telefono`, `direccion`, `fecha_registro`, `activo`) VALUES
 (1, 'rollinera', 'perez', 'asasss@gmail.com', 'V-30218994', '+584260563224', '12123133', '2026-05-28 03:58:21', 0),
 (2, 'JENNYMAR COROMOTO', 'PEREZ COLMANARES', 'NIUSF@GMAIL.COM', 'V-16238398', '+584126749294', 'jdjdjdjdd', '2026-05-29 03:33:08', 1),
-(3, 'JONATHAN JOSE', 'YEPEZ DIAZ', 'DJDJxxLF@gmail.com', 'V-23834152', '+584165546097', 'JKAFDIHjhvdo7-vSd', '2026-05-29 20:18:23', 1);
+(3, 'JONATHAN JOSE', 'YEPEZ DIAZ', 'DJDJxxLF@gmail.com', 'V-23834152', '+584165546097', 'JKAFDIHjhvdo7-vSd', '2026-05-29 20:18:23', 1),
+(4, 'JOSE GUILLERMO', 'PEREZ SOTO', '', 'V-30218990', '', '', '2026-06-03 03:41:27', 1),
+(12, 'MARIA CLAUDIA', 'SILVA ALVAREZ', NULL, 'V-30218956', NULL, NULL, '2026-06-03 04:02:28', 1),
+(13, 'Luis', 'Gonzales', NULL, 'V-32218992', NULL, NULL, '2026-06-03 04:10:11', 1);
 
 -- --------------------------------------------------------
 
@@ -177,7 +180,10 @@ INSERT INTO `detalles_pedido` (`id`, `id_pedido`, `id_producto`, `tipo`, `imagen
 (5, 5, 2, 'proveedor', '', 'https://us.shein.com/Women-s-Vest-Brasil-South-America-Flag-Print-Design-Exquisite-Elegant-And-Fashionable-Exuding-Feminine-Charm-Perfect-For-Holiday-Gifts-Mother-s-Day-Coachella-Music-Festival-Memorial-Day-Suitable-For-Spring-And-Summer-Suitable-For-Casual-Sports-Vacation-Travel-Beach-Wear-And-Daily-Wear-Widely-Versatile-Applicable-To-Various-Occasions-Ladies-Elegant-Suits-Blouses-Summer-Outfits-Vacation-Outfits-Women-Travel-Wear-Tank-Top-p-444142921.html?src_identifier=on%3DONE_THIRD_COMPONENT%60cn%3DONE_THIRD_COMPONENT_2%60hz%3D-%60jc%3DsheinPicks_10751%60ps%3D1_4&src_module=all&src_tab_page_id=page_home1780016622648&mallCode=1&pageListType=4&detailBusinessFrom=0-1_444142921%7C0-2', '2026-05-29 01:04:15', 'pendiente', 'franela brasil', 1, NULL, NULL, NULL, 'vinculado'),
 (6, 6, NULL, 'proveedor', '', '', '2026-05-29 03:51:47', 'pendiente', 'perfume sabroso', 1, NULL, NULL, NULL, 'ignorado'),
 (7, 6, NULL, 'proveedor', '', 'https://us.shein.com/Women-s-Vest-Brasil-South-America-Flag-Print-Design-Exquisite-Elegant-And-Fashionable-Exuding-Feminine-Charm-Perfect-For-Holiday-Gifts-Mother-s-Day-Coachella-Music-Festival-Memorial-Day-Suitable-For-Spring-And-Summer-Suitable-For-Casual-Sports-Vacation-Travel-Beach-Wear-And-Daily-Wear-Widely-Versatile-Applicable-To-Various-Occasions-Ladies-Elegant-Suits-Blouses-Summer-Outfits-Vacation-Outfits-Women-Travel-Wear-Tank-Top-p-444597816.html?src_identifier=on%3DONE_THIRD_COMPONENT%60cn%3DONE_THIRD_COMPONENT_2%60hz%3D-%60jc%3DsheinPicks_10751%60ps%3D1_4&src_module=all&src_tab_page_id=page_home1780016622648&mallCode=1&pageListType=4&detailBusinessFrom=0-1_444142921%7C0-2&main_attr=27_1000112', '2026-05-29 03:51:47', 'pendiente', NULL, 1, NULL, NULL, NULL, 'ignorado'),
-(8, 6, NULL, 'proveedor', 'assets/img/products/sin_categoria/detalle_2.png', '', '2026-05-29 03:51:47', 'pendiente', NULL, 1, NULL, NULL, NULL, 'ignorado');
+(8, 6, NULL, 'proveedor', 'assets/img/products/sin_categoria/detalle_2.png', '', '2026-05-29 03:51:47', 'pendiente', NULL, 1, NULL, NULL, NULL, 'ignorado'),
+(9, 7, 25, 'cliente', '', '', '2026-06-03 03:52:03', 'pendiente', NULL, 1, NULL, NULL, NULL, 'vinculado'),
+(10, 7, 2, 'cliente', '', '', '2026-06-03 03:52:03', 'pendiente', NULL, 1, NULL, NULL, NULL, 'vinculado'),
+(11, 8, 2, 'cliente', '', '', '2026-06-03 04:10:11', 'pendiente', NULL, 1, NULL, NULL, NULL, 'vinculado');
 
 -- --------------------------------------------------------
 
@@ -259,7 +265,9 @@ INSERT INTO `pedidos` (`id`, `id_proveedor`, `nombre proveedor`, `id_cliente`, `
 (3, NULL, 'shein', NULL, 'propios', '2026-05-28 23:19:45', 'entregado'),
 (4, NULL, 'shein', NULL, 'propios', '2026-05-29 00:00:22', 'recibido'),
 (5, NULL, 'amazon', NULL, 'propios', '2026-05-29 01:04:15', 'recibido'),
-(6, NULL, 'shein', NULL, 'propios', '2026-05-29 03:51:47', 'recibido');
+(6, NULL, 'shein', NULL, 'propios', '2026-05-29 03:51:47', 'recibido'),
+(7, NULL, NULL, 4, 'cliente', '2026-06-03 03:52:03', 'pendiente'),
+(8, NULL, NULL, 13, 'cliente', '2026-06-03 04:10:11', 'pendiente');
 
 -- --------------------------------------------------------
 
@@ -343,17 +351,7 @@ INSERT INTO `producto_variantes` (`id`, `id_producto`, `nombre_variante`, `atrib
 (2, 2, 'Franela roja', '{\"talla\":\"xxl\",\"color\":\"Rojo\"}', 0.00, 6, NULL, 1),
 (3, 2, 'franela verde', '{\"talla\":\"s\",\"color\":\"verde\"}', 0.00, 1, NULL, 1),
 (4, 1, 'Principal', '{\"talla\":\"l\",\"color\":\"gris\"}', 0.00, 1, NULL, 0),
-(25, 23, 'perfume sabroso', '{\"Volumen\":\"250ml\",\"Fragancia\":\"calida\"}', 0.00, 1, NULL, 1),
-(26, 24, 'perfume sabroso', '{\"Volumen\":\"250ml\",\"Fragancia\":\"calida\"}', 0.00, 1, NULL, 1),
 (27, 25, 'perfume test', '{\"volumen_ml\":\"1\",\"fragancia\":\"prueba\"}', 0.00, 1, 'assets/img/products/perfumes/perfume_sabroso_perfume_test.png', 1),
-(28, 26, 'perfume sabroso', '{\"Volumen\":\"250ml\",\"Fragancia\":\"calida\"}', 0.00, 1, NULL, 1),
-(29, 27, 'perfume sabroso', '{\"Volumen\":\"250ml\",\"Fragancia\":\"calida\"}', 0.00, 1, NULL, 1),
-(30, 28, 'perfume sabroso', '{\"Volumen\":\"250ml\",\"Fragancia\":\"calida\"}', 0.00, 1, NULL, 1),
-(31, 29, 'perfume sabroso', '{\"Volumen\":\"250ml\",\"Fragancia\":\"calida\"}', 0.00, 1, NULL, 1),
-(32, 30, 'perfume sabroso', '{\"Volumen\":\"250ml\",\"Fragancia\":\"calida\"}', 0.00, 1, NULL, 1),
-(33, 31, 'perfume sabroso', '{\"Volumen\":\"250ml\",\"Fragancia\":\"calida\"}', 0.00, 1, NULL, 1),
-(34, 32, 'perfume sabroso', '{\"Volumen\":\"250ml\",\"Fragancia\":\"calida\"}', 0.00, 1, NULL, 1),
-(35, 33, 'perfume sabroso', '{\"Volumen\":\"250ml\",\"Fragancia\":\"calida\"}', 0.00, 1, NULL, 1),
 (36, 25, 'perfume rico', '{\"volumen_ml\":\"12\",\"fragancia\":\"test2\"}', 0.00, 2, NULL, 1),
 (37, 25, 'perfume pequeno', '{\"volumen_ml\":\"20\",\"fragancia\":\"hallmen\"}', 0.00, 10, 'assets/img/products/perfumes/perfume_sabroso_perfume_pequeno.png', 1);
 
@@ -454,7 +452,7 @@ CREATE TABLE `tasa` (
 --
 
 INSERT INTO `tasa` (`id`, `valor`, `fecha_actualizacion`) VALUES
-(2, 544.58, '2026-05-28 23:41:45');
+(2, 558.64, '2026-06-03 10:26:20');
 
 -- --------------------------------------------------------
 
@@ -481,7 +479,7 @@ INSERT INTO `usuarios` (`id`, `id_rol`, `nombre`, `usuario`, `clave`, `estado`) 
 (3, NULL, 'Rafael', 'kesto', 'c775e7b757ede630cd0aa1113bd102661ab38829ca52a6422ab782862f268646', 1),
 (4, 1, 'Userrrrrt', 'kestico2', 'c775e7b757ede630cd0aa1113bd102661ab38829ca52a6422ab782862f268646', 0),
 (5, 1, 'rollinera', 'rollinera', 'adba3cd291eab6784a2ff059fdb770a94d821e92fbbe1fe075649cc90d2e0711', 1),
-(6, 3, 'PEPE', 'PEPEM', '1234567', 1),
+(6, 3, 'PEPE', 'PEPEM', 'b221d9dbb083a7f33428d7c2a3c3198ae925614d70210e28716ccaa7cd4ddb79', 1),
 (7, 1, 'JONATHAN JOSE', 'jjyd', '21f4d881861425c9c7012b2e5e811248851acb61db3815e4566233d32975771d', 1);
 
 --
@@ -637,7 +635,7 @@ ALTER TABLE `categorias`
 -- AUTO_INCREMENT de la tabla `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de la tabla `despachos`
@@ -661,7 +659,7 @@ ALTER TABLE `detalles_entrada`
 -- AUTO_INCREMENT de la tabla `detalles_pedido`
 --
 ALTER TABLE `detalles_pedido`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `entradas`
@@ -685,7 +683,7 @@ ALTER TABLE `pagos`
 -- AUTO_INCREMENT de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `preguntas_seguridad`

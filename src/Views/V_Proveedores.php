@@ -128,7 +128,7 @@
                                                                 <div class="row mb-3">
                                                                     <div class="col-md-6">
                                                                         <label for="telefono" class="form-label">Teléfono</label>
-                                                                        <input type="tel" class="form-control phone-input" inputmode="tel" title="Ingrese un teléfono válido" name="telefono" placeholder="Teléfono" value="<?php echo $p['telefono'] ?>" required />
+                                                                        <input type="tel" class="form-control phone-input" inputmode="tel" title="Ingrese un teléfono válido" name="telefono"  value="<?php echo $p['telefono'] ?>" required />
                                                                         <span class="error-msg text-danger small" style="display: none; margin-top: 5px;"></span>
                                                                         <span class="valid-msg text-success small" style="display: none; margin-top: 5px;">✓ Válido</span>
                                                                     </div>
@@ -248,7 +248,7 @@
                                                                 <div class="row mb-3">
                                                                     <div class="col-md-6">
                                                                         <label for="telefono" class="form-label">Teléfono</label>
-                                                                        <input type="tel" class="form-control phone-input" inputmode="tel" title="Ingrese un teléfono válido" name="telefono" placeholder="Teléfono" value="<?php echo $pIN['telefono'] ?>" required />
+                                                                        <input type="tel" class="form-control phone-input" inputmode="tel" title="Ingrese un teléfono válido" name="telefono"  value="<?php echo $pIN['telefono'] ?>" required />
                                                                         <span class="error-msg text-danger small" style="display: none; margin-top: 5px;"></span>
                                                                         <span class="valid-msg text-success small" style="display: none; margin-top: 5px;">✓ Válido</span>
                                                                     </div>

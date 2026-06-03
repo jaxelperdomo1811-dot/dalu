@@ -61,6 +61,15 @@
             return $stmt->fetchAll(\PDO::FETCH_ASSOC);
         }
 
+        public function getByCedula($cedula) {
+            $sql = "SELECT * FROM clientes WHERE cedula = :cedula LIMIT 1";
+            $stmt = $this->prepare($sql);
+            $stmt->bindParam(":cedula", $cedula);
+            $stmt->execute();
+            return $stmt->fetch(\PDO::FETCH_ASSOC);
+        }
+
+
         public function searchInactive() {
             $sql = "SELECT * FROM clientes WHERE activo = 0";
             $stmt = $this->prepare($sql);
