@@ -289,13 +289,13 @@
                 </div>
 
                 <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label for="nombre" class="form-label">Nombre</label>
+                    <div id="input-nombre-container" class="col-md-6">
+                        <label id="label-nombre" for="nombre" class="form-label">Nombre</label>
                         <input type="text" minlength="3" maxlength="20" pattern="[A-Za-z\s]{3,}" title="Ingrese solo texto, entre 3 y 20 caracteres" name="nombre" class="form-control" id="nombre" placeholder="Nombre" required />
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6" id="input-apellido-container">
                         <label for="apellido" class="form-label">Apellido</label>
-                        <input type="text" minlength="3" maxlength="20" pattern="[A-Za-z\s]{3,}" title="Ingrese solo texto, entre 3 y 20 caracteres" name="apellido" class="form-control" id="apellido" placeholder="Apellido" required />
+                        <input id="input-apellido" type="text" minlength="3" maxlength="20" pattern="[A-Za-z\s]{3,}" title="Ingrese solo texto, entre 3 y 20 caracteres" name="apellido" class="form-control" id="apellido" placeholder="Apellido" required />
                     </div>
                 </div>
 
