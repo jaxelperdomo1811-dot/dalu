@@ -82,7 +82,9 @@ function initSelect2() {
                 options.dropdownParent = $modal;
             }
             
-            $select.select2(options);
+            $select.select2(options).on('select2:select select2:unselect select2:clear', function () {
+                this.dispatchEvent(new Event('change', { bubbles: true }));
+            });
         });
     }
 }

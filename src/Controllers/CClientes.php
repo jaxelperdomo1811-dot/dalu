@@ -11,7 +11,7 @@
             require_once __DIR__ . '/../Views/V_cliente.php';
             break;
         case 'insert':
-            $telefonoRaw = trim($_POST['telefono'] ?? '');
+            $telefonoRaw = trim($_POST['phone_full'] ?? $_POST['telefono'] ?? '');
             // Quitar espacios, guiones y paréntesis
             $telefono = preg_replace('/[^\d+]/', '', $telefonoRaw);
             
@@ -49,7 +49,7 @@
             exit();
             break;
         case 'update':
-            $telefonoRaw = trim($_POST['telefono'] ?? '');
+            $telefonoRaw = trim($_POST['phone_full'] ?? $_POST['telefono'] ?? '');
             // Quitar espacios, guiones y paréntesis
             $telefono = preg_replace('/[^\d+]/', '', $telefonoRaw);
             
@@ -59,6 +59,7 @@
             } elseif (preg_match('/^[1-9]\d{9}$/', $telefono)) {
                 $telefono = '+58' . $telefono;
             }
+            file_put_contents(__DIR__.'/debug_telefono.txt', "update processed: '$telefono'\n", FILE_APPEND);
 
             // Validar formato E.164 internacional
             if (!preg_match('/^\+[1-9]\d{6,14}$/', $telefono)) {
