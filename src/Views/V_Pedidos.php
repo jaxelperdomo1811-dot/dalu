@@ -11,10 +11,9 @@
     <link rel="stylesheet" href="assets/DataTablet/datatables.css">
     <link rel="icon" href="assets/img/dalulisto.png">
     <script src="assets/js/js.js" defer></script>
-    <script src="assets/js/citas.js" defer></script>
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script src="assets/DataTablet/datatables.min.js" defer></script>
-    <script src="assets/js/pages/pedidos2.js" defer></script>
+    <script src="assets/js/pages/pedidos.js" defer></script>
     <script src="assets/DataTablet/tabla.js" defer></script>
     <title>Pedidos</title>
 </head>
@@ -90,7 +89,7 @@
                                             <?php else: ?>
                                                 <button type="button" class="btn btn-sm btn-success m-1" disabled title="El pedido debe estar en estado 'recibido'">Crear Entrada</button>
                                             <?php endif; ?>
-                                            <button type="button" class="btn btn-sm btn-danger m-1" data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminarTienda<?= $p['id'] ?>">Cancelar</button>
+                                            <button type="button" class="btn btn-sm btn-danger m-1" data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminarTienda<?= $p['id'] ?>" <?= in_array($p['estado'], ['enviado', 'recibido', 'entregado', 'cancelado']) ? ' disabled title="No se puede cancelar en este estado"' : '' ?>>Cancelar</button>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -99,42 +98,6 @@
                     </div>
                 </div>
 
-                <!-- Modulo Clientes -->
-                <div class="tab-pane fade" id="modulo-clientes">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h1 class="titulo text-black">Servicio de Pedidos para Clientes</h1>
-                        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarPC">+ Nuevo Pedido</button>
-                    </div>
-
-                    <div class="table-responsive">
-                        <table id="tablaClientes" class="table-DT table table-striped">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Nro #</th>
-                                    <th scope="col">Nombre Cliente</th>
-                                    <th scope="col">Fecha Pedido</th>
-                                    <th scope="col">Estado</th>
-                                    <th scope="col">Accion</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($pedidosC as $p): ?>
-                                    <tr>
-                                        <td><?php echo htmlspecialchars($p['id']); ?></td>
-                                        <td><?php echo htmlspecialchars($p['nombre_cliente'] ?? ''); ?></td>
-                                        <td><?php echo htmlspecialchars($p['fecha_pedido'] ?? ''); ?></td>
-                                        <td><?php echo htmlspecialchars($p['estado']); ?></td>
-                                        <td>
-                                            <button type="button" class="btn btn-sm btn-info m-1 btn-ver-detalles" data-id="<?= $p['id'] ?>">Detalles</button>
-                                            <button type="button" class="btn btn-sm btn-warning m-1" data-bs-toggle="modal" data-bs-target="#modalAvanzarEstadoCliente<?= $p['id'] ?>" <?= in_array($p['estado'], ['entregado','cancelado']) ? ' disabled' : '' ?>>Siguiente estado</button>
-                                            <button type="button" class="btn btn-sm btn-danger m-1" data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminarCliente<?= $p['id'] ?>">Cancelar</button>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
             </div>
         </div>
     </main>
@@ -200,8 +163,13 @@
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="nombreProveedorTienda" class="form-label">Nombre del proveedor</label>
-                        <input type="text" name="nombre_proveedor" id="nombreProveedorTienda" class="form-control" placeholder="Proveedor" required />
+                        <label for="idProveedorTienda" class="form-label">Proveedor</label>
+                        <select name="id_proveedor" id="idProveedorTienda" class="form-select" required>
+                            <option value="">-- Seleccione un proveedor --</option>
+                            <?php foreach ($proveedores as $prov): ?>
+                                <option value="<?= $prov['id'] ?>"><?= htmlspecialchars(!empty($prov['razon_social']) ? $prov['razon_social'] : $prov['nombre']) ?></option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                     <input type="hidden" name="estado" value="pendiente" />
                     <input type="hidden" name="tipo" value="propios" />
@@ -233,6 +201,29 @@
                     <button type="submit" class="btn btn-primary">Guardar</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Modal Detalles del Pedido -->
+    <div class="modal fade" id="modalDetallesPedido" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalDetallesPedidoTitulo">Detalles del pedido</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body" id="modalDetallesPedidoBody">
+                    <div class="text-center py-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <p class="mt-3">Cargando detalle del pedido...</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
         </div>
     </div>
 

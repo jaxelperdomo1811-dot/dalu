@@ -65,8 +65,31 @@ window.onpageshow = function(event) {
         Proveedores
       </a>
     </li>
+    <li class="nav-item m-1 fs-6">
+      <a class="nav-link" href="?c=Notas">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"
+        class='bx bxs-chart icon'><!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
+          <path fill="#ffffff"
+            d="M53.5 245.1L110.3 131.4C121.2 109.7 143.3 96 167.6 96L472.5 96C496.7 96 518.9 109.7 529.7 131.4L586.5 245.1C590.1 252.3 592 260.2 592 268.3C592 295.6 570.8 318 544 319.9L544 512C544 529.7 529.7 544 512 544C494.3 544 480 529.7 480 512L480 320L384 320L384 496C384 522.5 362.5 544 336 544L144 544C117.5 544 96 522.5 96 496L96 319.9C69.2 318 48 295.6 48 268.3C48 260.3 49.9 252.3 53.5 245.1zM160 320L160 432C160 440.8 167.2 448 176 448L304 448C312.8 448 320 440.8 320 432L320 320L160 320z"/>
+        </svg>
+        Notas de
+        <br>
+        Entrega
+      </a>
+    </li>
 
-<li class="nav-item m-1 fs-6">
+    <li class="nav-item m-1 fs-6">
+      <a class="nav-link" href="?c=Creditos">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"
+          class='bx bxs-chart icon'><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+          <path fill="#ffffff"
+            d="M64 64C28.7 64 0 92.7 0 128V384c0 35.3 28.7 64 64 64H512c35.3 0 64-28.7 64-64V128c0-35.3-28.7-64-64-64H64zm64 320H64V320c35.3 0 64 28.7 64 64zM64 192V128h64c0 35.3-28.7 64-64 64zM448 384c0-35.3 28.7-64 64-64v64H448zm64-192c-35.3 0-64-28.7-64-64h64v64zM288 160a96 96 0 1 1 0 192 96 96 0 1 1 0-192z" />
+        </svg>
+        Créditos
+      </a>
+    </li>
+
+    <li class="nav-item m-1 fs-6">
       <a class="nav-link" href="?c=Despacho">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"
           class='bx bxs-chart icon'><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->

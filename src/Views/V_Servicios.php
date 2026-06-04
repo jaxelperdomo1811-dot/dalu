@@ -13,7 +13,7 @@
     <script src="assets/js/js.js" defer></script>
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script src="assets/DataTablet/datatables.min.js" defer></script>
-    <script src="assets/js/pages/pedidos2.js" defer></script>
+    <script src="assets/js/pages/pedidos.js" defer></script>
     <script src="assets/js/pages/servicios.js" defer></script>
     <script src="assets/DataTablet/tabla.js" defer></script>
     <title>Servicios</title>
@@ -77,7 +77,7 @@
                                         <td>
                                             <button type="button" class="btn btn-sm btn-info m-1 btn-ver-detalles" data-id="<?= $p['id'] ?>">Detalles</button>
                                             <button type="button" class="btn btn-sm btn-warning m-1" data-bs-toggle="modal" data-bs-target="#modalAvanzarEstadoCliente<?= $p['id'] ?>" <?= in_array($p['estado'], ['entregado','cancelado']) ? ' disabled' : '' ?>>Siguiente estado</button>
-                                            <button type="button" class="btn btn-sm btn-danger m-1" data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminarCliente<?= $p['id'] ?>">Cancelar</button>
+                                            <button type="button" class="btn btn-sm btn-danger m-1" data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminarCliente<?= $p['id'] ?>" <?= in_array($p['estado'], ['enviado', 'recibido', 'entregado', 'cancelado']) ? ' disabled title="No se puede cancelar en este estado"' : '' ?>>Cancelar</button>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>

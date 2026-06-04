@@ -67,6 +67,41 @@ class Productos extends Conexion {
     public function getVentasTotales() { return $this->ventas_totales; }
     public function getVariantes() { return $this->variantes; }
     
+    /**
+     * Calcula el precio de venta de un producto aplicando la fórmula de ajustes y tasas.
+     * Fórmula: (Precio Compra * factor_envio * factor_ganancia) * (Tasa Zelle / Tasa BCV)
+     * 
+     * @param float $precio_compra El precio base de compra (ej. Precio Shein en USD)
+     * @return float El precio de venta calculado en la moneda base (USD)
+     */
+    public function calcularPrecioVentaDesdeCompra($precio_compra) {
+        $ajustesModel = new \Lenovo\Dalu\Models\Ajustes();
+        $tasaModel = new \Lenovo\Dalu\Models\Tasa();
+        
+        // Traer porcentajes y convertirlos a factor multiplicador
+        // Ejemplo: 20% -> 1.20
+        $pct_envio = $ajustesModel->get('porcentaje_envio') ?? 20;
+        $pct_ganancia = $ajustesModel->get('porcentaje_ganancia') ?? 30;
+        
+        $factor_envio = 1 + ($pct_envio / 100);
+        $factor_ganancia = 1 + ($pct_ganancia / 100);
+        
+        // Traer tasas
+        $tasa_bcv_data = $tasaModel->getLatest('BCV');
+        $tasa_zelle_data = $tasaModel->getLatest('Zelle'); 
+        
+        $tasa_bcv = $tasa_bcv_data ? floatval($tasa_bcv_data['valor']) : 1;
+        $tasa_zelle = $tasa_zelle_data ? floatval($tasa_zelle_data['valor']) : $tasa_bcv; // Si no hay Zelle, usa BCV
+        
+        // Evitar división por cero
+        if ($tasa_bcv <= 0) $tasa_bcv = 1;
+        
+        // Aplicar fórmula
+        $precio_venta = ($precio_compra * $factor_envio * $factor_ganancia) * ($tasa_zelle / $tasa_bcv);
+        
+        return round($precio_venta, 2);
+    }
+    
     public function getNombreCategoria($producto_id = null) {
     $id = $producto_id ?? $this->id;
     $sql = "SELECT c.nombre FROM categorias c 

@@ -472,7 +472,7 @@
                                                             </div>
                                                             <div class="row mb-3">
                                                                 <div class="col-md-6">
-                                                                    <label for="precio_venta_<?= $p['id'] ?>" class="form-label">Precio</label>
+                                                                    <label for="precio_venta_<?= $p['id'] ?>" class="form-label">Precio Venta</label>
                                                                     <input type="number" step="0.01" min="0" id="precio_venta_<?= $p['id'] ?>" name="precio_venta" class="form-control" value="<?= htmlspecialchars($p['precio_venta'] ?? $p['precio'] ?? '') ?>" required />
                                                                 </div>
                                                                 <div class="col-md-6">
@@ -598,7 +598,7 @@
                                                             </div>
                                                             <div class="row mb-3">
                                                                 <div class="col-md-6">
-                                                                    <label for="precio_venta_<?= $pIN['id'] ?>" class="form-label">Precio</label>
+                                                                    <label for="precio_venta_<?= $pIN['id'] ?>" class="form-label">Precio Venta</label>
                                                                     <input type="number" step="0.01" min="0" id="precio_venta_<?= $pIN['id'] ?>" name="precio_venta" class="form-control" value="<?= htmlspecialchars($pIN['precio_venta'] ?? $pIN['precio'] ?? '') ?>" required />
                                                                 </div>
                                                                 <div class="col-md-6">
@@ -692,14 +692,19 @@
                                 id="nombre_input" placeholder="Nombre" required />
                         </div>
                         <div class="col-md-6">
-                            <label for="precio" class="form-label">Precio</label>
+                            <label for="precio" class="form-label">Precio Venta</label>
                             <input type="number" step="0.01" min="0" name="precio_venta" class="form-control"
-                                id="precio" placeholder="Precio" required />
+                                id="precio" placeholder="Precio Venta" required />
                         </div>
                     </div>
 
                     <div class="row mb-3">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label for="precio_compra" class="form-label">Precio Compra</label>
+                            <input type="number" step="0.01" min="0" name="precio_compra" class="form-control"
+                                id="precio_compra" placeholder="Precio Compra" />
+                        </div>
+                        <div class="col-md-6">
                             <label for="descripcion_input" class="form-label">Descripción</label>
                             <input type="text" minlength="5" maxlength="25" name="descripcion" class="form-control"
                                 id="descripcion_input" title="Entre 5 y 25 caracteres" placeholder="Descripción" required />
@@ -768,8 +773,49 @@
         </div>
 
         <!-- Exponer categorías a JS y cargar script de productos -->
+        <?php
+        $ajustesModel = new \Lenovo\Dalu\Models\Ajustes();
+        $tasaModel = new \Lenovo\Dalu\Models\Tasa();
+        
+        $pct_envio = $ajustesModel->get('porcentaje_envio') ?? 20;
+        $pct_ganancia = $ajustesModel->get('porcentaje_ganancia') ?? 30;
+        
+        $factor_envio = 1 + ($pct_envio / 100);
+        $factor_ganancia = 1 + ($pct_ganancia / 100);
+        
+        $tasa_bcv_data = $tasaModel->getLatest('BCV');
+        $tasa_zelle_data = $tasaModel->getLatest('Zelle'); 
+        
+        $tasa_bcv = $tasa_bcv_data ? floatval($tasa_bcv_data['valor']) : 1;
+        $tasa_zelle = $tasa_zelle_data ? floatval($tasa_zelle_data['valor']) : $tasa_bcv;
+        if ($tasa_bcv <= 0) $tasa_bcv = 1;
+        $ratio_tasa = $tasa_zelle / $tasa_bcv;
+        ?>
         <script>
             window.productosCategories = <?php echo json_encode($categorias ?? [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?: '[]'; ?>;
+            window.factorEnvio = <?= json_encode($factor_envio) ?>;
+            window.factorGanancia = <?= json_encode($factor_ganancia) ?>;
+            window.ratioTasa = <?= json_encode($ratio_tasa) ?>;
+
+            document.addEventListener('DOMContentLoaded', function() {
+                // Delegación de eventos para calcular el precio de venta cuando se edite precio_compra
+                document.body.addEventListener('input', function(e) {
+                    if (e.target && e.target.name === 'precio_compra') {
+                        // Encontrar el modal o el form donde estamos
+                        const container = e.target.closest('form');
+                        if (container) {
+                            const inputVenta = container.querySelector('input[name="precio_venta"]');
+                            if (inputVenta) {
+                                const val = parseFloat(e.target.value);
+                                if (!isNaN(val) && val > 0) {
+                                    const calculado = (val * window.factorEnvio * window.factorGanancia) * window.ratioTasa;
+                                    inputVenta.value = calculado.toFixed(2);
+                                }
+                            }
+                        }
+                    }
+                });
+            });
         </script>
     <script>
         document.addEventListener('submit', function(e) {

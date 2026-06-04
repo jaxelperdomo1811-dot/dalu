@@ -49,6 +49,30 @@ class Entradas extends Conexion {
                 $stmtDetalle->bindParam(":precio_compra", $detalle['precio_compra']);
                 $stmtDetalle->execute();
 
+                // Actualizar precio del producto (usando la fórmula de Ajustes)
+                $id_producto_actualizar = null;
+                if (!empty($detalle['id_variante'])) {
+                    $stmtProd = $this->prepare("SELECT id_producto FROM producto_variantes WHERE id = :id");
+                    $stmtProd->bindParam(":id", $detalle['id_variante']);
+                    $stmtProd->execute();
+                    $resProd = $stmtProd->fetch(PDO::FETCH_ASSOC);
+                    if ($resProd) $id_producto_actualizar = $resProd['id_producto'];
+                } elseif (!empty($detalle['id_producto'])) {
+                    $id_producto_actualizar = $detalle['id_producto'];
+                }
+
+                if ($id_producto_actualizar && floatval($detalle['precio_compra']) > 0) {
+                    $prodModel = new \Lenovo\Dalu\Models\Productos();
+                    $nuevo_precio_venta = $prodModel->calcularPrecioVentaDesdeCompra($detalle['precio_compra']);
+                    
+                    $sqlUpdatePrecio = "UPDATE productos SET precio_compra = :pc, precio_venta = :pv WHERE id = :id";
+                    $stmtUpdPrecio = $this->prepare($sqlUpdatePrecio);
+                    $stmtUpdPrecio->bindParam(":pc", $detalle['precio_compra']);
+                    $stmtUpdPrecio->bindParam(":pv", $nuevo_precio_venta);
+                    $stmtUpdPrecio->bindParam(":id", $id_producto_actualizar);
+                    $stmtUpdPrecio->execute();
+                }
+
                 // Actualizar stock de la variante si aplica
                 if (!empty($detalle['id_variante'])) {
                     $sqlUpdateVar = "UPDATE producto_variantes SET stock = stock + :cantidad WHERE id = :id_variante";
@@ -146,9 +170,12 @@ class Entradas extends Conexion {
             return ['error' => 'No hay productos válidos para generar la entrada (todos fueron ignorados).'];
         }
         
-        // Obtener o crear proveedor
-        $nombre_proveedor = $pedido['nombre_proveedor'] ?: 'Proveedor Genérico';
-        $id_proveedor = $this->obtenerOCrearProveedor($nombre_proveedor);
+        // Obtener proveedor directamente o crearlo
+        $id_proveedor = $pedido['id_proveedor'] ?? null;
+        if (!$id_proveedor) {
+            $nombre_proveedor = $pedido['nombre_proveedor'] ?: 'Proveedor Genérico';
+            $id_proveedor = $this->obtenerOCrearProveedor($nombre_proveedor);
+        }
         
         $numero_lote = 'LOTE-PED-' . $pedido_id . '-' . date('Ymd');
         $fecha_ingreso = date('Y-m-d');
@@ -200,6 +227,19 @@ class Entradas extends Conexion {
                     $stmtVar->bindParam(":cantidad", $detalle['cantidad']);
                     $stmtVar->bindParam(":id_variante", $detalle['id_variante']);
                     $stmtVar->execute();
+                }
+
+                // Actualizar precio del producto (usando la fórmula de Ajustes)
+                if (!empty($detalle['id_producto']) && floatval($detalle['precio_compra']) > 0) {
+                    $prodModel = new \Lenovo\Dalu\Models\Productos();
+                    $nuevo_precio_venta = $prodModel->calcularPrecioVentaDesdeCompra($detalle['precio_compra']);
+                    
+                    $sqlUpdatePrecio = "UPDATE productos SET precio_compra = :pc, precio_venta = :pv WHERE id = :id";
+                    $stmtUpdPrecio = $this->prepare($sqlUpdatePrecio);
+                    $stmtUpdPrecio->bindParam(":pc", $detalle['precio_compra']);
+                    $stmtUpdPrecio->bindParam(":pv", $nuevo_precio_venta);
+                    $stmtUpdPrecio->bindParam(":id", $detalle['id_producto']);
+                    $stmtUpdPrecio->execute();
                 }
             }
             

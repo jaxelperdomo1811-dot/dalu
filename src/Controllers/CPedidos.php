@@ -19,8 +19,8 @@ switch ($accion) {
         break;
 
     case 'insertTienda':
-        if (empty($_POST['nombre_proveedor'])) {
-            $_SESSION['error'] = 'Debe ingresar el nombre del proveedor.';
+        if (empty($_POST['id_proveedor'])) {
+            $_SESSION['error'] = 'Debe seleccionar un proveedor.';
             $redirect_url = isset($_POST['from_servicios']) ? '?c=servicios&accion=view' : '?c=pedidos&accion=view';
             header('Location: ' . $redirect_url);
             exit();
@@ -30,7 +30,7 @@ switch ($accion) {
         $pedido->setTipo('propios')
                ->setEstado($_POST['estado'] ?? 'pendiente')
                ->setIdCliente(null)
-               ->setNombreProveedor(trim($_POST['nombre_proveedor']));
+               ->setIdProveedor($_POST['id_proveedor']);
 
         // Procesar detalles opcionales
         $productosModel = new Productos();
@@ -95,7 +95,7 @@ switch ($accion) {
         $pedido->setTipo('proveedor')
                ->setEstado($_POST['estado'] ?? 'pendiente')
                ->setIdCliente(null)
-               ->setNombreProveedor(null);
+               ->setIdProveedor($_POST['id_proveedor']);
 
         // Procesar detalles opcionales
         $productosModel = new Productos();
@@ -151,6 +151,22 @@ switch ($accion) {
         $pedidoId = $_POST['id'] ?? null;
         if (empty($pedidoId)) {
             $_SESSION['error'] = 'ID de pedido inválido.';
+            $redirect_url = isset($_POST['from_servicios']) ? '?c=servicios&accion=view' : '?c=pedidos&accion=view';
+            header('Location: ' . $redirect_url);
+            exit();
+        }
+
+        $pedidoModel = new Pedidos();
+        $pedidoData = $pedidoModel->getById($pedidoId);
+        if (!$pedidoData) {
+            $_SESSION['error'] = 'Pedido no encontrado.';
+            $redirect_url = isset($_POST['from_servicios']) ? '?c=servicios&accion=view' : '?c=pedidos&accion=view';
+            header('Location: ' . $redirect_url);
+            exit();
+        }
+
+        if (in_array($pedidoData['estado'], ['enviado', 'recibido', 'entregado', 'cancelado'])) {
+            $_SESSION['error'] = 'El pedido no puede ser cancelado porque su estado es ' . htmlspecialchars($pedidoData['estado']) . '.';
             $redirect_url = isset($_POST['from_servicios']) ? '?c=servicios&accion=view' : '?c=pedidos&accion=view';
             header('Location: ' . $redirect_url);
             exit();

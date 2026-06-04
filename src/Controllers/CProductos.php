@@ -31,19 +31,23 @@ switch($accion) {
     
 case "insert":
     // Validar campos requeridos
-    if (empty($_POST['id_categoria']) || empty($_POST['nombre']) || empty($_POST['precio_venta'])) {
+    if (empty($_POST['id_categoria']) || empty($_POST['nombre']) || (empty($_POST['precio_venta']) && empty($_POST['precio_compra']))) {
         $_SESSION['error'] = "Todos los campos requeridos (*) deben ser llenados.";
         header("Location: ?c=productos&accion=view");
         exit();
     }
+    
+    $precio_compra = !empty($_POST['precio_compra']) ? floatval($_POST['precio_compra']) : 0;
+    $tempProducto = new Productos();
+    $precio_venta = $precio_compra > 0 ? $tempProducto->calcularPrecioVentaDesdeCompra($precio_compra) : $_POST['precio_venta'];
     
     $producto = new Productos(
         null,                           // id
         $_POST['id_categoria'],         // id_categoria
         $_POST['nombre'],               // nombre
         $_POST['descripcion'],          // descripcion
-        $_POST['precio_venta'],         // precio_venta
-        !empty($_POST['precio_compra']) ? $_POST['precio_compra'] : 0,   // precio_compra
+        $precio_venta,                  // precio_venta calculado
+        $precio_compra,                 // precio_compra
         !empty($_POST['marca']) ? $_POST['marca'] : null         // marca
     );
     
@@ -152,19 +156,22 @@ case "insert":
     
 case "update":
     // Validar campos requeridos
-    if (empty($_POST['id']) || empty($_POST['id_categoria']) || empty($_POST['nombre']) || empty($_POST['precio_venta'])) {
+    if (empty($_POST['id']) || empty($_POST['id_categoria']) || empty($_POST['nombre']) || (empty($_POST['precio_venta']) && empty($_POST['precio_compra']))) {
         $_SESSION['error'] = "Todos los campos requeridos (*) deben ser llenados.";
         header("Location: ?c=productos&accion=view");
         exit();
     }
     
+    $precio_compra = !empty($_POST['precio_compra']) ? floatval($_POST['precio_compra']) : 0;
     $producto = new Productos();
+    $precio_venta = $precio_compra > 0 ? $producto->calcularPrecioVentaDesdeCompra($precio_compra) : $_POST['precio_venta'];
+
     $producto->setId($_POST['id'])
              ->setIdCategoria($_POST['id_categoria'])
              ->setNombre($_POST['nombre'])
              ->setDescripcion($_POST['descripcion'])
-             ->setPrecioCompra($_POST['precio_compra'] !== '' ? $_POST['precio_compra'] : 0)
-             ->setPrecioVenta($_POST['precio_venta'])
+             ->setPrecioCompra($precio_compra)
+             ->setPrecioVenta($precio_venta)
              ->setPrecioOferta($_POST['precio_oferta'] !== '' ? $_POST['precio_oferta'] : null)
              ->setStockMinimo($_POST['stock_minimo'] !== '' ? $_POST['stock_minimo'] : 3)
              ->setMarca(!empty($_POST['marca']) ? $_POST['marca'] : null);
