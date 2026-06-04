@@ -79,18 +79,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function agregarDetalle() {
         const row = document.createElement('div');
-        row.className = 'detalle-row d-flex gap-2 mb-2 align-items-center';
+        row.className = 'detalle-row d-flex gap-2 mb-2 align-items-center w-100';
         row.innerHTML = `
-            <select class="form-select form-select-sm sel-producto" style="flex: 2;">
-                ${opcionesProductos}
-            </select>
-            <select name="id_variante[]" class="form-select form-select-sm sel-variante" style="flex: 2;" required>
-                <option value="">-- Variante --</option>
-            </select>
-            <input type="number" name="cantidad[]" class="form-control form-control-sm in-cantidad" min="1" value="1" style="flex: 1;" required>
-            <input type="number" name="precio_unitario[]" class="form-control form-control-sm in-precio" step="0.01" placeholder="Precio U." style="flex: 1;" required>
-            <div style="flex: 1;" class="text-end fw-bold">$<span class="sp-subtotal">0.00</span></div>
-            <button type="button" class="btn btn-sm btn-danger btn-remove-detalle">X</button>
+            <div style="width: 32%;">
+                <select class="form-select form-select-sm sel-producto w-100">
+                    ${opcionesProductos}
+                </select>
+            </div>
+            <div style="width: 25%;">
+                <select name="id_variante[]" class="form-select form-select-sm sel-variante w-100" required>
+                    <option value="">-- Variante --</option>
+                </select>
+            </div>
+            <div style="width: 12%;">
+                <input type="number" name="cantidad[]" class="form-control form-control-sm in-cantidad px-1" min="1" value="1" placeholder="Cant." required>
+            </div>
+            <div style="width: 16%;">
+                <input type="number" name="precio_unitario[]" class="form-control form-control-sm in-precio px-1" step="0.01" placeholder="P. Unit" required>
+            </div>
+            <div style="width: 10%;" class="text-end fw-bold text-nowrap px-1">
+                $<span class="sp-subtotal">0.00</span>
+            </div>
+            <button type="button" class="btn btn-sm btn-danger btn-remove-detalle px-2">X</button>
         `;
 
         container.appendChild(row);
@@ -321,6 +331,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const container = e.target.closest('.pago-item');
             const hiddenMoneda = container.querySelector('.input-moneda-hidden');
             const badgeMoneda = container.querySelector('.badge-moneda');
+            const inputReferencia = container.querySelector('input[name="referencia[]"]');
             const nombreMetodo = e.target.options[e.target.selectedIndex].text.toLowerCase();
             
             if (nombreMetodo.includes('bs') || nombreMetodo.includes('pago móvil')) {
@@ -333,6 +344,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 badgeMoneda.className = 'badge bg-success badge-moneda';
             }
             hiddenMoneda.dispatchEvent(new Event('change', { bubbles: true }));
+            
+            if (inputReferencia) {
+                if (nombreMetodo.includes('efectivo')) {
+                    inputReferencia.style.display = 'none';
+                    inputReferencia.required = false;
+                    inputReferencia.value = ''; // Clean up
+                } else {
+                    inputReferencia.style.display = 'block';
+                    inputReferencia.required = true;
+                }
+            }
             
             const modal = e.target.closest('.modal');
             if (modal) actualizarOpcionesMetodos(modal);
@@ -388,7 +410,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (primerItem) {
                 const nuevoItem = primerItem.cloneNode(true);
                 nuevoItem.querySelector('.input-monto-pago').value = '';
-                nuevoItem.querySelector('input[name="referencia[]"]').value = '';
+                const inputReferenciaNuevo = nuevoItem.querySelector('input[name="referencia[]"]');
+                if (inputReferenciaNuevo) {
+                    inputReferenciaNuevo.value = '';
+                    inputReferenciaNuevo.style.display = 'block';
+                    inputReferenciaNuevo.required = false;
+                }
+                
                 nuevoItem.querySelector('.select-metodo-pago').value = '';
                 nuevoItem.querySelector('.equivalente-pago-text').innerText = '$0.00';
                 nuevoItem.querySelector('.badge-moneda').innerText = 'Moneda: ?';
@@ -514,8 +542,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const primerItem = contenedor.querySelector('.pago-item');
             if (primerItem) {
                 const nuevoItem = primerItem.cloneNode(true);
-                nuevoItem.querySelector('.input-monto-pago').value = '';
-                nuevoItem.querySelector('input[name="referencia[]"]').value = '';
+                const inputReferenciaNuevo = nuevoItem.querySelector('input[name="referencia[]"]');
+                if (inputReferenciaNuevo) {
+                    inputReferenciaNuevo.value = '';
+                    inputReferenciaNuevo.style.display = 'block';
+                    inputReferenciaNuevo.required = false;
+                }
+                
                 nuevoItem.querySelector('.select-metodo-pago').value = '';
                 nuevoItem.querySelector('.equivalente-pago-text').innerText = '$0.00';
                 nuevoItem.querySelector('.badge-moneda').innerText = 'Moneda: ?';

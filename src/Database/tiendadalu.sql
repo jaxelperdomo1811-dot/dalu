@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 04-06-2026 a las 07:09:00
+-- Tiempo de generación: 05-06-2026 a las 01:39:43
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -64,10 +64,10 @@ INSERT INTO `categorias` (`id`, `nombre`, `descripcion`, `fecha_registro`, `acti
 (1, 'Carteras', '', '2026-05-22 00:41:09', 1),
 (2, 'Ropa', '', '2026-05-22 01:18:57', 1),
 (5, 'Cosméticos', '', '2026-05-27 22:13:00', 1),
-(6, 'Perfumes', '', '2026-05-27 22:24:23', 0),
+(6, 'Perfumes', '', '2026-05-27 22:24:23', 1),
 (7, 'Bisutería', '', '2026-05-27 22:27:01', 1),
 (8, 'Zapatos', '', '2026-05-27 22:27:13', 1),
-(9, 'Maquillaje', '', '2026-05-27 23:03:42', 0),
+(9, 'Maquillaje', '', '2026-05-27 23:03:42', 1),
 (10, 'Accesorios', '', '2026-05-27 23:33:26', 1);
 
 -- --------------------------------------------------------
@@ -102,7 +102,13 @@ INSERT INTO `clientes` (`id`, `nombre`, `apellido`, `correo`, `cedula`, `telefon
 (14, 'Fabrica SA', '', 'NIUaaaSF@GMAIL.COM', 'J-30218990', '+584261289078', 'aqaqaaq1', '2026-06-03 18:00:40', 1),
 (15, 'FRANCISMAR PAOLA', 'ARROYO RODRIGUEZ', 'NI11aUSF@GMAIL.COM', 'V-30218957', '+584241289078', 'dwqdwfde2', '2026-06-03 18:02:02', 1),
 (16, 'ANDRES', 'GONZALEZ GONZALEZ', NULL, 'V-26276726', NULL, NULL, '2026-06-03 22:31:34', 1),
-(17, 'MANUEL RICARDO', 'SANCHEZ TORRES', NULL, 'V-26076726', NULL, NULL, '2026-06-03 22:31:48', 1);
+(17, 'MANUEL RICARDO', 'SANCHEZ TORRES', NULL, 'V-26076726', NULL, NULL, '2026-06-03 22:31:48', 1),
+(18, 'JESUS ALEXANDER', 'PERDOMO PERDOMO', NULL, 'V-27388616', NULL, NULL, '2026-06-04 15:31:41', 1),
+(19, 'Maria', 'Perez', NULL, 'V-33551766', NULL, NULL, '2026-06-04 15:39:28', 1),
+(20, 'JESUS GREGORIO', 'PERDOMO ORTIZ', 'aaSF@GMAIL.COM', 'V-12371443', '+584245674001', 'su casa ', '2026-06-04 20:41:04', 1),
+(21, 'DANIELLA VALENTINA', 'LUNA DIAZ', 'NIUSjhbuggvyrfvyF@GMAIL.COM', 'V-30377063', '+584223174606', 'gtybkjgvtuooyt', '2026-06-04 21:07:36', 1),
+(22, 'LIVORIO ANTONIO', 'MORENO GIL', NULL, 'V-30377064', NULL, NULL, '2026-06-04 21:08:47', 1),
+(23, 'HONIS MARIA', 'PEREZ DE SOTO', 'qqdhghh@gmail.com', 'V-12884771', '+573211234567', 'xdawcrwverbvr', '2026-06-04 21:42:13', 1);
 
 -- --------------------------------------------------------
 
@@ -128,7 +134,8 @@ CREATE TABLE `creditos` (
 
 INSERT INTO `creditos` (`id`, `id_nota_entrega`, `porcentaje_inicial`, `monto_cuota_inicial`, `nro_cuotas`, `monto_por_cuota`, `frecuencia`, `estado`, `fecha_registro`) VALUES
 (1, 1, 40, 9.60, 4, 3.60, 'semanal', 'pendiente', '2026-06-03 22:32:14'),
-(2, 1, 60, 7.20, 2, 2.40, 'semanal', 'pendiente', '2026-06-04 02:21:50');
+(2, 1, 60, 7.20, 2, 2.40, 'semanal', 'pendiente', '2026-06-04 02:21:50'),
+(3, 1, 60, 12.00, 5, 1.60, 'semanal', 'pendiente', '2026-06-04 15:39:28');
 
 -- --------------------------------------------------------
 
@@ -160,7 +167,13 @@ INSERT INTO `creditos_cuotas` (`id`, `id_credito`, `tipo_cuota`, `nro_cuota`, `m
 (5, 1, 'regular', 4, 3.60, 3.60, '2026-07-02', 'pendiente', NULL),
 (6, 2, 'inicial', 0, 7.20, 0.00, '2026-06-04', 'pagado', '2026-06-04 04:21:51'),
 (7, 2, 'regular', 1, 2.40, 2.40, '2026-06-11', 'pendiente', NULL),
-(8, 2, 'regular', 2, 2.40, 2.40, '2026-06-18', 'pendiente', NULL);
+(8, 2, 'regular', 2, 2.40, 2.40, '2026-06-18', 'pendiente', NULL),
+(9, 3, 'inicial', 0, 12.00, 0.00, '2026-06-04', 'pagado', '2026-06-04 17:39:28'),
+(10, 3, 'regular', 1, 1.60, 1.60, '2026-06-11', 'pendiente', NULL),
+(11, 3, 'regular', 2, 1.60, 1.60, '2026-06-18', 'pendiente', NULL),
+(12, 3, 'regular', 3, 1.60, 1.60, '2026-06-25', 'pendiente', NULL),
+(13, 3, 'regular', 4, 1.60, 1.60, '2026-07-02', 'pendiente', NULL),
+(14, 3, 'regular', 5, 1.60, 1.60, '2026-07-09', 'pendiente', NULL);
 
 -- --------------------------------------------------------
 
@@ -203,7 +216,8 @@ CREATE TABLE `detalles_entrada` (
 --
 
 INSERT INTO `detalles_entrada` (`id`, `id_entrada`, `id_variante`, `cantidad`, `precio_compra`) VALUES
-(8, 8, 2, 5, 10.00);
+(8, 8, 2, 5, 10.00),
+(9, 14, 2, 5, 5.00);
 
 -- --------------------------------------------------------
 
@@ -265,7 +279,8 @@ CREATE TABLE `entradas` (
 --
 
 INSERT INTO `entradas` (`id`, `id_proveedor`, `numero_lote`, `fecha_ingreso`, `total`, `fecha_registro`) VALUES
-(8, 1, '5', '2026-05-29', 50.00, '2026-05-29 20:02:28');
+(8, 1, '5', '2026-05-29', 50.00, '2026-05-29 20:02:28'),
+(14, 1, '56', '2026-06-05', 25.00, '2026-06-04 23:23:34');
 
 -- --------------------------------------------------------
 
@@ -302,7 +317,7 @@ CREATE TABLE `notas_entrega` (
   `id` int(11) NOT NULL,
   `id_cliente` int(11) NOT NULL,
   `fecha_pedido` datetime NOT NULL,
-  `estado` varchar(50) NOT NULL DEFAULT 'pendiente',
+  `estado` enum('pendiente','confirmado','enviado','recibido','entregado','cancelado') NOT NULL DEFAULT 'pendiente',
   `tipo` enum('debito','credito') NOT NULL DEFAULT 'debito',
   `total` decimal(10,2) NOT NULL DEFAULT 0.00,
   `observaciones` text DEFAULT NULL,
@@ -318,7 +333,8 @@ INSERT INTO `notas_entrega` (`id`, `id_cliente`, `fecha_pedido`, `estado`, `tipo
 (2, 4, '2026-06-03 21:33:23', 'confirmado', 'debito', 10.00, '', '2026-06-03 19:33:23'),
 (3, 4, '2026-06-04 00:29:47', 'pendiente', 'credito', 30.00, '', '2026-06-03 22:29:47'),
 (4, 17, '2026-06-04 00:32:13', 'pendiente', 'credito', 24.00, '', '2026-06-03 22:32:14'),
-(5, 4, '2026-06-04 04:21:50', 'pendiente', 'credito', 12.00, '', '2026-06-04 02:21:50');
+(5, 4, '2026-06-04 04:21:50', 'pendiente', 'credito', 12.00, '', '2026-06-04 02:21:50'),
+(6, 19, '2026-06-04 17:39:28', 'pendiente', 'credito', 20.00, '', '2026-06-04 15:39:28');
 
 -- --------------------------------------------------------
 
@@ -345,7 +361,8 @@ INSERT INTO `notas_entrega_detalles` (`id`, `id_nota_entrega`, `id_variante`, `c
 (3, 2, 27, 1, 10.00, ''),
 (4, 3, 37, 3, 10.00, ''),
 (5, 4, 1, 2, 12.00, ''),
-(6, 5, 1, 1, 12.00, '');
+(6, 5, 1, 1, 12.00, ''),
+(7, 6, 37, 2, 10.00, '');
 
 -- --------------------------------------------------------
 
@@ -371,7 +388,11 @@ CREATE TABLE `pagos` (
 --
 
 INSERT INTO `pagos` (`id`, `id_nota_entrega`, `id_metodo_pago`, `monto_bs`, `monto_usd`, `fecha`, `tasa`, `comprobante`, `referencia`, `estado`) VALUES
-(107, 1, 7, 4022.21, 7.20, '2026-06-03 22:21:51', 558.64, NULL, '', 'por verificar');
+(107, 1, 7, 4022.21, 7.20, '2026-06-03 22:21:51', 558.64, NULL, '', 'por verificar'),
+(108, 1, 7, 1340.74, 2.40, '2026-06-04 01:13:00', 558.64, NULL, '121233', 'por verificar'),
+(109, 1, 7, 1340.74, 2.40, '2026-06-04 01:14:27', 558.64, NULL, '21212', 'por verificar'),
+(110, 1, 10, 6724.56, 12.00, '2026-06-04 11:39:28', 560.38, NULL, '22', 'por verificar'),
+(111, 1, 8, 5.00, 0.01, '2026-06-04 11:44:01', 560.38, NULL, '111', 'por verificar');
 
 -- --------------------------------------------------------
 
@@ -383,6 +404,7 @@ CREATE TABLE `pedidos` (
   `id` int(11) NOT NULL,
   `id_proveedor` int(11) DEFAULT NULL,
   `id_cliente` int(11) DEFAULT NULL,
+  `id_nota_entrega` int(11) DEFAULT NULL,
   `tipo` enum('cliente','proveedor','propios','') NOT NULL,
   `fecha_registro` timestamp NOT NULL DEFAULT current_timestamp(),
   `estado` enum('pendiente','confirmado','enviado','recibido','cancelado','entregado') NOT NULL DEFAULT 'pendiente'
@@ -392,15 +414,15 @@ CREATE TABLE `pedidos` (
 -- Volcado de datos para la tabla `pedidos`
 --
 
-INSERT INTO `pedidos` (`id`, `id_proveedor`, `id_cliente`, `tipo`, `fecha_registro`, `estado`) VALUES
-(1, 1, NULL, 'propios', '2026-05-28 04:27:15', 'entregado'),
-(2, 1, 1, 'cliente', '2026-05-28 04:28:24', 'cancelado'),
-(3, 1, NULL, 'propios', '2026-05-28 23:19:45', 'entregado'),
-(4, 1, NULL, 'propios', '2026-05-29 00:00:22', 'recibido'),
-(5, 4, NULL, 'propios', '2026-05-29 01:04:15', 'recibido'),
-(6, 4, NULL, 'propios', '2026-05-29 03:51:47', 'recibido'),
-(7, 1, 4, 'cliente', '2026-06-03 03:52:03', 'pendiente'),
-(8, 4, 13, 'cliente', '2026-06-03 04:10:11', 'pendiente');
+INSERT INTO `pedidos` (`id`, `id_proveedor`, `id_cliente`, `id_nota_entrega`, `tipo`, `fecha_registro`, `estado`) VALUES
+(1, 1, NULL, NULL, 'propios', '2026-05-28 04:27:15', 'entregado'),
+(2, 1, 1, NULL, 'cliente', '2026-05-28 04:28:24', 'cancelado'),
+(3, 1, NULL, NULL, 'propios', '2026-05-28 23:19:45', 'entregado'),
+(4, 1, NULL, NULL, 'propios', '2026-05-29 00:00:22', 'recibido'),
+(5, 4, NULL, NULL, 'propios', '2026-05-29 01:04:15', 'recibido'),
+(6, 4, NULL, NULL, 'propios', '2026-05-29 03:51:47', 'recibido'),
+(7, 1, 4, NULL, 'cliente', '2026-06-03 03:52:03', 'pendiente'),
+(8, 4, 13, NULL, 'cliente', '2026-06-03 04:10:11', 'pendiente');
 
 -- --------------------------------------------------------
 
@@ -456,7 +478,7 @@ CREATE TABLE `productos` (
 
 INSERT INTO `productos` (`id`, `id_categoria`, `nombre`, `descripcion`, `precio_compra`, `precio_venta`, `precio_oferta`, `stock_minimo`, `marca`, `imagen_principal`, `activo`, `ventas_totales`, `fecha_registro`) VALUES
 (1, 2, 'sueter champions', 'sueter champions', 0.00, 12.00, NULL, 3, NULL, NULL, 1, 0, '2026-05-27 23:18:05'),
-(2, 2, 'Franela', 'franelas', 0.00, 10.00, NULL, 3, NULL, NULL, 1, 0, '2026-05-28 22:57:39'),
+(2, 2, 'Franela', 'franelas', 5.00, 10.37, NULL, 3, NULL, NULL, 1, 0, '2026-05-28 22:57:39'),
 (25, 6, 'perfume sabroso', '', 0.00, 10.00, NULL, 3, 'factory', NULL, 1, 0, '2026-05-29 03:55:06');
 
 -- --------------------------------------------------------
@@ -482,10 +504,10 @@ CREATE TABLE `producto_variantes` (
 
 INSERT INTO `producto_variantes` (`id`, `id_producto`, `nombre_variante`, `atributos`, `precio_adicional`, `stock`, `imagen_variante`, `activo`) VALUES
 (1, 1, 'Principal', '{\"talla\":\"s\",\"color\":\"rojo\"}', 0.00, 10, NULL, 1),
-(2, 2, 'Franela roja', '{\"talla\":\"xxl\",\"color\":\"Rojo\"}', 0.00, 5, NULL, 1),
+(2, 2, 'Franela roja', '{\"talla\":\"xxl\",\"color\":\"Rojo\"}', 0.00, 10, NULL, 1),
 (3, 2, 'franela verde', '{\"talla\":\"s\",\"color\":\"verde\"}', 0.00, 1, NULL, 1),
 (4, 1, 'Principal', '{\"talla\":\"l\",\"color\":\"gris\"}', 0.00, 1, NULL, 0),
-(27, 25, 'perfume test', '{\"volumen_ml\":\"1\",\"fragancia\":\"prueba\"}', 0.00, -3, 'assets/img/products/perfumes/perfume_sabroso_perfume_test.png', 1),
+(27, 25, 'perfume test', '{\"volumen_ml\":\"1\",\"fragancia\":\"prueba\"}', 0.00, 2, 'assets/img/products/perfumes/perfume_sabroso_perfume_test.png', 1),
 (36, 25, 'perfume rico', '{\"volumen_ml\":\"12\",\"fragancia\":\"test2\"}', 0.00, 1, NULL, 1),
 (37, 25, 'perfume pequeno', '{\"volumen_ml\":\"20\",\"fragancia\":\"hallmen\"}', 0.00, 10, 'assets/img/products/perfumes/perfume_sabroso_perfume_pequeno.png', 1);
 
@@ -504,7 +526,7 @@ CREATE TABLE `proveedores` (
   `apellido` varchar(11) NOT NULL,
   `telefono_1` varchar(25) DEFAULT NULL,
   `telefono_2` varchar(25) DEFAULT NULL,
-  `correo` varchar(70) NOT NULL DEFAULT '0',
+  `correo` varchar(70) DEFAULT NULL,
   `active` tinyint(1) NOT NULL DEFAULT 1,
   `direccion` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -514,8 +536,8 @@ CREATE TABLE `proveedores` (
 --
 
 INSERT INTO `proveedores` (`id`, `razon_social`, `documento_identidad`, `rif`, `nombre`, `apellido`, `telefono_1`, `telefono_2`, `correo`, `active`, `direccion`) VALUES
-(1, 'shein', 'N/A', NULL, 'shein', '', NULL, NULL, 'sin_correo@ejemplo.com', 1, NULL),
-(4, 'amazon', 'N/A', NULL, 'amazon', '', NULL, NULL, 'sin_correo@ejemplo.com', 1, NULL);
+(1, 'shein', 'N/A', NULL, 'shein', '', NULL, NULL, NULL, 1, NULL),
+(4, 'amazon', 'N/A', NULL, 'amazon', '', NULL, NULL, NULL, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -587,7 +609,7 @@ CREATE TABLE `tasa` (
 --
 
 INSERT INTO `tasa` (`id`, `nombre`, `valor`, `fecha_actualizacion`) VALUES
-(2, 'BCV', 558.64, '2026-06-03 10:26:20'),
+(2, 'BCV', 560.38, '2026-06-04 11:25:15'),
 (3, 'Zelle', 744.69, '2026-06-03 23:51:44');
 
 -- --------------------------------------------------------
@@ -803,19 +825,19 @@ ALTER TABLE `categorias`
 -- AUTO_INCREMENT de la tabla `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT de la tabla `creditos`
 --
 ALTER TABLE `creditos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `creditos_cuotas`
 --
 ALTER TABLE `creditos_cuotas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `despachos`
@@ -827,7 +849,7 @@ ALTER TABLE `despachos`
 -- AUTO_INCREMENT de la tabla `detalles_entrada`
 --
 ALTER TABLE `detalles_entrada`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `detalles_pedido`
@@ -839,7 +861,7 @@ ALTER TABLE `detalles_pedido`
 -- AUTO_INCREMENT de la tabla `entradas`
 --
 ALTER TABLE `entradas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `metodos_pago`
@@ -851,19 +873,19 @@ ALTER TABLE `metodos_pago`
 -- AUTO_INCREMENT de la tabla `notas_entrega`
 --
 ALTER TABLE `notas_entrega`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `notas_entrega_detalles`
 --
 ALTER TABLE `notas_entrega_detalles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `pagos`
 --
 ALTER TABLE `pagos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=108;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=112;
 
 --
 -- AUTO_INCREMENT de la tabla `pedidos`

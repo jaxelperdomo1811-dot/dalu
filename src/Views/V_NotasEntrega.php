@@ -296,7 +296,7 @@
                                 <div class="col-md-6">
                                     <label class="form-label">Cédula del Cliente</label>
                                     <div class="input-group">
-                                        <select name="tipo_persona" class="form-select" id="pedido_tipo_persona" style="max-width: 80px;">
+                                        <select name="tipo_persona" class="form-select no-select2" id="pedido_tipo_persona" style="max-width: 80px;">
                                             <option value="V-">V-</option>
                                             <option value="E-">E-</option>
                                             <option value="J-">J-</option>
@@ -398,7 +398,7 @@
                                     <div class="row mb-2">
                                         <div class="col-7">
                                             <label class="form-label text-sm m-0">Método de Pago</label>
-                                            <select name="id_metodo_pago[]" class="form-select form-select-sm select-metodo-pago" required>
+                                            <select name="id_metodo_pago[]" class="form-select form-select-sm select-metodo-pago no-select2" required>
                                                 <option value="" disabled selected>Seleccione...</option>
                                                 <?php foreach ($metodosPago as $metodo): ?>
                                                     <option value="<?= $metodo['id'] ?>"><?= htmlspecialchars($metodo['nombre']) ?></option>
