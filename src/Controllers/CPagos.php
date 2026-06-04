@@ -1,5 +1,5 @@
 <?php
-namespace Lenovo\TiendaDalu\Controllers;
+namespace Lenovo\Dalu\Controllers;
 
 use Lenovo\Dalu\Models\Pagos;
 use Lenovo\Dalu\Models\MetodosPago;

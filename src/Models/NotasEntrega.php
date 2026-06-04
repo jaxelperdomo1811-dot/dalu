@@ -103,7 +103,7 @@ class NotasEntrega extends Conexion {
                 $stmtDet->execute();
             }
 
-            return true;
+            return $id_nota;
         } catch (PDOException $e) {
             error_log("Error al insertar nota de entrega: " . $e->getMessage());
             return false;
