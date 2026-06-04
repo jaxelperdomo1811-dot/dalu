@@ -15,6 +15,10 @@
     <script src="assets/DataTablet/datatables.min.js" defer></script>
     <script src="assets/DataTablet/tabla.js" defer></script>
     <title>Administración de Créditos</title>
+    <link rel="stylesheet" href="assets/css/libs/select2.min.css">
+    <link rel="stylesheet" href="assets/css/libs/select2-bootstrap-5-theme.min.css">
+    <script src="assets/js/libs/select2.min.js" defer></script>
+    <script src="assets/js/pages/creditos.js" defer></script>
 </head>
 
 <body>

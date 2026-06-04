@@ -20,6 +20,9 @@
     <link rel="stylesheet" href="assets/DataTablet/datatables.css">
 
     <title>cliente</title>
+    <link rel="stylesheet" href="assets/css/libs/select2.min.css">
+    <link rel="stylesheet" href="assets/css/libs/select2-bootstrap-5-theme.min.css">
+    <script src="assets/js/libs/select2.min.js" defer></script>
 </head>
 
 <body>

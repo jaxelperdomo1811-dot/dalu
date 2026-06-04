@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button type="button" class="btn btn-sm btn-danger btn-remove-detalle">Eliminar</button>
             `;
             container.appendChild(row);
+            if (typeof initSelect2 === 'function') initSelect2();
         });
 
         container.addEventListener('click', (e) => {

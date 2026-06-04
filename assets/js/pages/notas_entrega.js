@@ -94,6 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
 
         container.appendChild(row);
+        if (typeof initSelect2 === 'function') initSelect2();
 
         // Eventos
         const selProd = row.querySelector('.sel-producto');

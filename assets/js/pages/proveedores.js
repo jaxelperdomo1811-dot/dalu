@@ -192,6 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 container.appendChild(newRow);
+                if (typeof initSelect2 === 'function') initSelect2();
             }
         });
 

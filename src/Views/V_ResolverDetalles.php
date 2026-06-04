@@ -14,6 +14,10 @@
         .resuelto { background-color: #d1e7dd !important; }
         .ignorado { background-color: #e2e3e5 !important; }
     </style>
+    <link rel="stylesheet" href="assets/css/libs/select2.min.css">
+    <link rel="stylesheet" href="assets/css/libs/select2-bootstrap-5-theme.min.css">
+    <script src="assets/js/libs/select2.min.js" defer></script>
+    <script src="assets/js/pages/resolver_detalles.js" defer></script>
 </head>
 <body>
     <?php require_once __DIR__ . "/../Views/layout/header.php"; ?>
