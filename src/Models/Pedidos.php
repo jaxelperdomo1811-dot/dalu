@@ -332,14 +332,13 @@ use Lenovo\Dalu\Models\Conexion;
                         cantidad = :cantidad,
                         precio_unitario = :precio_unitario,
                         descripcion_producto = :descripcion_producto,
-                        id_producto = :id_producto,
                         id_variante = :id_variante,
                         status_inventario = :status_inventario
                     WHERE id = :id";
             
             $stmt = $this->prepare($sql);
             
-            $status = !empty($detalle_data['id_producto']) ? 'vinculado' : 'pendiente';
+            $status = !empty($detalle_data['id_variante']) ? 'vinculado' : 'pendiente';
             
             $stmt->bindParam(":tipo", $detalle_data['tipo']);
             $stmt->bindParam(":imagen", $detalle_data['imagen']);
@@ -348,7 +347,6 @@ use Lenovo\Dalu\Models\Conexion;
             $stmt->bindParam(":cantidad", $detalle_data['cantidad']);
             $stmt->bindParam(":precio_unitario", $detalle_data['precio_unitario']);
             $stmt->bindParam(":descripcion_producto", $detalle_data['descripcion_producto']);
-            $stmt->bindParam(":id_producto", $detalle_data['id_producto']);
             $stmt->bindParam(":id_variante", $detalle_data['id_variante']);
             $stmt->bindParam(":status_inventario", $status);
             $stmt->bindParam(":id", $detalle_id);

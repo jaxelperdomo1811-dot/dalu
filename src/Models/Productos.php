@@ -13,7 +13,6 @@ class Productos extends Conexion {
     private $precio_compra;
     private $precio_venta;
     private $precio_oferta;
-    private $stock_total;
     private $stock_minimo;
     private $marca;
     private $imagen_principal;
@@ -36,7 +35,6 @@ class Productos extends Conexion {
         $this->stock_minimo = 3;
         $this->activo = 1;
         $this->ventas_totales = 0;
-        $this->stock_total = 0;
     }
     
     public function setId($id) { $this->id = $id; return $this; }
@@ -59,7 +57,6 @@ class Productos extends Conexion {
     public function getPrecioCompra() { return $this->precio_compra; }
     public function getPrecioVenta() { return $this->precio_venta; }
     public function getPrecioOferta() { return $this->precio_oferta; }
-    public function getStockTotal() { return $this->stock_total; }
     public function getStockMinimo() { return $this->stock_minimo; }
     public function getMarca() { return $this->marca; }
     public function getImagenPrincipal() { return $this->imagen_principal; }
@@ -183,7 +180,6 @@ class Productos extends Conexion {
             $stmt->bindParam(":imagen_principal", $this->imagen_principal);
             $stmt->bindParam(":activo", $this->activo);
             $stmt->bindParam(":ventas_totales", $this->ventas_totales);
-            $stmt->bindParam(":stock_total", $this->stock_total);
             
             if (!$stmt->execute()) {
                 return false;
@@ -341,9 +337,6 @@ class Productos extends Conexion {
             $total_stock += $variante['stock'];
         }
         
-        // Actualizar stock_total del producto
-        $this->actualizarStockTotal($producto_id);
-        
         return true;
     }
     
@@ -436,7 +429,6 @@ class Productos extends Conexion {
             $stmt->bindParam(":imagen_variante", $variante_data['imagen_variante']);
             
             if ($stmt->execute()) {
-                $this->actualizarStockTotal($producto_id);
                 return $this->lastInsertId();
             }
             
@@ -472,11 +464,6 @@ class Productos extends Conexion {
             $stmt->bindParam(":id", $variante_id);
             
             if ($stmt->execute()) {
-                // Obtener producto_id para actualizar stock total
-                $variante = $this->getVarianteById($variante_id);
-                if ($variante) {
-                    $this->actualizarStockTotal($variante['id_producto']);
-                }
                 return true;
             }
             
@@ -499,11 +486,6 @@ class Productos extends Conexion {
             $stmt->bindParam(":id", $variante_id);
             
             if ($stmt->execute()) {
-                // Obtener el producto_id de la variante
-                $variante = $this->getVarianteById($variante_id);
-                if ($variante) {
-                    $this->actualizarStockTotal($variante['id_producto']);
-                }
                 return true;
             }
             return false;
@@ -524,11 +506,6 @@ class Productos extends Conexion {
             $stmt->bindParam(":id", $variante_id);
             
             if ($stmt->execute()) {
-                // Obtener producto_id y actualizar stock total
-                $variante = $this->getVarianteById($variante_id);
-                if ($variante) {
-                    $this->actualizarStockTotal($variante['id_producto']);
-                }
                 return true;
             }
             return false;
@@ -549,17 +526,6 @@ class Productos extends Conexion {
             $stmt->bindParam(":id", $variante_id);
             
             if ($stmt->execute()) {
-                // Actualizar stock total para incluir esta variante nuevamente
-                // Nota: getVarianteById no filtra por activo=1, pero si lo hiciera, podriamos usar un query directo.
-                $sql_prod = "SELECT id_producto FROM producto_variantes WHERE id = :id";
-                $stmt_prod = $this->prepare($sql_prod);
-                $stmt_prod->bindParam(":id", $variante_id);
-                $stmt_prod->execute();
-                $res = $stmt_prod->fetch(PDO::FETCH_ASSOC);
-                
-                if ($res) {
-                    $this->actualizarStockTotal($res['id_producto']);
-                }
                 return true;
             }
             return false;
@@ -568,23 +534,6 @@ class Productos extends Conexion {
             error_log("Error en reactivateVariante: " . $e->getMessage());
             return false;
         }
-    }
-    
-    /**
-     * Actualizar el stock total del producto (suma de variantes activas)
-     */
-    private function actualizarStockTotal($producto_id) {
-        $sql = "UPDATE productos p
-                SET p.stock_total = (
-                    SELECT COALESCE(SUM(v.stock), 0)
-                    FROM producto_variantes v
-                    WHERE v.id_producto = p.id AND v.activo = 1
-                )
-                WHERE p.id = :producto_id";
-        
-        $stmt = $this->prepare($sql);
-        $stmt->bindParam(":producto_id", $producto_id);
-        return $stmt->execute();
     }
     
     /**
@@ -635,7 +584,7 @@ class Productos extends Conexion {
      * Buscar productos con bajo stock
      */
     public function getLowStock() {
-        $sql = "SELECT p.*, c.nombre as categoria_nombre
+        $sql = "SELECT p.*, c.nombre as categoria_nombre, (SELECT COALESCE(SUM(v.stock), 0) FROM producto_variantes v WHERE v.id_producto = p.id AND v.activo = 1) AS stock_total
                 FROM productos p
                 JOIN categorias c ON p.id_categoria = c.id
                 WHERE (SELECT COALESCE(SUM(v.stock), 0) FROM producto_variantes v WHERE v.id_producto = p.id AND v.activo = 1) <= p.stock_minimo AND p.activo = 1
@@ -723,9 +672,6 @@ class Productos extends Conexion {
             // Obtener producto_id
             $variante = $this->getVarianteById($variante_id);
             if ($variante) {
-                // Actualizar stock total del producto
-                $this->actualizarStockTotal($variante['id_producto']);
-                
                 // Incrementar ventas_totales del producto
                 $sql2 = "UPDATE productos SET ventas_totales = ventas_totales + 1 
                          WHERE id = :producto_id";

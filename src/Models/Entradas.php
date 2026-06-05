@@ -232,14 +232,7 @@ class Entradas extends Conexion {
                 $stmtDetalle->bindParam(":precio_compra", $detalle['precio_compra']);
                 $stmtDetalle->execute();
 
-                // Actualizar stock del producto (stock_total)
-                // Usando un query directo como en registrarEntrada
-                $sqlUpdateStock = "UPDATE productos SET stock_total = stock_total + :cantidad WHERE id = :id_producto";
-                $stmtStock = $this->prepare($sqlUpdateStock);
-                $stmtStock->bindParam(":cantidad", $detalle['cantidad']);
-                $stmtStock->bindParam(":id_producto", $detalle['id_producto']);
-                $stmtStock->execute();
-                
+
                 // Actualizar stock de la variante si aplica
                 if (!empty($detalle['id_variante'])) {
                     $sqlUpdateVar = "UPDATE producto_variantes SET stock = stock + :cantidad WHERE id = :id_variante";

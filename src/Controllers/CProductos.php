@@ -42,18 +42,18 @@ case "insert":
     $precio_venta = $precio_compra > 0 ? $tempProducto->calcularPrecioVentaDesdeCompra($precio_compra) : $_POST['precio_venta'];
     
     $producto = new Productos(
-        null,                           // id
-        $_POST['id_categoria'],         // id_categoria
-        $_POST['nombre'],               // nombre
-        $_POST['descripcion'],          // descripcion
-        $precio_venta,                  // precio_venta calculado
-        $precio_compra,                 // precio_compra
-        !empty($_POST['marca']) ? $_POST['marca'] : null         // marca
+        null,                           
+        $_POST['id_categoria'],      
+        $_POST['nombre'],              
+        $_POST['descripcion'],          
+        $precio_venta,                 
+        $precio_compra,                 
+        !empty($_POST['marca']) ? $_POST['marca'] : null       
     );
     
-    // Configurar opciones adicionales
-    $producto->setPrecioOferta($_POST['precio_oferta'] !== '' ? $_POST['precio_oferta'] : null)
-             ->setStockMinimo($_POST['stock_minimo'] !== '' ? $_POST['stock_minimo'] : 3);
+   
+    $producto->setPrecioOferta(isset($_POST['precio_oferta']) && $_POST['precio_oferta'] !== '' ? $_POST['precio_oferta'] : null)
+             ->setStockMinimo(isset($_POST['stock_minimo']) && $_POST['stock_minimo'] !== '' ? $_POST['stock_minimo'] : 3);
     
     // ========== PROCESAR IMAGEN PRINCIPAL CON CATEGORÍA DINÁMICA ==========
     if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
@@ -89,7 +89,7 @@ case "insert":
     // Procesar variantes si existen
     $variantes = [];
     if (isset($_POST['variantes']) && is_array($_POST['variantes'])) {
-        foreach ($_POST['variantes'] as $variante) {
+        foreach ($_POST['variantes'] as $index => $variante) {
             // Validar que la variante tenga al menos nombre y stock
             if (!empty($variante['nombre_variante']) && isset($variante['stock'])) {
                 $atributos = [];
@@ -172,8 +172,8 @@ case "update":
              ->setDescripcion($_POST['descripcion'])
              ->setPrecioCompra($precio_compra)
              ->setPrecioVenta($precio_venta)
-             ->setPrecioOferta($_POST['precio_oferta'] !== '' ? $_POST['precio_oferta'] : null)
-             ->setStockMinimo($_POST['stock_minimo'] !== '' ? $_POST['stock_minimo'] : 3)
+             ->setPrecioOferta(isset($_POST['precio_oferta']) && $_POST['precio_oferta'] !== '' ? $_POST['precio_oferta'] : null)
+             ->setStockMinimo(isset($_POST['stock_minimo']) && $_POST['stock_minimo'] !== '' ? $_POST['stock_minimo'] : 3)
              ->setMarca(!empty($_POST['marca']) ? $_POST['marca'] : null);
     
     // ========== PROCESAR NUEVA IMAGEN SI SE SUBIÓ ==========

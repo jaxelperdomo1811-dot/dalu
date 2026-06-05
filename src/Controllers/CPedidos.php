@@ -38,7 +38,7 @@ switch ($accion) {
         if (isset($_POST['detalles']) && is_array($_POST['detalles'])) {
             foreach ($_POST['detalles'] as $index => $d) {
                 $hasFile = isset($_FILES['detalleImagens']['tmp_name'][$index]) && $_FILES['detalleImagens']['error'][$index] === UPLOAD_ERR_OK;
-                $hasDetalle = !empty($d['id_producto']) || !empty($d['nombre_producto']) || !empty($d['link']) || $hasFile;
+                $hasDetalle = !empty($d['id_variante']) || !empty($d['nombre_producto']) || !empty($d['link']) || $hasFile;
                 if ($hasDetalle) {
                     $imagenRuta = '';
                     if ($hasFile) {
@@ -60,11 +60,10 @@ switch ($accion) {
                         'link' => trim($d['link'] ?? ''),
                         'estado' => $d['estado'] ?? 'pendiente',
                         'nombre_producto' => trim($d['nombre_producto'] ?? '') ?: null,
-                        'id_producto' => $d['id_producto'] ?? null,
                         'cantidad' => !empty($d['cantidad']) ? (int) $d['cantidad'] : 1,
-                        'precio_unitario' => null,
+                        'precio_unitario' => !empty($d['precio_unitario']) ? (float)$d['precio_unitario'] : null,
                         'descripcion_producto' => null,
-                        'id_variante' => null,
+                        'id_variante' => !empty($d['id_variante']) ? $d['id_variante'] : null,
                     ];
                 }
             }
@@ -103,7 +102,7 @@ switch ($accion) {
         if (isset($_POST['detalles']) && is_array($_POST['detalles'])) {
             foreach ($_POST['detalles'] as $index => $d) {
                 $hasFile = isset($_FILES['detalleImagens']['tmp_name'][$index]) && $_FILES['detalleImagens']['error'][$index] === UPLOAD_ERR_OK;
-                $hasDetalle = !empty($d['id_producto']) || !empty($d['nombre_producto']) || !empty($d['link']) || $hasFile;
+                $hasDetalle = !empty($d['id_variante']) || !empty($d['nombre_producto']) || !empty($d['link']) || $hasFile;
                 if ($hasDetalle) {
                     $imagenRuta = '';
                     if ($hasFile) {
@@ -125,11 +124,10 @@ switch ($accion) {
                         'link' => trim($d['link'] ?? ''),
                         'estado' => $d['estado'] ?? 'pendiente',
                         'nombre_producto' => trim($d['nombre_producto'] ?? '') ?: null,
-                        'id_producto' => $d['id_producto'] ?? null,
                         'cantidad' => !empty($d['cantidad']) ? (int) $d['cantidad'] : 1,
-                        'precio_unitario' => null,
+                        'precio_unitario' => !empty($d['precio_unitario']) ? (float)$d['precio_unitario'] : null,
                         'descripcion_producto' => null,
-                        'id_variante' => null,
+                        'id_variante' => !empty($d['id_variante']) ? $d['id_variante'] : null,
                     ];
                 }
             }
