@@ -127,12 +127,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
             inLink.addEventListener('input', clearSelects);
             inFile.addEventListener('change', clearSelects);
+            
+            calcularTotal(); // Initial calculation for new row
+        });
+
+        const calcularTotal = () => {
+            const totalSpan = document.getElementById(containerId === 'detallesContainerTienda' ? 'totalPedidoTienda' : '');
+            if (!totalSpan) return;
+            
+            let total = 0;
+            const rows = container.querySelectorAll('.detalle-row');
+            rows.forEach(r => {
+                const cant = parseFloat(r.querySelector('.in-cantidad').value) || 0;
+                const prec = parseFloat(r.querySelector('.in-precio').value) || 0;
+                total += cant * prec;
+            });
+            totalSpan.innerText = total.toFixed(2);
+        };
+
+        container.addEventListener('input', (e) => {
+            if (e.target.classList.contains('in-cantidad') || e.target.classList.contains('in-precio')) {
+                calcularTotal();
+            }
         });
 
         container.addEventListener('click', (e) => {
             if (e.target && e.target.classList.contains('btn-remove-detalle')) {
                 const row = e.target.closest('.detalle-row');
-                if (row) row.remove();
+                if (row) {
+                    row.remove();
+                    calcularTotal();
+                }
             }
         });
 

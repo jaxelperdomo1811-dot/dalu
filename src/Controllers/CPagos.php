@@ -44,7 +44,14 @@ switch($accion) {
                             $monto_usd = $valor_tasa > 0 ? ($monto_bs / $valor_tasa) : 0;
                         }
 
-                        if ($modeloPagos->insert($id_nota_entrega, $id_metodo_pago, $monto_bs, $monto_usd, $valor_tasa, $referencia)) {
+                        $modeloPagos->setIdNotaEntrega($id_nota_entrega)
+                                    ->setIdMetodoPago($id_metodo_pago)
+                                    ->setMontoBs($monto_bs)
+                                    ->setMontoUsd($monto_usd)
+                                    ->setTasa($valor_tasa)
+                                    ->setReferencia($referencia);
+
+                        if ($modeloPagos->insert()) {
                             $exitos++;
                             
                             // Logica para deducir cuotas si es credito

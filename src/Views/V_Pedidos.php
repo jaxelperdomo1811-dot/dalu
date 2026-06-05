@@ -158,50 +158,44 @@
 
     <!-- Modal Agregar Pedido Tienda -->
     <div class="modal fade" id="modalAgregarPT" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-xl">
             <form action="?c=pedidos&accion=insertTienda" method="POST" enctype="multipart/form-data" class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Agregar Pedido Tienda</h5>
+                    <h5 class="modal-title">Agregar Pedido a Proveedor</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="idProveedorTienda" class="form-label">Proveedor</label>
-                        <select name="id_proveedor" id="idProveedorTienda" class="form-select" required>
-                            <option value="">-- Seleccione un proveedor --</option>
-                            <?php foreach ($proveedores as $prov): ?>
-                                <option value="<?= $prov['id'] ?>"><?= htmlspecialchars(!empty($prov['razon_social']) ? $prov['razon_social'] : $prov['nombre']) ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                <div class="modal-body p-4">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="idProveedorTienda" class="form-label">Proveedor</label>
+                            <select name="id_proveedor" id="idProveedorTienda" class="form-select no-select2" required>
+                                <option value="">-- Seleccione un proveedor --</option>
+                                <?php foreach ($proveedores as $prov): ?>
+                                    <option value="<?= $prov['id'] ?>"><?= htmlspecialchars(!empty($prov['razon_social']) ? $prov['razon_social'] : $prov['nombre']) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <h4 class="mt-4">Costo Total: $<span id="totalPedidoTienda">0.00</span></h4>
+                        </div>
                     </div>
+                    
                     <input type="hidden" name="estado" value="pendiente" />
                     <input type="hidden" name="tipo" value="propios" />
 
-                    <!-- Detalle opcional -->
+                    <!-- Detalles -->
+                    <h5 class="mt-4 border-bottom pb-2">Detalles (Productos del Pedido)</h5>
                     <div id="detallesContainerTienda">
-                        <div class="detalle-row d-flex gap-2 mb-2" data-index="0">
-                            <input type="hidden" name="detalles[0][tipo]" value="producto">
-                            <select name="detalles[0][id_producto]" class="form-select form-select-sm">
-                                <option value="">-- Producto existente --</option>
-                                <?php foreach ($productos as $prod): ?>
-                                    <option value="<?= $prod['id'] ?>"><?= htmlspecialchars($prod['nombre']) ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                            <input type="text" name="detalles[0][nombre_producto]" class="form-control" placeholder="Nombre producto (opcional)">
-                            <input type="number" name="detalles[0][cantidad]" class="form-control" placeholder="Cantidad" min="1" value="1">
-                            <input type="text" name="detalles[0][link]" class="form-control" placeholder="Link (opcional)">
-                            <input type="file" name="detalleImagens[0]" accept="image/*" class="form-control form-control-sm">
-                            <button type="button" class="btn btn-sm btn-danger btn-remove-detalle">Eliminar</button>
-                        </div>
+                        <!-- Las filas dinámicas se agregarán aquí desde pedidos.js -->
                     </div>
-                    <div class="d-flex gap-2 mt-2">
+                    
+                    <div class="d-flex justify-content-between align-items-center mt-3">
                         <button type="button" class="btn btn-sm btn-secondary" id="addDetalleTienda">+ Agregar detalle</button>
                     </div>
-                    <input type="hidden" name="detalles[0][estado]" value="pendiente" />
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Pedido</button>
                 </div>
             </form>
         </div>

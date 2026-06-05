@@ -5,10 +5,36 @@ use PDO;
 use PDOException;
 
 class NotasEntrega extends Conexion {
+    private $id;
+    private $id_cliente;
+    private $fecha_pedido;
+    private $estado;
+    private $tipo;
+    private $total;
+    private $observaciones;
+    private $detalles = [];
     
     public function __construct() {
         parent::__construct();
     }
+    
+    public function setId($id) { $this->id = $id; return $this; }
+    public function setIdCliente($id_cliente) { $this->id_cliente = $id_cliente; return $this; }
+    public function setFechaPedido($fecha_pedido) { $this->fecha_pedido = $fecha_pedido; return $this; }
+    public function setEstado($estado) { $this->estado = $estado; return $this; }
+    public function setTipo($tipo) { $this->tipo = $tipo; return $this; }
+    public function setTotal($total) { $this->total = $total; return $this; }
+    public function setObservaciones($observaciones) { $this->observaciones = $observaciones; return $this; }
+    public function setDetalles($detalles) { $this->detalles = $detalles; return $this; }
+    
+    public function getId() { return $this->id; }
+    public function getIdCliente() { return $this->id_cliente; }
+    public function getFechaPedido() { return $this->fecha_pedido; }
+    public function getEstado() { return $this->estado; }
+    public function getTipo() { return $this->tipo; }
+    public function getTotal() { return $this->total; }
+    public function getObservaciones() { return $this->observaciones; }
+    public function getDetallesObj() { return $this->detalles; }
 
     public function search() {
         try {
@@ -75,23 +101,23 @@ class NotasEntrega extends Conexion {
         }
     }
 
-    public function insert($id_cliente, $fecha_pedido, $estado, $tipo, $total, $observaciones, $detalles) {
+    public function insert() {
         try {
             // Nota: No se usan transacciones según solicitud
             $sql = "INSERT INTO notas_entrega (id_cliente, fecha_pedido, estado, tipo, total, observaciones) 
                     VALUES (:id_cliente, :fecha_pedido, :estado, :tipo, :total, :observaciones)";
             $stmt = $this->prepare($sql);
-            $stmt->bindParam(":id_cliente", $id_cliente);
-            $stmt->bindParam(":fecha_pedido", $fecha_pedido);
-            $stmt->bindParam(":estado", $estado);
-            $stmt->bindParam(":tipo", $tipo);
-            $stmt->bindParam(":total", $total);
-            $stmt->bindParam(":observaciones", $observaciones);
+            $stmt->bindParam(":id_cliente", $this->id_cliente);
+            $stmt->bindParam(":fecha_pedido", $this->fecha_pedido);
+            $stmt->bindParam(":estado", $this->estado);
+            $stmt->bindParam(":tipo", $this->tipo);
+            $stmt->bindParam(":total", $this->total);
+            $stmt->bindParam(":observaciones", $this->observaciones);
             $stmt->execute();
 
             $id_nota = $this->lastInsertId();
 
-            foreach ($detalles as $det) {
+            foreach ($this->detalles as $det) {
                 $sqlDet = "INSERT INTO notas_entrega_detalles (id_nota_entrega, id_variante, cantidad, precio_unitario, descripcion) 
                            VALUES (:id_nota, :id_variante, :cantidad, :precio_unitario, :descripcion)";
                 $stmtDet = $this->prepare($sqlDet);

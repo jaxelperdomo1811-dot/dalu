@@ -32,7 +32,12 @@ switch ($accion) {
         }
 
         if (count($detalles) > 0 && $id_proveedor && $numero_lote && $fecha_ingreso) {
-            if ($entradas->registrarEntrada($id_proveedor, $numero_lote, $fecha_ingreso, $detalles)) {
+            $entradas->setIdProveedor($id_proveedor)
+                     ->setNumeroLote($numero_lote)
+                     ->setFechaIngreso($fecha_ingreso)
+                     ->setDetalles($detalles);
+
+            if ($entradas->insert()) {
                 $_SESSION['success'] = "Entrada registrada exitosamente.";
             } else {
                 $_SESSION['error'] = "Error al registrar la entrada.";

@@ -148,8 +148,15 @@ switch ($accion) {
 
         if (count($detalles) > 0) {
             $notasModel = new NotasEntrega();
-            // NotasModel insert method needs to return the ID for this to work perfectly, which we did by returning $this->lastInsertId()
-            $idNotaNueva = $notasModel->insert($idCliente, $fecha_pedido, $estado, $tipo, $total, $observaciones, $detalles);
+            $notasModel->setIdCliente($idCliente)
+                       ->setFechaPedido($fecha_pedido)
+                       ->setEstado($estado)
+                       ->setTipo($tipo)
+                       ->setTotal($total)
+                       ->setObservaciones($observaciones)
+                       ->setDetalles($detalles);
+            
+            $idNotaNueva = $notasModel->insert();
             
             if ($idNotaNueva) {
                 if ($tipo === 'credito') {
@@ -210,7 +217,14 @@ switch ($accion) {
                                 $monto_usd = $valor_tasa > 0 ? ($monto_bs / $valor_tasa) : 0;
                             }
 
-                            if ($modeloPagos->insert($idNotaNueva, $id_metodo_pago, $monto_bs, $monto_usd, $valor_tasa, $referencia)) {
+                            $modeloPagos->setIdNotaEntrega($idNotaNueva)
+                                        ->setIdMetodoPago($id_metodo_pago)
+                                        ->setMontoBs($monto_bs)
+                                        ->setMontoUsd($monto_usd)
+                                        ->setTasa($valor_tasa)
+                                        ->setReferencia($referencia);
+
+                            if ($modeloPagos->insert()) {
                                 // Logica para deducir cuotas si es credito
                                 if ($tipo === 'credito' && isset($idCredito)) {
                                     $pago_restante = $monto_usd;

@@ -54,7 +54,8 @@ switch($accion) {
             $id = $_POST['id'] ?? null;
             
             if ($valor !== null) {
-                if ($tasaModel->update($id, $valor)) {
+                $tasaModel->setId($id)->setValor($valor);
+                if ($tasaModel->update()) {
                     echo json_encode(['error' => false, 'message' => 'Tasa actualizada correctamente.']);
                 } else {
                     echo json_encode(['error' => true, 'message' => 'Error al actualizar la tasa.']);

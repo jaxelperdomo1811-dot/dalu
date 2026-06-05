@@ -5,20 +5,40 @@ use PDO;
 use PDOException;
 
 class Entradas extends Conexion {
+    private $id;
+    private $id_proveedor;
+    private $numero_lote;
+    private $fecha_ingreso;
+    private $total;
+    private $detalles = [];
     
     public function __construct() {
         parent::__construct();
     }
+    
+    public function setId($id) { $this->id = $id; return $this; }
+    public function setIdProveedor($id_proveedor) { $this->id_proveedor = $id_proveedor; return $this; }
+    public function setNumeroLote($numero_lote) { $this->numero_lote = $numero_lote; return $this; }
+    public function setFechaIngreso($fecha_ingreso) { $this->fecha_ingreso = $fecha_ingreso; return $this; }
+    public function setTotal($total) { $this->total = $total; return $this; }
+    public function setDetalles($detalles) { $this->detalles = $detalles; return $this; }
+    
+    public function getId() { return $this->id; }
+    public function getIdProveedor() { return $this->id_proveedor; }
+    public function getNumeroLote() { return $this->numero_lote; }
+    public function getFechaIngreso() { return $this->fecha_ingreso; }
+    public function getTotal() { return $this->total; }
+    public function getDetallesArray() { return $this->detalles; }
 
     /**
      * Registra una nueva entrada y sus detalles, actualizando el stock.
      */
-    public function registrarEntrada($id_proveedor, $numero_lote, $fecha_ingreso, $detalles) {
+    public function insert() {
         try {
 
             // Calcular el total de la entrada
             $total_entrada = 0;
-            foreach ($detalles as $detalle) {
+            foreach ($this->detalles as $detalle) {
                 $total_entrada += ($detalle['cantidad'] * $detalle['precio_compra']);
             }
 
@@ -26,16 +46,16 @@ class Entradas extends Conexion {
             $sql = "INSERT INTO entradas (id_proveedor, numero_lote, fecha_ingreso, total) 
                     VALUES (:id_proveedor, :numero_lote, :fecha_ingreso, :total)";
             $stmt = $this->prepare($sql);
-            $stmt->bindParam(":id_proveedor", $id_proveedor);
-            $stmt->bindParam(":numero_lote", $numero_lote);
-            $stmt->bindParam(":fecha_ingreso", $fecha_ingreso);
+            $stmt->bindParam(":id_proveedor", $this->id_proveedor);
+            $stmt->bindParam(":numero_lote", $this->numero_lote);
+            $stmt->bindParam(":fecha_ingreso", $this->fecha_ingreso);
             $stmt->bindParam(":total", $total_entrada);
             $stmt->execute();
 
             $id_entrada = $this->lastInsertId();
 
             // Insertar detalles y actualizar stock
-            foreach ($detalles as $detalle) {
+            foreach ($this->detalles as $detalle) {
                 // Insertar detalle
                 $sqlDetalle = "INSERT INTO detalles_entrada (id_entrada, id_variante, cantidad, precio_compra) 
                                VALUES (:id_entrada, :id_variante, :cantidad, :precio_compra)";

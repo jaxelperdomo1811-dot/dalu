@@ -138,7 +138,14 @@
                 $notaModel = new \Lenovo\Dalu\Models\NotasEntrega();
                 $observacionesNota = "Generada automáticamente desde Pedido de Servicio #" . $idPedido;
                 // Usamos un array de detalles vacío para la nota, porque los verdaderos están en el pedido
-                $exitoNota = $notaModel->insert($idCliente, date('Y-m-d H:i:s'), 'servicio', $tipoModalidad, $totalPedido, $observacionesNota, []);
+                $notaModel->setIdCliente($idCliente)
+                          ->setFechaPedido(date('Y-m-d H:i:s'))
+                          ->setEstado('servicio')
+                          ->setTipo($tipoModalidad)
+                          ->setTotal($totalPedido)
+                          ->setObservaciones($observacionesNota)
+                          ->setDetalles([]);
+                $exitoNota = $notaModel->insert();
                 
                 if ($exitoNota) {
                     $db = new \Lenovo\Dalu\Models\Conexion();
@@ -188,7 +195,13 @@
                                         $montoBs = ($moneda === 'VES') ? $monto : ($monto * $tasaActual['valor']);
                                         $montoUsd = ($moneda === 'VES') ? ($monto / $tasaActual['valor']) : $monto;
                                         
-                                        $pagosModel->insert($idNotaNueva, $id_metodo, $montoBs, $montoUsd, $tasaActual['valor'], $referencia);
+                                        $pagosModel->setIdNotaEntrega($idNotaNueva)
+                                                   ->setIdMetodoPago($id_metodo)
+                                                   ->setMontoBs($montoBs)
+                                                   ->setMontoUsd($montoUsd)
+                                                   ->setTasa($tasaActual['valor'])
+                                                   ->setReferencia($referencia);
+                                        $pagosModel->insert();
                                         $montoAbonadoTotal += $montoUsd;
                                     }
                                 }

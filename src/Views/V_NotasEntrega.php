@@ -85,10 +85,6 @@
                                         <td><?php echo htmlspecialchars($n['estado']); ?></td>
                                         <td>
                                             <button type="button" class="btn btn-sm btn-info m-1 btn-ver-detalles" data-id="<?= $n['id'] ?>">Detalles</button>
-                                            
-                                            <?php if ($n['saldo_pendiente'] > 0 && !in_array($n['estado'], ['cancelado', 'entregado'])): ?>
-                                                <button type="button" class="btn btn-sm btn-success m-1" data-bs-toggle="modal" data-bs-target="#modalPagarNE<?= $n['id'] ?>">Pagar</button>
-                                            <?php endif; ?>
 
                                             <button type="button" class="btn btn-sm btn-warning m-1" data-bs-toggle="modal" data-bs-target="#modalAvanzarEstadoNE<?= $n['id'] ?>" <?= in_array($n['estado'], ['entregado','cancelado']) ? ' disabled' : '' ?>>Siguiente estado</button>
                                             
@@ -134,10 +130,6 @@
                                         <td><?php echo htmlspecialchars($n['estado']); ?></td>
                                         <td>
                                             <button type="button" class="btn btn-sm btn-info m-1 btn-ver-detalles" data-id="<?= $n['id'] ?>">Detalles</button>
-                                            
-                                            <?php if ($n['saldo_pendiente'] > 0 && !in_array($n['estado'], ['cancelado', 'entregado'])): ?>
-                                                <button type="button" class="btn btn-sm btn-success m-1" data-bs-toggle="modal" data-bs-target="#modalPagarNE<?= $n['id'] ?>">Pagar</button>
-                                            <?php endif; ?>
 
                                             <button type="button" class="btn btn-sm btn-warning m-1" data-bs-toggle="modal" data-bs-target="#modalAvanzarEstadoNE<?= $n['id'] ?>" <?= in_array($n['estado'], ['entregado','cancelado']) ? ' disabled' : '' ?>>Siguiente estado</button>
                                             
@@ -213,70 +205,7 @@
                 </div>
             </div>
         </div>
-        <!-- Modal Registrar Pago -->
-        <?php if ($n['saldo_pendiente'] > 0 && !in_array($n['estado'], ['cancelado', 'entregado'])): ?>
-        <div class="modal fade" id="modalPagarNE<?= $n['id'] ?>" tabindex="-1">
-            <div class="modal-dialog">
-                <form action="?c=Pagos&accion=insert" method="POST" class="modal-content">
-                    <input type="hidden" name="id_nota_entrega" value="<?= $n['id'] ?>">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Registrar Pago - Nota #<?= $n['id'] ?></h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="alert alert-info">
-                            <div class="d-flex justify-content-between">
-                                <span><strong>Total a pagar:</strong> $<?= number_format($n['saldo_pendiente'], 2) ?> | Bs <?= number_format($n['saldo_pendiente'] * ($tasaActual['valor'] ?? 1), 2) ?></span>
-                                <span><small>Tasa actual: <?= number_format($tasaActual['valor'] ?? 1, 2) ?> Bs/$</small></span>
-                            </div>
-                            <hr class="my-2">
-                            <div class="text-end">
-                                <strong>Restante:</strong> <span class="restante-usd" data-total="<?= $n['saldo_pendiente'] ?>">$<?= number_format($n['saldo_pendiente'], 2) ?></span> | <span class="restante-bs">Bs <?= number_format($n['saldo_pendiente'] * ($tasaActual['valor'] ?? 1), 2) ?></span>
-                            </div>
-                        </div>
-                        
-                        <div id="contenedorPagosNE<?= $n['id'] ?>">
-                            <div class="pago-item border p-2 mb-2 rounded bg-light">
-                                <div class="row mb-2">
-                                    <div class="col-7">
-                                        <label class="form-label text-sm m-0">Método de Pago</label>
-                                        <select name="id_metodo_pago[]" class="form-select form-select-sm select-metodo-pago" required>
-                                            <option value="" disabled selected>Seleccione...</option>
-                                            <?php foreach ($metodosPago as $metodo): ?>
-                                                <option value="<?= $metodo['id'] ?>"><?= htmlspecialchars($metodo['nombre']) ?></option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                    <div class="col-5 text-end pt-3">
-                                        <span class="badge bg-secondary badge-moneda">Moneda: ?</span>
-                                        <input type="hidden" name="moneda[]" class="input-moneda-hidden" value="USD" data-tasa="<?= $tasaActual['valor'] ?? 1 ?>">
-                                    </div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-6">
-                                        <label class="form-label text-sm m-0">Monto</label>
-                                        <input type="number" step="0.01" name="monto_ingresado[]" class="form-control form-control-sm input-monto-pago" required>
-                                    </div>
-                                    <div class="col-6 pt-4 text-end">
-                                        <label class="form-label text-muted text-sm m-0">Equiv: <span class="equivalente-pago-text text-dark fw-bold">$0.00</span></label>
-                                    </div>
-                                </div>
-                                <div>
-                                    <input type="text" name="referencia[]" class="form-control form-control-sm" placeholder="Ref/Comprobante">
-                                </div>
-                            </div>
-                        </div>
 
-                        <button type="button" class="btn btn-sm btn-outline-primary w-100 btn-agregar-pago" data-id="<?= $n['id'] ?>">+ Agregar otro método de pago</button>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-success">Guardar Pagos</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <?php endif; ?>
 
     <?php endforeach; ?>
 

@@ -398,43 +398,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    const btnsAgregarPago = document.querySelectorAll('.btn-agregar-pago');
-    btnsAgregarPago.forEach(btn => {
-        btn.addEventListener('click', function() {
-            const id = this.getAttribute('data-id');
-            const contenedor = document.getElementById('contenedorPagosNE' + id);
-            if (!contenedor) return;
-            const modal = this.closest('.modal');
 
-            const primerItem = contenedor.querySelector('.pago-item');
-            if (primerItem) {
-                const nuevoItem = primerItem.cloneNode(true);
-                nuevoItem.querySelector('.input-monto-pago').value = '';
-                const inputReferenciaNuevo = nuevoItem.querySelector('input[name="referencia[]"]');
-                if (inputReferenciaNuevo) {
-                    inputReferenciaNuevo.value = '';
-                    inputReferenciaNuevo.style.display = 'block';
-                    inputReferenciaNuevo.required = false;
-                }
-                
-                nuevoItem.querySelector('.select-metodo-pago').value = '';
-                nuevoItem.querySelector('.equivalente-pago-text').innerText = '$0.00';
-                nuevoItem.querySelector('.badge-moneda').innerText = 'Moneda: ?';
-                nuevoItem.querySelector('.badge-moneda').className = 'badge bg-secondary badge-moneda';
-                nuevoItem.querySelector('.input-moneda-hidden').value = 'USD';
-                
-                if (!nuevoItem.querySelector('.btn-remove-pago')) {
-                    const removeBtnHtml = `<div class="text-end mt-1"><button type="button" class="btn btn-sm btn-danger btn-remove-pago">X</button></div>`;
-                    nuevoItem.insertAdjacentHTML('beforeend', removeBtnHtml);
-                }
-                contenedor.appendChild(nuevoItem);
-                if (modal) {
-                    actualizarOpcionesMetodos(modal);
-                    actualizarTotalesPagos(modal);
-                }
-            }
-        });
-    });
 
     document.body.addEventListener('click', function(e) {
         if (e.target.classList.contains('btn-remove-pago')) {
@@ -554,6 +518,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 nuevoItem.querySelector('.badge-moneda').innerText = 'Moneda: ?';
                 nuevoItem.querySelector('.badge-moneda').className = 'badge bg-secondary badge-moneda';
                 nuevoItem.querySelector('.input-moneda-hidden').value = 'USD';
+                
+                const inputMontoNuevo = nuevoItem.querySelector('.input-monto-pago');
+                if (inputMontoNuevo) {
+                    inputMontoNuevo.value = '';
+                }
                 
                 if (!nuevoItem.querySelector('.btn-remove-pago')) {
                     const removeBtnHtml = `<div class="text-end mt-1"><button type="button" class="btn btn-sm btn-danger btn-remove-pago">X</button></div>`;

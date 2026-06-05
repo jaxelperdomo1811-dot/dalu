@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 05-06-2026 a las 01:39:43
+-- Tiempo de generación: 05-06-2026 a las 08:01:12
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -135,7 +135,8 @@ CREATE TABLE `creditos` (
 INSERT INTO `creditos` (`id`, `id_nota_entrega`, `porcentaje_inicial`, `monto_cuota_inicial`, `nro_cuotas`, `monto_por_cuota`, `frecuencia`, `estado`, `fecha_registro`) VALUES
 (1, 1, 40, 9.60, 4, 3.60, 'semanal', 'pendiente', '2026-06-03 22:32:14'),
 (2, 1, 60, 7.20, 2, 2.40, 'semanal', 'pendiente', '2026-06-04 02:21:50'),
-(3, 1, 60, 12.00, 5, 1.60, 'semanal', 'pendiente', '2026-06-04 15:39:28');
+(3, 1, 60, 12.00, 5, 1.60, 'semanal', 'pendiente', '2026-06-04 15:39:28'),
+(4, 7, 40, 4.00, 4, 1.50, 'semanal', 'pagado', '2026-06-05 00:00:05');
 
 -- --------------------------------------------------------
 
@@ -173,7 +174,12 @@ INSERT INTO `creditos_cuotas` (`id`, `id_credito`, `tipo_cuota`, `nro_cuota`, `m
 (11, 3, 'regular', 2, 1.60, 1.60, '2026-06-18', 'pendiente', NULL),
 (12, 3, 'regular', 3, 1.60, 1.60, '2026-06-25', 'pendiente', NULL),
 (13, 3, 'regular', 4, 1.60, 1.60, '2026-07-02', 'pendiente', NULL),
-(14, 3, 'regular', 5, 1.60, 1.60, '2026-07-09', 'pendiente', NULL);
+(14, 3, 'regular', 5, 1.60, 1.60, '2026-07-09', 'pendiente', NULL),
+(15, 4, 'inicial', 0, 4.00, 0.00, '2026-06-05', 'pagado', '2026-06-05 02:00:05'),
+(16, 4, 'regular', 1, 1.50, 0.00, '2026-06-12', 'pagado', '2026-06-05 02:00:52'),
+(17, 4, 'regular', 2, 1.50, 0.00, '2026-06-19', 'pagado', '2026-06-05 02:02:09'),
+(18, 4, 'regular', 3, 1.50, 0.00, '2026-06-26', 'pagado', '2026-06-05 02:02:09'),
+(19, 4, 'regular', 4, 1.50, 0.00, '2026-07-03', 'pagado', '2026-06-05 02:02:42');
 
 -- --------------------------------------------------------
 
@@ -228,7 +234,6 @@ INSERT INTO `detalles_entrada` (`id`, `id_entrada`, `id_variante`, `cantidad`, `
 CREATE TABLE `detalles_pedido` (
   `id` int(11) NOT NULL,
   `id_pedido` int(11) NOT NULL,
-  `id_producto` int(11) DEFAULT NULL,
   `id_variante` int(11) DEFAULT NULL,
   `tipo` enum('cliente','proveedor') NOT NULL,
   `imagen` varchar(60) NOT NULL,
@@ -246,18 +251,20 @@ CREATE TABLE `detalles_pedido` (
 -- Volcado de datos para la tabla `detalles_pedido`
 --
 
-INSERT INTO `detalles_pedido` (`id`, `id_pedido`, `id_producto`, `id_variante`, `tipo`, `imagen`, `link`, `fecha_registro`, `estado`, `nombre_producto`, `cantidad`, `precio_unitario`, `descripcion_producto`, `status_inventario`) VALUES
-(1, 3, NULL, NULL, 'proveedor', 'assets/img/products/sin_categoria/franela.png', '', '2026-05-28 23:19:45', 'pendiente', 'franela', 1, NULL, NULL, 'pendiente'),
-(2, 3, NULL, NULL, 'proveedor', '', 'facebook.com', '2026-05-28 23:19:45', 'pendiente', 'jean', 1, NULL, NULL, 'pendiente'),
-(3, 4, 2, NULL, 'proveedor', 'assets/img/products/sin_categoria/franela.png', '', '2026-05-29 00:00:22', 'pendiente', 'franela', 1, NULL, NULL, 'vinculado'),
-(4, 5, NULL, NULL, 'proveedor', 'assets/img/products/sin_categoria/jean.png', '', '2026-05-29 01:04:15', 'pendiente', 'jean', 1, NULL, NULL, 'ignorado'),
-(5, 5, 2, NULL, 'proveedor', '', 'https://us.shein.com/Women-s-Vest-Brasil-South-America-Flag-Print-Design-Exquisite-Elegant-And-Fashionable-Exuding-Feminine-Charm-Perfect-For-Holiday-Gifts-Mother-s-Day-Coachella-Music-Festival-Memorial-Day-Suitable-For-Spring-And-Summer-Suitable-For-Casual-Sports-Vacation-Travel-Beach-Wear-And-Daily-Wear-Widely-Versatile-Applicable-To-Various-Occasions-Ladies-Elegant-Suits-Blouses-Summer-Outfits-Vacation-Outfits-Women-Travel-Wear-Tank-Top-p-444142921.html?src_identifier=on%3DONE_THIRD_COMPONENT%60cn%3DONE_THIRD_COMPONENT_2%60hz%3D-%60jc%3DsheinPicks_10751%60ps%3D1_4&src_module=all&src_tab_page_id=page_home1780016622648&mallCode=1&pageListType=4&detailBusinessFrom=0-1_444142921%7C0-2', '2026-05-29 01:04:15', 'pendiente', 'franela brasil', 1, NULL, NULL, 'vinculado'),
-(6, 6, NULL, NULL, 'proveedor', '', '', '2026-05-29 03:51:47', 'pendiente', 'perfume sabroso', 1, NULL, NULL, 'ignorado'),
-(7, 6, NULL, NULL, 'proveedor', '', 'https://us.shein.com/Women-s-Vest-Brasil-South-America-Flag-Print-Design-Exquisite-Elegant-And-Fashionable-Exuding-Feminine-Charm-Perfect-For-Holiday-Gifts-Mother-s-Day-Coachella-Music-Festival-Memorial-Day-Suitable-For-Spring-And-Summer-Suitable-For-Casual-Sports-Vacation-Travel-Beach-Wear-And-Daily-Wear-Widely-Versatile-Applicable-To-Various-Occasions-Ladies-Elegant-Suits-Blouses-Summer-Outfits-Vacation-Outfits-Women-Travel-Wear-Tank-Top-p-444597816.html?src_identifier=on%3DONE_THIRD_COMPONENT%60cn%3DONE_THIRD_COMPONENT_2%60hz%3D-%60jc%3DsheinPicks_10751%60ps%3D1_4&src_module=all&src_tab_page_id=page_home1780016622648&mallCode=1&pageListType=4&detailBusinessFrom=0-1_444142921%7C0-2&main_attr=27_1000112', '2026-05-29 03:51:47', 'pendiente', NULL, 1, NULL, NULL, 'ignorado'),
-(8, 6, NULL, NULL, 'proveedor', 'assets/img/products/sin_categoria/detalle_2.png', '', '2026-05-29 03:51:47', 'pendiente', NULL, 1, NULL, NULL, 'ignorado'),
-(9, 7, 25, NULL, 'cliente', '', '', '2026-06-03 03:52:03', 'pendiente', NULL, 1, NULL, NULL, 'vinculado'),
-(10, 7, 2, NULL, 'cliente', '', '', '2026-06-03 03:52:03', 'pendiente', NULL, 1, NULL, NULL, 'vinculado'),
-(11, 8, 2, NULL, 'cliente', '', '', '2026-06-03 04:10:11', 'pendiente', NULL, 1, NULL, NULL, 'vinculado');
+INSERT INTO `detalles_pedido` (`id`, `id_pedido`, `id_variante`, `tipo`, `imagen`, `link`, `fecha_registro`, `estado`, `nombre_producto`, `cantidad`, `precio_unitario`, `descripcion_producto`, `status_inventario`) VALUES
+(1, 3, NULL, 'proveedor', 'assets/img/products/sin_categoria/franela.png', '', '2026-05-28 23:19:45', 'pendiente', 'franela', 1, NULL, NULL, 'pendiente'),
+(2, 3, NULL, 'proveedor', '', 'facebook.com', '2026-05-28 23:19:45', 'pendiente', 'jean', 1, NULL, NULL, 'pendiente'),
+(3, 4, NULL, 'proveedor', 'assets/img/products/sin_categoria/franela.png', '', '2026-05-29 00:00:22', 'pendiente', 'franela', 1, NULL, NULL, 'vinculado'),
+(4, 5, NULL, 'proveedor', 'assets/img/products/sin_categoria/jean.png', '', '2026-05-29 01:04:15', 'pendiente', 'jean', 1, NULL, NULL, 'ignorado'),
+(5, 5, NULL, 'proveedor', '', 'https://us.shein.com/Women-s-Vest-Brasil-South-America-Flag-Print-Design-Exquisite-Elegant-And-Fashionable-Exuding-Feminine-Charm-Perfect-For-Holiday-Gifts-Mother-s-Day-Coachella-Music-Festival-Memorial-Day-Suitable-For-Spring-And-Summer-Suitable-For-Casual-Sports-Vacation-Travel-Beach-Wear-And-Daily-Wear-Widely-Versatile-Applicable-To-Various-Occasions-Ladies-Elegant-Suits-Blouses-Summer-Outfits-Vacation-Outfits-Women-Travel-Wear-Tank-Top-p-444142921.html?src_identifier=on%3DONE_THIRD_COMPONENT%60cn%3DONE_THIRD_COMPONENT_2%60hz%3D-%60jc%3DsheinPicks_10751%60ps%3D1_4&src_module=all&src_tab_page_id=page_home1780016622648&mallCode=1&pageListType=4&detailBusinessFrom=0-1_444142921%7C0-2', '2026-05-29 01:04:15', 'pendiente', 'franela brasil', 1, NULL, NULL, 'vinculado'),
+(6, 6, NULL, 'proveedor', '', '', '2026-05-29 03:51:47', 'pendiente', 'perfume sabroso', 1, NULL, NULL, 'ignorado'),
+(7, 6, NULL, 'proveedor', '', 'https://us.shein.com/Women-s-Vest-Brasil-South-America-Flag-Print-Design-Exquisite-Elegant-And-Fashionable-Exuding-Feminine-Charm-Perfect-For-Holiday-Gifts-Mother-s-Day-Coachella-Music-Festival-Memorial-Day-Suitable-For-Spring-And-Summer-Suitable-For-Casual-Sports-Vacation-Travel-Beach-Wear-And-Daily-Wear-Widely-Versatile-Applicable-To-Various-Occasions-Ladies-Elegant-Suits-Blouses-Summer-Outfits-Vacation-Outfits-Women-Travel-Wear-Tank-Top-p-444597816.html?src_identifier=on%3DONE_THIRD_COMPONENT%60cn%3DONE_THIRD_COMPONENT_2%60hz%3D-%60jc%3DsheinPicks_10751%60ps%3D1_4&src_module=all&src_tab_page_id=page_home1780016622648&mallCode=1&pageListType=4&detailBusinessFrom=0-1_444142921%7C0-2&main_attr=27_1000112', '2026-05-29 03:51:47', 'pendiente', NULL, 1, NULL, NULL, 'ignorado'),
+(8, 6, NULL, 'proveedor', 'assets/img/products/sin_categoria/detalle_2.png', '', '2026-05-29 03:51:47', 'pendiente', NULL, 1, NULL, NULL, 'ignorado'),
+(9, 7, NULL, 'cliente', '', '', '2026-06-03 03:52:03', 'pendiente', NULL, 1, NULL, NULL, 'vinculado'),
+(10, 7, NULL, 'cliente', '', '', '2026-06-03 03:52:03', 'pendiente', NULL, 1, NULL, NULL, 'vinculado'),
+(11, 8, NULL, 'cliente', '', '', '2026-06-03 04:10:11', 'pendiente', NULL, 1, NULL, NULL, 'vinculado'),
+(12, 9, NULL, 'proveedor', '', 'https://us.shein.com/Women-s-Vest-Brasil-South-America-Flag-Print-Design-Exquisite-Elegant-And-Fashionable-Exuding-Feminine-Charm-Perfect-For-Holiday-Gifts-Mother-s-Day-Coachella-Music-Festival-Memorial-Day-Suitable-For-Spring-And-Summer-Suitable-For-Casual-Sports-Vacation-Travel-Beach-Wear-And-Daily-Wear-Widely-Versatile-Applicable-To-Various-Occasions-Ladies-Elegant-Suits-Blouses-Summer-Outfits-Vacation-Outfits-Women-Travel-Wear-Tank-Top-p-444597816.html?src_identifier=on%3DONE_THIRD_COMPONENT%60cn%3DONE_THIRD_COMPONENT_2%60hz%3D-%60jc%3DsheinPicks_10751%60ps%3D1_4&src_module=all&src_tab_page_id=page_home1780016622648&mallCode=1&pageListType=4&detailBusinessFrom=0-1_444142921%7C0-2&main_attr=27_762', '2026-06-05 00:42:20', 'pendiente', NULL, 1, 10.00, NULL, 'ignorado'),
+(13, 9, NULL, 'proveedor', 'assets/img/products/sin_categoria/detalle_1.jpg', '', '2026-06-05 00:42:20', 'pendiente', NULL, 1, 15.00, NULL, 'ignorado');
 
 -- --------------------------------------------------------
 
@@ -334,7 +341,8 @@ INSERT INTO `notas_entrega` (`id`, `id_cliente`, `fecha_pedido`, `estado`, `tipo
 (3, 4, '2026-06-04 00:29:47', 'pendiente', 'credito', 30.00, '', '2026-06-03 22:29:47'),
 (4, 17, '2026-06-04 00:32:13', 'pendiente', 'credito', 24.00, '', '2026-06-03 22:32:14'),
 (5, 4, '2026-06-04 04:21:50', 'pendiente', 'credito', 12.00, '', '2026-06-04 02:21:50'),
-(6, 19, '2026-06-04 17:39:28', 'pendiente', 'credito', 20.00, '', '2026-06-04 15:39:28');
+(6, 19, '2026-06-04 17:39:28', 'pendiente', 'credito', 20.00, '', '2026-06-04 15:39:28'),
+(7, 18, '2026-06-05 02:00:05', 'pendiente', 'credito', 10.00, '', '2026-06-05 00:00:05');
 
 -- --------------------------------------------------------
 
@@ -362,7 +370,8 @@ INSERT INTO `notas_entrega_detalles` (`id`, `id_nota_entrega`, `id_variante`, `c
 (4, 3, 37, 3, 10.00, ''),
 (5, 4, 1, 2, 12.00, ''),
 (6, 5, 1, 1, 12.00, ''),
-(7, 6, 37, 2, 10.00, '');
+(7, 6, 37, 2, 10.00, ''),
+(8, 7, 27, 1, 10.00, '');
 
 -- --------------------------------------------------------
 
@@ -392,7 +401,11 @@ INSERT INTO `pagos` (`id`, `id_nota_entrega`, `id_metodo_pago`, `monto_bs`, `mon
 (108, 1, 7, 1340.74, 2.40, '2026-06-04 01:13:00', 558.64, NULL, '121233', 'por verificar'),
 (109, 1, 7, 1340.74, 2.40, '2026-06-04 01:14:27', 558.64, NULL, '21212', 'por verificar'),
 (110, 1, 10, 6724.56, 12.00, '2026-06-04 11:39:28', 560.38, NULL, '22', 'por verificar'),
-(111, 1, 8, 5.00, 0.01, '2026-06-04 11:44:01', 560.38, NULL, '111', 'por verificar');
+(111, 1, 8, 5.00, 0.01, '2026-06-04 11:44:01', 560.38, NULL, '111', 'por verificar'),
+(112, 7, 7, 2241.52, 4.00, '2026-06-04 20:00:05', 560.38, NULL, '', 'por verificar'),
+(113, 7, 8, 840.57, 1.50, '2026-06-04 20:00:52', 560.38, NULL, '232323', 'por verificar'),
+(114, 7, 7, 2241.52, 4.00, '2026-06-04 20:02:09', 560.38, NULL, '21212', 'por verificar'),
+(115, 7, 8, 280.19, 0.50, '2026-06-04 20:02:42', 560.38, NULL, '21212', 'por verificar');
 
 -- --------------------------------------------------------
 
@@ -422,7 +435,8 @@ INSERT INTO `pedidos` (`id`, `id_proveedor`, `id_cliente`, `id_nota_entrega`, `t
 (5, 4, NULL, NULL, 'propios', '2026-05-29 01:04:15', 'recibido'),
 (6, 4, NULL, NULL, 'propios', '2026-05-29 03:51:47', 'recibido'),
 (7, 1, 4, NULL, 'cliente', '2026-06-03 03:52:03', 'pendiente'),
-(8, 4, 13, NULL, 'cliente', '2026-06-03 04:10:11', 'pendiente');
+(8, 4, 13, NULL, 'cliente', '2026-06-03 04:10:11', 'pendiente'),
+(9, 1, NULL, NULL, 'propios', '2026-06-05 00:42:20', 'recibido');
 
 -- --------------------------------------------------------
 
@@ -609,7 +623,7 @@ CREATE TABLE `tasa` (
 --
 
 INSERT INTO `tasa` (`id`, `nombre`, `valor`, `fecha_actualizacion`) VALUES
-(2, 'BCV', 560.38, '2026-06-04 11:25:15'),
+(2, 'BCV', 560.38, '2026-06-04 22:53:09'),
 (3, 'Zelle', 744.69, '2026-06-03 23:51:44');
 
 -- --------------------------------------------------------
@@ -700,7 +714,6 @@ ALTER TABLE `detalles_entrada`
 ALTER TABLE `detalles_pedido`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_pedido` (`id_pedido`),
-  ADD KEY `id_producto` (`id_producto`),
   ADD KEY `id_variante` (`id_variante`);
 
 --
@@ -831,13 +844,13 @@ ALTER TABLE `clientes`
 -- AUTO_INCREMENT de la tabla `creditos`
 --
 ALTER TABLE `creditos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `creditos_cuotas`
 --
 ALTER TABLE `creditos_cuotas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT de la tabla `despachos`
@@ -855,13 +868,13 @@ ALTER TABLE `detalles_entrada`
 -- AUTO_INCREMENT de la tabla `detalles_pedido`
 --
 ALTER TABLE `detalles_pedido`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de la tabla `entradas`
 --
 ALTER TABLE `entradas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `metodos_pago`
@@ -873,25 +886,25 @@ ALTER TABLE `metodos_pago`
 -- AUTO_INCREMENT de la tabla `notas_entrega`
 --
 ALTER TABLE `notas_entrega`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `notas_entrega_detalles`
 --
 ALTER TABLE `notas_entrega_detalles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `pagos`
 --
 ALTER TABLE `pagos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=112;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=116;
 
 --
 -- AUTO_INCREMENT de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `preguntas_seguridad`
@@ -974,8 +987,7 @@ ALTER TABLE `detalles_entrada`
 --
 ALTER TABLE `detalles_pedido`
   ADD CONSTRAINT `detalles_pedido_ibfk_variante` FOREIGN KEY (`id_variante`) REFERENCES `producto_variantes` (`id`) ON DELETE SET NULL,
-  ADD CONSTRAINT `pedidos_ibfk` FOREIGN KEY (`id_pedido`) REFERENCES `pedidos` (`id`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `pedidos_ibfk5` FOREIGN KEY (`id_producto`) REFERENCES `productos` (`id`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `pedidos_ibfk` FOREIGN KEY (`id_pedido`) REFERENCES `pedidos` (`id`) ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `entradas`

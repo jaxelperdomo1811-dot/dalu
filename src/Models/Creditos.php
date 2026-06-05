@@ -4,21 +4,47 @@ namespace Lenovo\Dalu\Models;
 use PDO;
 
 class Creditos extends Conexion {
+    private $id;
+    private $id_nota_entrega;
+    private $porcentaje_inicial;
+    private $monto_cuota_inicial;
+    private $nro_cuotas;
+    private $monto_por_cuota;
+    private $frecuencia;
+    private $estado;
     
     public function __construct() {
         parent::__construct();
     }
     
-    public function insertarCredito($id_nota_entrega, $porcentaje_inicial, $monto_cuota_inicial, $nro_cuotas, $monto_por_cuota, $frecuencia) {
+    public function setId($id) { $this->id = $id; return $this; }
+    public function setIdNotaEntrega($id_nota_entrega) { $this->id_nota_entrega = $id_nota_entrega; return $this; }
+    public function setPorcentajeInicial($porcentaje_inicial) { $this->porcentaje_inicial = $porcentaje_inicial; return $this; }
+    public function setMontoCuotaInicial($monto_cuota_inicial) { $this->monto_cuota_inicial = $monto_cuota_inicial; return $this; }
+    public function setNroCuotas($nro_cuotas) { $this->nro_cuotas = $nro_cuotas; return $this; }
+    public function setMontoPorCuota($monto_por_cuota) { $this->monto_por_cuota = $monto_por_cuota; return $this; }
+    public function setFrecuencia($frecuencia) { $this->frecuencia = $frecuencia; return $this; }
+    public function setEstado($estado) { $this->estado = $estado; return $this; }
+    
+    public function getId() { return $this->id; }
+    public function getIdNotaEntrega() { return $this->id_nota_entrega; }
+    public function getPorcentajeInicial() { return $this->porcentaje_inicial; }
+    public function getMontoCuotaInicial() { return $this->monto_cuota_inicial; }
+    public function getNroCuotas() { return $this->nro_cuotas; }
+    public function getMontoPorCuota() { return $this->monto_por_cuota; }
+    public function getFrecuencia() { return $this->frecuencia; }
+    public function getEstado() { return $this->estado; }
+    
+    public function insert() {
         $sql = "INSERT INTO creditos (id_nota_entrega, porcentaje_inicial, monto_cuota_inicial, nro_cuotas, monto_por_cuota, frecuencia) 
                 VALUES (:id_nota_entrega, :porcentaje_inicial, :monto_cuota_inicial, :nro_cuotas, :monto_por_cuota, :frecuencia)";
         $stmt = $this->prepare($sql);
-        $stmt->bindParam(":id_nota_entrega", $id_nota_entrega);
-        $stmt->bindParam(":porcentaje_inicial", $porcentaje_inicial);
-        $stmt->bindParam(":monto_cuota_inicial", $monto_cuota_inicial);
-        $stmt->bindParam(":nro_cuotas", $nro_cuotas);
-        $stmt->bindParam(":monto_por_cuota", $monto_por_cuota);
-        $stmt->bindParam(":frecuencia", $frecuencia);
+        $stmt->bindParam(":id_nota_entrega", $this->id_nota_entrega);
+        $stmt->bindParam(":porcentaje_inicial", $this->porcentaje_inicial);
+        $stmt->bindParam(":monto_cuota_inicial", $this->monto_cuota_inicial);
+        $stmt->bindParam(":nro_cuotas", $this->nro_cuotas);
+        $stmt->bindParam(":monto_por_cuota", $this->monto_por_cuota);
+        $stmt->bindParam(":frecuencia", $this->frecuencia);
         
         if ($stmt->execute()) {
             return $this->lastInsertId();

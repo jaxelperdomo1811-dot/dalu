@@ -329,16 +329,15 @@ switch ($accion) {
     case 'vincularDetalleAjax':
         header('Content-Type: application/json');
         $detalleId = $_POST['detalle_id'] ?? null;
-        $idProducto = $_POST['id_producto'] ?? null;
         $idVariante = !empty($_POST['id_variante']) ? $_POST['id_variante'] : null;
         
-        if (!$detalleId || !$idProducto) {
-            echo json_encode(['success' => false, 'error' => 'Faltan datos requeridos']);
+        if (!$detalleId || !$idVariante) {
+            echo json_encode(['success' => false, 'error' => 'Faltan datos requeridos (variante)']);
             exit();
         }
         
         $pedidoModel = new Pedidos();
-        $success = $pedidoModel->vincularDetalleAProducto($detalleId, $idProducto, $idVariante);
+        $success = $pedidoModel->vincularDetalleAProducto($detalleId, $idVariante);
         
         echo json_encode(['success' => $success]);
         exit();
