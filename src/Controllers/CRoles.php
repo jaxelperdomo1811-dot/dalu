@@ -11,10 +11,18 @@ switch ($accion) {
         $rol->setNombre($_POST['nombre']);
         $rol->setDescripcion($_POST['descripcion']);
         
-        if ($rol->insert()) {
-            $_SESSION['success'] = "Rol registrado exitosamente.";
-        } else {
-            $_SESSION['error'] = "Error al registrar el rol.";
+        try {
+            if ($rol->insert()) {
+                $_SESSION['success'] = "Rol registrado exitosamente.";
+            } else {
+                $_SESSION['error'] = "Error al registrar el rol.";
+            }
+        } catch (\PDOException $e) {
+            if ($e->getCode() == 23000) {
+                $_SESSION['error'] = "Error: Ya existe un rol con este nombre.";
+            } else {
+                $_SESSION['error'] = "Error de base de datos: " . $e->getMessage();
+            }
         }
         header("Location: ?c=usuarios&accion=view&tab=roles");
         exit();
@@ -26,10 +34,18 @@ switch ($accion) {
         $rol->setNombre($_POST['nombre']);
         $rol->setDescripcion($_POST['descripcion']);
 
-        if ($rol->update()) {
-            $_SESSION['success'] = "Rol actualizado exitosamente.";
-        } else {
-            $_SESSION['error'] = "Error al actualizar el rol.";
+        try {
+            if ($rol->update()) {
+                $_SESSION['success'] = "Rol actualizado exitosamente.";
+            } else {
+                $_SESSION['error'] = "Error al actualizar el rol.";
+            }
+        } catch (\PDOException $e) {
+            if ($e->getCode() == 23000) {
+                $_SESSION['error'] = "Error: Ya existe otro rol con este nombre.";
+            } else {
+                $_SESSION['error'] = "Error de base de datos: " . $e->getMessage();
+            }
         }
         header("Location: ?c=usuarios&accion=view&tab=roles");
         exit();

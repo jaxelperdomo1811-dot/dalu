@@ -145,10 +145,18 @@ case "insert":
     
     $producto->setVariantes($variantes);
     
-    if ($producto->insert()) {
-        $_SESSION['success'] = "Producto registrado exitosamente con " . count($variantes) . " variante(s).";
-    } else {
-        $_SESSION['error'] = "Error al registrar el producto.";
+    try {
+        if ($producto->insert()) {
+            $_SESSION['success'] = "Producto registrado exitosamente con " . count($variantes) . " variante(s).";
+        } else {
+            $_SESSION['error'] = "Error al registrar el producto.";
+        }
+    } catch (\PDOException $e) {
+        if ($e->getCode() == 23000) {
+            $_SESSION['error'] = "Error: Ya existe un producto con este nombre o código.";
+        } else {
+            $_SESSION['error'] = "Error de base de datos: " . $e->getMessage();
+        }
     }
     header("Location: ?c=productos&accion=view");
     exit();
@@ -217,88 +225,96 @@ case "update":
         }
     }
     
-    if ($producto->update()) {
-        // ========== PROCESAR VARIANTES ELIMINADAS ==========
-        if (isset($_POST['deleted_variants']) && is_array($_POST['deleted_variants'])) {
-            foreach ($_POST['deleted_variants'] as $variante_id) {
-                if (!empty($variante_id)) {
-                    $producto->deleteVariante($variante_id);
+    try {
+        if ($producto->update()) {
+            // ========== PROCESAR VARIANTES ELIMINADAS ==========
+            if (isset($_POST['deleted_variants']) && is_array($_POST['deleted_variants'])) {
+                foreach ($_POST['deleted_variants'] as $variante_id) {
+                    if (!empty($variante_id)) {
+                        $producto->deleteVariante($variante_id);
+                    }
                 }
             }
-        }
 
-        // ========== PROCESAR VARIANTES REACTIVADAS ==========
-        if (isset($_POST['reactivate_variants']) && is_array($_POST['reactivate_variants'])) {
-            foreach ($_POST['reactivate_variants'] as $variante_id) {
-                if (!empty($variante_id)) {
-                    $producto->reactivateVariante($variante_id);
+            // ========== PROCESAR VARIANTES REACTIVADAS ==========
+            if (isset($_POST['reactivate_variants']) && is_array($_POST['reactivate_variants'])) {
+                foreach ($_POST['reactivate_variants'] as $variante_id) {
+                    if (!empty($variante_id)) {
+                        $producto->reactivateVariante($variante_id);
+                    }
                 }
             }
-        }
 
-        // ========== PROCESAR VARIANTES (ACTUALIZAR O AGREGAR NUEVAS) ==========
-        if (isset($_POST['variantes']) && is_array($_POST['variantes'])) {
-            foreach ($_POST['variantes'] as $index => $v) {
-                if (!empty($v['nombre_variante']) && isset($v['stock'])) {
-                    $atributos = [];
-                    if (!empty($v['talla'])) $atributos['talla'] = $v['talla'];
-                    if (!empty($v['color'])) $atributos['color'] = $v['color'];
-                    if (!empty($v['volumen_ml'])) $atributos['volumen_ml'] = $v['volumen_ml'];
-                    if (!empty($v['spf'])) $atributos['spf'] = $v['spf'];
-                    if (!empty($v['fragancia'])) $atributos['fragancia'] = $v['fragancia'];
-                    if (!empty($v['tipo_piel'])) $atributos['tipo_piel'] = $v['tipo_piel'];
+            // ========== PROCESAR VARIANTES (ACTUALIZAR O AGREGAR NUEVAS) ==========
+            if (isset($_POST['variantes']) && is_array($_POST['variantes'])) {
+                foreach ($_POST['variantes'] as $index => $v) {
+                    if (!empty($v['nombre_variante']) && isset($v['stock'])) {
+                        $atributos = [];
+                        if (!empty($v['talla'])) $atributos['talla'] = $v['talla'];
+                        if (!empty($v['color'])) $atributos['color'] = $v['color'];
+                        if (!empty($v['volumen_ml'])) $atributos['volumen_ml'] = $v['volumen_ml'];
+                        if (!empty($v['spf'])) $atributos['spf'] = $v['spf'];
+                        if (!empty($v['fragancia'])) $atributos['fragancia'] = $v['fragancia'];
+                        if (!empty($v['tipo_piel'])) $atributos['tipo_piel'] = $v['tipo_piel'];
 
-                    $imagen_variante = !empty($v['imagen_variante_actual']) ? $v['imagen_variante_actual'] : null;
+                        $imagen_variante = !empty($v['imagen_variante_actual']) ? $v['imagen_variante_actual'] : null;
 
-                    if (isset($_FILES['imagen_variante']) && isset($_FILES['imagen_variante']['error'][$index]) && $_FILES['imagen_variante']['error'][$index] === UPLOAD_ERR_OK) {
-                        try {
-                            $fileArray = [
-                                'name' => $_FILES['imagen_variante']['name'][$index],
-                                'type' => $_FILES['imagen_variante']['type'][$index],
-                                'tmp_name' => $_FILES['imagen_variante']['tmp_name'][$index],
-                                'error' => $_FILES['imagen_variante']['error'][$index],
-                                'size' => $_FILES['imagen_variante']['size'][$index]
-                            ];
-                            
-                            $categoriaModel = new Categorias();
-                            $categoria = $categoriaModel->searchById($_POST['id_categoria']);
-                            $nombreCategoria = $categoria ? $categoria['nombre'] : 'sin_categoria';
+                        if (isset($_FILES['imagen_variante']) && isset($_FILES['imagen_variante']['error'][$index]) && $_FILES['imagen_variante']['error'][$index] === UPLOAD_ERR_OK) {
+                            try {
+                                $fileArray = [
+                                    'name' => $_FILES['imagen_variante']['name'][$index],
+                                    'type' => $_FILES['imagen_variante']['type'][$index],
+                                    'tmp_name' => $_FILES['imagen_variante']['tmp_name'][$index],
+                                    'error' => $_FILES['imagen_variante']['error'][$index],
+                                    'size' => $_FILES['imagen_variante']['size'][$index]
+                                ];
+                                
+                                $categoriaModel = new Categorias();
+                                $categoria = $categoriaModel->searchById($_POST['id_categoria']);
+                                $nombreCategoria = $categoria ? $categoria['nombre'] : 'sin_categoria';
 
-                            $rutaImagenVariante = $producto->subirImagen(
-                                $fileArray,
-                                $nombreCategoria,
-                                $_POST['nombre'] . '_' . $v['nombre_variante']
-                            );
-                            if ($rutaImagenVariante) {
-                                $imagen_variante = $rutaImagenVariante;
+                                $rutaImagenVariante = $producto->subirImagen(
+                                    $fileArray,
+                                    $nombreCategoria,
+                                    $_POST['nombre'] . '_' . $v['nombre_variante']
+                                );
+                                if ($rutaImagenVariante) {
+                                    $imagen_variante = $rutaImagenVariante;
+                                }
+                            } catch (Exception $e) {
+                                // Ignorar error
                             }
-                        } catch (Exception $e) {
-                            // Ignorar error
+                        }
+
+                        $variante_data = [
+                            'nombre_variante' => $v['nombre_variante'],
+                            'atributos' => $atributos,
+                            'precio_adicional' => isset($v['precio_adicional']) && $v['precio_adicional'] !== '' ? $v['precio_adicional'] : 0,
+                            'stock' => isset($v['stock']) && $v['stock'] !== '' ? $v['stock'] : 0,
+                            'imagen_variante' => $imagen_variante
+                        ];
+
+                        if (!empty($v['id'])) {
+                            // Actualizar variante existente
+                            $res = $producto->updateVariante($v['id'], $variante_data);
+                        } else {
+                            // Agregar nueva variante
+                            $res = $producto->addVariante($_POST['id'], $variante_data);
                         }
                     }
-
-                    $variante_data = [
-                        'nombre_variante' => $v['nombre_variante'],
-                        'atributos' => $atributos,
-                        'precio_adicional' => isset($v['precio_adicional']) && $v['precio_adicional'] !== '' ? $v['precio_adicional'] : 0,
-                        'stock' => isset($v['stock']) && $v['stock'] !== '' ? $v['stock'] : 0,
-                        'imagen_variante' => $imagen_variante
-                    ];
-
-                    if (!empty($v['id'])) {
-                        // Actualizar variante existente
-                        $res = $producto->updateVariante($v['id'], $variante_data);
-                    } else {
-                        // Agregar nueva variante
-                        $res = $producto->addVariante($_POST['id'], $variante_data);
-                    }
                 }
             }
-        }
 
-        $_SESSION['success'] = "Producto y sus variantes actualizados exitosamente.";
-    } else {
-        $_SESSION['error'] = "Error al actualizar el producto.";
+            $_SESSION['success'] = "Producto y sus variantes actualizados exitosamente.";
+        } else {
+            $_SESSION['error'] = "Error al actualizar el producto.";
+        }
+    } catch (\PDOException $e) {
+        if ($e->getCode() == 23000) {
+            $_SESSION['error'] = "Error: Ya existe un producto con este nombre o código.";
+        } else {
+            $_SESSION['error'] = "Error de base de datos: " . $e->getMessage();
+        }
     }
     header("Location: ?c=productos&accion=view");
     exit();

@@ -37,10 +37,18 @@ switch ($accion) {
                      ->setFechaIngreso($fecha_ingreso)
                      ->setDetalles($detalles);
 
-            if ($entradas->insert()) {
-                $_SESSION['success'] = "Entrada registrada exitosamente.";
-            } else {
-                $_SESSION['error'] = "Error al registrar la entrada.";
+            try {
+                if ($entradas->insert()) {
+                    $_SESSION['success'] = "Entrada registrada exitosamente.";
+                } else {
+                    $_SESSION['error'] = "Error al registrar la entrada.";
+                }
+            } catch (\PDOException $e) {
+                if ($e->getCode() == 23000) {
+                    $_SESSION['error'] = "Error: Esta entrada ya se encuentra registrada.";
+                } else {
+                    $_SESSION['error'] = "Error de base de datos: " . $e->getMessage();
+                }
             }
         } else {
             $_SESSION['error'] = "Faltan datos requeridos o detalles de productos.";

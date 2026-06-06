@@ -10,8 +10,9 @@
         private $correo;
         private $telefono;
         private $direccion;
+        private $palabra_secreta;
 
-        public function __construct($id = null, $nombre = null, $cedula = null, $apellido = null, $correo = null, $telefono = null, $direccion = null) {
+        public function __construct($id = null, $nombre = null, $cedula = null, $apellido = null, $correo = null, $telefono = null, $direccion = null, $palabra_secreta = null) {
             parent::__construct();
             $this->id = $id;
             $this->nombre = $nombre;
@@ -20,7 +21,7 @@
             $this->correo = $correo;
             $this->telefono = $telefono;
             $this->direccion = $direccion;
-
+            $this->palabra_secreta = $palabra_secreta;
         }
         
         public function setId($id) { $this->id = $id; return $this; }
@@ -30,6 +31,7 @@
         public function setCorreo($correo) { $this->correo = $correo; return $this; }
         public function setTelefono($telefono) { $this->telefono = $telefono; return $this; }
         public function setDireccion($direccion) { $this->direccion = $direccion; return $this; }
+        public function setPalabraSecreta($palabra_secreta) { $this->palabra_secreta = $palabra_secreta; return $this; }
 
         public function getId() { return $this->id; }
         public function getNombre() { return $this->nombre; }
@@ -38,9 +40,10 @@
         public function getCorreo() { return $this->correo; }
         public function getTelefono() { return $this->telefono; }
         public function getDireccion() { return $this->direccion; }
+        public function getPalabraSecreta() { return $this->palabra_secreta; }
 
         public function insert() {
-            $sql = "INSERT INTO clientes (nombre, cedula, apellido, correo, telefono, direccion) VALUES (:nombre, :cedula, :apellido, :correo, :telefono, :direccion)";
+            $sql = "INSERT INTO clientes (nombre, cedula, apellido, correo, telefono, direccion, palabra_secreta) VALUES (:nombre, :cedula, :apellido, :correo, :telefono, :direccion, :palabra_secreta)";
             $stmt = $this->prepare($sql);
             $stmt->bindParam(":nombre", $this->nombre);
             $stmt->bindParam(":cedula", $this->cedula);
@@ -48,6 +51,7 @@
             $stmt->bindParam(":correo", $this->correo);
             $stmt->bindParam(":telefono", $this->telefono);
             $stmt->bindParam(":direccion", $this->direccion);
+            $stmt->bindParam(":palabra_secreta", $this->palabra_secreta);
             if ($stmt->execute()) {
                 return true;
             } else {
@@ -78,13 +82,14 @@
         }
 
         public function update() {
-            $sql = "UPDATE clientes SET nombre = :nombre, apellido = :apellido, correo = :correo, telefono = :telefono, direccion = :direccion WHERE id = :id";
+            $sql = "UPDATE clientes SET nombre = :nombre, apellido = :apellido, correo = :correo, telefono = :telefono, direccion = :direccion, palabra_secreta = :palabra_secreta WHERE id = :id";
             $stmt = $this->prepare($sql);
             $stmt->bindParam(":nombre", $this->nombre);
             $stmt->bindParam(":apellido", $this->apellido);
             $stmt->bindParam(":correo", $this->correo);
             $stmt->bindParam(":telefono", $this->telefono);
             $stmt->bindParam(":direccion", $this->direccion);
+            $stmt->bindParam(":palabra_secreta", $this->palabra_secreta);
             $stmt->bindParam(":id", $this->id);
 
             if ($stmt->execute()) {

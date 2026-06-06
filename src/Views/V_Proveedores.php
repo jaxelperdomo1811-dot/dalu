@@ -73,7 +73,7 @@
                                             <th scope="col">Apellido</th>
                                             <th scope="col">Razon social</th>
                                             <th scope="col">RIF</th>
-                                            <th scope="col">Documento de identidad</th>
+                                            <th scope="col">Documento identidad</th>
                                             <th scope="col">Teléfono</th>
                                             <th scope="col">Teléfono 2</th>
                                             <th scope="col">Email</th>
@@ -198,9 +198,9 @@
                                             <th scope="col">Apellido</th>
                                             <th scope="col">Razon social</th>
                                             <th scope="col">RIF</th>
-                                            <th scope="col">Documento de identidad</th>
+                                            <th scope="col">Documento identidad</th>
                                             <th scope="col">Teléfono</th>
-                                            <th scope="col">Teléfono 2 </th>
+                                            <th scope="col">Teléfono 2</th>
                                             <th scope="col">Email</th>
                                             <th scope="col">Dirección</th>
                                             <th scope="col">Acción</th>

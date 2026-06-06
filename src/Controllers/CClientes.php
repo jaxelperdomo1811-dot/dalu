@@ -39,11 +39,20 @@
                     ->setCorreo($_POST['correo'] ?? null)
                     ->setTelefono($telefono)
                     ->setDireccion($_POST['direccion'] ?? null)
-                    ->setCedula($cedulaCompleta !== '' ? $cedulaCompleta : null);
-            if ($cliente->insert()) {
-                $_SESSION['success'] = "Cliente registrado exitosamente.";
-            } else {
-                $_SESSION['error'] = "Error al insertar el cliente.";
+                    ->setCedula($cedulaCompleta !== '' ? $cedulaCompleta : null)
+                    ->setPalabraSecreta($_POST['palabra_secreta'] ?? null);
+            try {
+                if ($cliente->insert()) {
+                    $_SESSION['success'] = "Cliente registrado exitosamente.";
+                } else {
+                    $_SESSION['error'] = "Error al insertar el cliente.";
+                }
+            } catch (\PDOException $e) {
+                if ($e->getCode() == 23000) {
+                    $_SESSION['error'] = "Error: Ya existe un cliente registrado con esta cédula.";
+                } else {
+                    $_SESSION['error'] = "Error de base de datos: " . $e->getMessage();
+                }
             }
             header("Location: ?c=clientes&accion=view");
             exit();
@@ -74,11 +83,20 @@
                     ->setApellido($_POST['apellido'] ?? null)
                     ->setCorreo($_POST['correo'] ?? null)
                     ->setTelefono($telefono)
-                    ->setDireccion($_POST['direccion'] ?? null);
-            if ($cliente->update()) {
-                $_SESSION['success'] = "Cliente actualizado exitosamente.";
-            } else {
-                $_SESSION['error'] = "Error al actualizar los datos del cliente.";
+                    ->setDireccion($_POST['direccion'] ?? null)
+                    ->setPalabraSecreta($_POST['palabra_secreta'] ?? null);
+            try {
+                if ($cliente->update()) {
+                    $_SESSION['success'] = "Cliente actualizado exitosamente.";
+                } else {
+                    $_SESSION['error'] = "Error al actualizar los datos del cliente.";
+                }
+            } catch (\PDOException $e) {
+                if ($e->getCode() == 23000) {
+                    $_SESSION['error'] = "Error: Ya existe otro cliente con esta cédula.";
+                } else {
+                    $_SESSION['error'] = "Error de base de datos: " . $e->getMessage();
+                }
             }
             header("Location: ?c=clientes&accion=view");
             exit();

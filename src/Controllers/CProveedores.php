@@ -65,10 +65,18 @@
                       ->setTelefono($telefono)
                       ->setEmail($_POST['email'] ?? null)
                       ->setDireccion($_POST['direccion'] ?? null);
-            if ($proveedor->insert()) {
-                $_SESSION['success'] = "Proveedor registrado exitosamente.";
-            } else {
-                $_SESSION['error'] = "Error al registrar el proveedor.";
+            try {
+                if ($proveedor->insert()) {
+                    $_SESSION['success'] = "Proveedor registrado exitosamente.";
+                } else {
+                    $_SESSION['error'] = "Error al registrar el proveedor.";
+                }
+            } catch (\PDOException $e) {
+                if ($e->getCode() == 23000) {
+                    $_SESSION['error'] = "Error: Ya existe un proveedor con este RIF, documento de identidad o correo.";
+                } else {
+                    $_SESSION['error'] = "Error de base de datos: " . $e->getMessage();
+                }
             }
             header("Location: ?c=proveedores&accion=view");
             exit();
@@ -104,10 +112,18 @@
                       ->setTelefono($telefono)
                       ->setEmail($_POST['email'] ?? null)
                       ->setDireccion($_POST['direccion'] ?? null);
-            if ($proveedor->update()) {
-                $_SESSION['success'] = "Proveedor actualizado exitosamente.";
-            } else {
-                $_SESSION['error'] = "Error al actualizar el proveedor.";
+            try {
+                if ($proveedor->update()) {
+                    $_SESSION['success'] = "Proveedor actualizado exitosamente.";
+                } else {
+                    $_SESSION['error'] = "Error al actualizar el proveedor.";
+                }
+            } catch (\PDOException $e) {
+                if ($e->getCode() == 23000) {
+                    $_SESSION['error'] = "Error: Ya existe otro proveedor con este RIF, documento de identidad o correo.";
+                } else {
+                    $_SESSION['error'] = "Error de base de datos: " . $e->getMessage();
+                }
             }
             header("Location: ?c=proveedores&accion=view");
             exit();
