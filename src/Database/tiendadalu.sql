@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 05-06-2026 a las 08:01:12
+-- Tiempo de generación: 07-06-2026 a las 03:36:42
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -84,6 +84,7 @@ CREATE TABLE `clientes` (
   `cedula` varchar(150) NOT NULL,
   `telefono` varchar(20) DEFAULT NULL,
   `direccion` varchar(255) DEFAULT NULL,
+  `palabra_secreta` varchar(256) DEFAULT NULL,
   `fecha_registro` timestamp NOT NULL DEFAULT current_timestamp(),
   `activo` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -92,23 +93,29 @@ CREATE TABLE `clientes` (
 -- Volcado de datos para la tabla `clientes`
 --
 
-INSERT INTO `clientes` (`id`, `nombre`, `apellido`, `correo`, `cedula`, `telefono`, `direccion`, `fecha_registro`, `activo`) VALUES
-(1, 'rollinera', 'perez', 'asasss@gmail.com', 'V-30218994', '+584260563224', '12123133', '2026-05-28 03:58:21', 0),
-(2, 'JENNYMAR COROMOTO', 'PEREZ COLMANARES', 'NIUSF@GMAIL.COM', 'V-16238398', '+584126749294', 'jdjdjdjdd', '2026-05-29 03:33:08', 1),
-(3, 'JONATHAN JOSE', 'YEPEZ DIAZ', 'DJDJxxLF@gmail.com', 'V-23834152', '+584165546097', 'JKAFDIHjhvdo7-vSd', '2026-05-29 20:18:23', 1),
-(4, 'JOSE GUILLERMO', 'PEREZ SOTO', '', 'V-30218990', '', '', '2026-06-03 03:41:27', 1),
-(12, 'MARIA CLAUDIA', 'SILVA ALVAREZ', NULL, 'V-30218956', NULL, NULL, '2026-06-03 04:02:28', 1),
-(13, 'Luis', 'Gonzales', NULL, 'V-32218992', NULL, NULL, '2026-06-03 04:10:11', 1),
-(14, 'Fabrica SA', '', 'NIUaaaSF@GMAIL.COM', 'J-30218990', '+584261289078', 'aqaqaaq1', '2026-06-03 18:00:40', 1),
-(15, 'FRANCISMAR PAOLA', 'ARROYO RODRIGUEZ', 'NI11aUSF@GMAIL.COM', 'V-30218957', '+584241289078', 'dwqdwfde2', '2026-06-03 18:02:02', 1),
-(16, 'ANDRES', 'GONZALEZ GONZALEZ', NULL, 'V-26276726', NULL, NULL, '2026-06-03 22:31:34', 1),
-(17, 'MANUEL RICARDO', 'SANCHEZ TORRES', NULL, 'V-26076726', NULL, NULL, '2026-06-03 22:31:48', 1),
-(18, 'JESUS ALEXANDER', 'PERDOMO PERDOMO', NULL, 'V-27388616', NULL, NULL, '2026-06-04 15:31:41', 1),
-(19, 'Maria', 'Perez', NULL, 'V-33551766', NULL, NULL, '2026-06-04 15:39:28', 1),
-(20, 'JESUS GREGORIO', 'PERDOMO ORTIZ', 'aaSF@GMAIL.COM', 'V-12371443', '+584245674001', 'su casa ', '2026-06-04 20:41:04', 1),
-(21, 'DANIELLA VALENTINA', 'LUNA DIAZ', 'NIUSjhbuggvyrfvyF@GMAIL.COM', 'V-30377063', '+584223174606', 'gtybkjgvtuooyt', '2026-06-04 21:07:36', 1),
-(22, 'LIVORIO ANTONIO', 'MORENO GIL', NULL, 'V-30377064', NULL, NULL, '2026-06-04 21:08:47', 1),
-(23, 'HONIS MARIA', 'PEREZ DE SOTO', 'qqdhghh@gmail.com', 'V-12884771', '+573211234567', 'xdawcrwverbvr', '2026-06-04 21:42:13', 1);
+INSERT INTO `clientes` (`id`, `nombre`, `apellido`, `correo`, `cedula`, `telefono`, `direccion`, `palabra_secreta`, `fecha_registro`, `activo`) VALUES
+(1, 'rollinera', 'perez', 'asasss@gmail.com', 'V-30218994', '+584260563224', '12123133', NULL, '2026-05-28 03:58:21', 0),
+(2, 'JENNYMAR COROMOTO', 'PEREZ COLMANARES', 'NIUSF@GMAIL.COM', 'V-16238398', '+584126749294', 'jdjdjdjdd', NULL, '2026-05-29 03:33:08', 1),
+(3, 'JONATHAN JOSE', 'YEPEZ DIAZ', 'DJDJxxLF@gmail.com', 'V-23834152', '+584165546097', 'JKAFDIHjhvdo7-vSd', NULL, '2026-05-29 20:18:23', 1),
+(4, 'LUIS MANUEL', 'PEREZ ANDRADE', '', 'V-30218990', '', '', NULL, '2026-06-03 03:41:27', 1),
+(12, 'MARIA CLAUDIA', 'SILVA ALVAREZ', NULL, 'V-30218956', NULL, NULL, NULL, '2026-06-03 04:02:28', 1),
+(13, 'Luis', 'Gonzales', NULL, 'V-32218992', NULL, NULL, NULL, '2026-06-03 04:10:11', 1),
+(14, 'Fabrica SA', '', 'NIUaaaSF@GMAIL.COM', 'J-30218990', '+584261289078', 'aqaqaaq1', NULL, '2026-06-03 18:00:40', 0),
+(15, 'FRANCISMAR PAOLA', 'ARROYO RODRIGUEZ', 'NI11aUSF@GMAIL.COM', 'V-30218957', '+584241289078', 'dwqdwfde2', NULL, '2026-06-03 18:02:02', 1),
+(16, 'ANDRES', 'GONZALEZ GONZALEZ', NULL, 'V-26276726', NULL, NULL, NULL, '2026-06-03 22:31:34', 1),
+(17, 'MANUEL RICARDO', 'SANCHEZ TORRES', NULL, 'V-26076726', NULL, NULL, NULL, '2026-06-03 22:31:48', 1),
+(18, 'JESUS ALEXANDER', 'PERDOMO PERDOMO', NULL, 'V-27388616', NULL, NULL, NULL, '2026-06-04 15:31:41', 1),
+(19, 'Maria', 'Perez', NULL, 'V-33551766', NULL, NULL, NULL, '2026-06-04 15:39:28', 1),
+(20, 'JESUS GREGORIO', 'PERDOMO ORTIZ', 'aaSF@GMAIL.COM', 'V-12371443', '+584245674001', 'su casa ', NULL, '2026-06-04 20:41:04', 1),
+(21, 'DANIELLA VALENTINA', 'LUNA DIAZ', 'NIUSjhbuggvyrfvyF@GMAIL.COM', 'V-30377063', '+584223174606', 'gtybkjgvtuooyt', NULL, '2026-06-04 21:07:36', 1),
+(22, 'LIVORIO ANTONIO', 'MORENO GIL', NULL, 'V-30377064', NULL, NULL, NULL, '2026-06-04 21:08:47', 1),
+(23, 'HONIS MARIA', 'PEREZ DE SOTO', 'qqdhghh@gmail.com', 'V-12884771', '+573211234567', 'xdawcrwverbvr', NULL, '2026-06-04 21:42:13', 1),
+(24, 'YESSIMAR MARIA', 'SOTO ANDRADE', 'NIZAXAXSWDUSF@GMAIL.COM', 'V-19571909', '+584220563224', '123434567', NULL, '2026-06-05 06:48:16', 1),
+(25, 'JAYKEL', 'PEREZ', NULL, 'V-31041911', NULL, NULL, NULL, '2026-06-05 12:18:20', 1),
+(26, 'jose', 'YEPEZ DIAZ', 'kkjjkhj@gmail.com', 'V-20517658', '+584165589169', 'kkkkkkk', NULL, '2026-06-05 14:12:01', 1),
+(28, 'Raul', 'YEPEZ ', 'xxkjjkhj@gmail.com', 'V-15424587', '+584125497898', 'yyyyyyyy', NULL, '2026-06-05 14:14:40', 1),
+(30, 'MARIA NELLY', 'MARQUEZ GUERRA', NULL, 'V-11899011', NULL, NULL, NULL, '2026-06-05 18:02:45', 1),
+(33, 'VIRGINIA ANTONIA', 'MENDOZA RAMOS', 'yessimarsoto909@gmail.com', 'V-19571908', '+584125244042', 'su casa ', 'arremangala empujala', '2026-06-06 22:25:39', 1);
 
 -- --------------------------------------------------------
 
@@ -201,7 +208,8 @@ CREATE TABLE `despachos` (
 --
 
 INSERT INTO `despachos` (`id`, `id_nota_entrega`, `numero_despacho`, `fecha_despacho`, `estado`, `fecha_registro`) VALUES
-(1, 1, 'DSP-1780022201', '2026-05-29', 'entregado', '2026-05-29 02:37:19');
+(1, 1, 'DSP-1780022201', '2026-05-29', 'entregado', '2026-05-29 02:37:19'),
+(3, 9, 'DSP-1780661915', '2026-06-05', 'enviado', '2026-06-05 12:18:35');
 
 -- --------------------------------------------------------
 
@@ -223,7 +231,10 @@ CREATE TABLE `detalles_entrada` (
 
 INSERT INTO `detalles_entrada` (`id`, `id_entrada`, `id_variante`, `cantidad`, `precio_compra`) VALUES
 (8, 8, 2, 5, 10.00),
-(9, 14, 2, 5, 5.00);
+(9, 14, 2, 5, 5.00),
+(10, 16, 3, 15, 20.00),
+(11, 17, 1, 5, 14.50),
+(12, 19, 38, 14, 5.60);
 
 -- --------------------------------------------------------
 
@@ -264,7 +275,13 @@ INSERT INTO `detalles_pedido` (`id`, `id_pedido`, `id_variante`, `tipo`, `imagen
 (10, 7, NULL, 'cliente', '', '', '2026-06-03 03:52:03', 'pendiente', NULL, 1, NULL, NULL, 'vinculado'),
 (11, 8, NULL, 'cliente', '', '', '2026-06-03 04:10:11', 'pendiente', NULL, 1, NULL, NULL, 'vinculado'),
 (12, 9, NULL, 'proveedor', '', 'https://us.shein.com/Women-s-Vest-Brasil-South-America-Flag-Print-Design-Exquisite-Elegant-And-Fashionable-Exuding-Feminine-Charm-Perfect-For-Holiday-Gifts-Mother-s-Day-Coachella-Music-Festival-Memorial-Day-Suitable-For-Spring-And-Summer-Suitable-For-Casual-Sports-Vacation-Travel-Beach-Wear-And-Daily-Wear-Widely-Versatile-Applicable-To-Various-Occasions-Ladies-Elegant-Suits-Blouses-Summer-Outfits-Vacation-Outfits-Women-Travel-Wear-Tank-Top-p-444597816.html?src_identifier=on%3DONE_THIRD_COMPONENT%60cn%3DONE_THIRD_COMPONENT_2%60hz%3D-%60jc%3DsheinPicks_10751%60ps%3D1_4&src_module=all&src_tab_page_id=page_home1780016622648&mallCode=1&pageListType=4&detailBusinessFrom=0-1_444142921%7C0-2&main_attr=27_762', '2026-06-05 00:42:20', 'pendiente', NULL, 1, 10.00, NULL, 'ignorado'),
-(13, 9, NULL, 'proveedor', 'assets/img/products/sin_categoria/detalle_1.jpg', '', '2026-06-05 00:42:20', 'pendiente', NULL, 1, 15.00, NULL, 'ignorado');
+(13, 9, NULL, 'proveedor', 'assets/img/products/sin_categoria/detalle_1.jpg', '', '2026-06-05 00:42:20', 'pendiente', NULL, 1, 15.00, NULL, 'ignorado'),
+(14, 10, NULL, 'proveedor', '', '', '2026-06-05 12:03:51', 'pendiente', 'sueter', 1, NULL, NULL, 'pendiente'),
+(15, 11, 1, 'proveedor', '', '', '2026-06-05 13:28:28', 'pendiente', 'sueter', 1, 5.00, NULL, 'vinculado'),
+(16, 11, NULL, 'proveedor', '', 'https://us.shein.com/Women-s-Vest-Brasil-South-America-Flag-Print-Design-Exquisite-Elegant-And-Fashionable-Exuding-Feminine-Charm-Perfect-For-Holiday-Gifts-Mother-s-Day-Coachella-Music-Festival-Memorial-Day-Suitable-For-Spring-And-Summer-Suitable-For-Casual-Sports-Vacation-Travel-Beach-Wear-And-Daily-Wear-Widely-Versatile-Applicable-To-Various-Occasions-Ladies-Elegant-Suits-Blouses-Summer-Outfits-Vacation-Outfits-Women-Travel-Wear-Tank-Top-p-444142921.html?src_identifier=on%3DONE_THIRD_COMPONENT%60cn%3DONE_THIRD_COMPONENT_2%60hz%3D-%60jc%3DsheinPicks_10751%60ps%3D1_4&src_module=all&src_tab_page_id=page_home1780016622648&mallCode=1&pageListType=4&detailBusinessFrom=0-1_444142921%7C0-2', '2026-06-05 13:28:28', 'pendiente', NULL, 1, 8.00, NULL, 'pendiente'),
+(17, 11, NULL, 'proveedor', 'assets/img/products/sin_categoria/detalle_3.jpg', '', '2026-06-05 13:28:28', 'pendiente', NULL, 2, 6.10, NULL, 'pendiente'),
+(18, 12, NULL, 'proveedor', 'assets/img/products/sin_categoria/franela.jpg', '', '2026-06-05 14:19:30', 'pendiente', 'franela', 1, 10.00, NULL, 'pendiente'),
+(19, 13, NULL, 'proveedor', 'assets/img/products/sin_categoria/jean.jpg', '', '2026-06-05 14:21:22', 'pendiente', 'jean', 1, 5.00, NULL, 'pendiente');
 
 -- --------------------------------------------------------
 
@@ -287,7 +304,10 @@ CREATE TABLE `entradas` (
 
 INSERT INTO `entradas` (`id`, `id_proveedor`, `numero_lote`, `fecha_ingreso`, `total`, `fecha_registro`) VALUES
 (8, 1, '5', '2026-05-29', 50.00, '2026-05-29 20:02:28'),
-(14, 1, '56', '2026-06-05', 25.00, '2026-06-04 23:23:34');
+(14, 1, '56', '2026-06-05', 25.00, '2026-06-04 23:23:34'),
+(16, 4, 'e23re23rt4', '2026-06-05', 300.00, '2026-06-05 06:52:43'),
+(17, 4, '56', '2026-06-05', 72.50, '2026-06-05 12:10:00'),
+(19, 1, '12', '2026-06-05', 78.40, '2026-06-05 13:15:16');
 
 -- --------------------------------------------------------
 
@@ -337,12 +357,15 @@ CREATE TABLE `notas_entrega` (
 
 INSERT INTO `notas_entrega` (`id`, `id_cliente`, `fecha_pedido`, `estado`, `tipo`, `total`, `observaciones`, `fecha_registro`) VALUES
 (1, 4, '2026-06-03 20:43:22', 'cancelado', 'debito', 20.00, '', '2026-06-03 18:43:22'),
-(2, 4, '2026-06-03 21:33:23', 'confirmado', 'debito', 10.00, '', '2026-06-03 19:33:23'),
+(2, 4, '2026-06-03 21:33:23', 'entregado', 'debito', 10.00, '', '2026-06-03 19:33:23'),
 (3, 4, '2026-06-04 00:29:47', 'pendiente', 'credito', 30.00, '', '2026-06-03 22:29:47'),
 (4, 17, '2026-06-04 00:32:13', 'pendiente', 'credito', 24.00, '', '2026-06-03 22:32:14'),
 (5, 4, '2026-06-04 04:21:50', 'pendiente', 'credito', 12.00, '', '2026-06-04 02:21:50'),
 (6, 19, '2026-06-04 17:39:28', 'pendiente', 'credito', 20.00, '', '2026-06-04 15:39:28'),
-(7, 18, '2026-06-05 02:00:05', 'pendiente', 'credito', 10.00, '', '2026-06-05 00:00:05');
+(7, 18, '2026-06-05 02:00:05', 'pendiente', 'credito', 10.00, '', '2026-06-05 00:00:05'),
+(8, 18, '2026-06-05 14:14:45', 'entregado', 'debito', 82.92, 'compra', '2026-06-05 12:14:45'),
+(9, 25, '2026-06-05 14:18:20', 'confirmado', 'debito', 20.50, 'COMPRA', '2026-06-05 12:18:20'),
+(10, 18, '2026-06-05 16:41:18', 'confirmado', 'debito', 87.66, '', '2026-06-05 14:41:18');
 
 -- --------------------------------------------------------
 
@@ -371,7 +394,12 @@ INSERT INTO `notas_entrega_detalles` (`id`, `id_nota_entrega`, `id_variante`, `c
 (5, 4, 1, 2, 12.00, ''),
 (6, 5, 1, 1, 12.00, ''),
 (7, 6, 37, 2, 10.00, ''),
-(8, 7, 27, 1, 10.00, '');
+(8, 7, 27, 1, 10.00, ''),
+(9, 8, 2, 2, 41.46, ''),
+(10, 9, 1, 1, 20.50, ''),
+(12, 10, 40, 1, 23.10, ''),
+(13, 10, 2, 1, 41.46, ''),
+(14, 11, 1, 14, 29.90, '');
 
 -- --------------------------------------------------------
 
@@ -405,7 +433,12 @@ INSERT INTO `pagos` (`id`, `id_nota_entrega`, `id_metodo_pago`, `monto_bs`, `mon
 (112, 7, 7, 2241.52, 4.00, '2026-06-04 20:00:05', 560.38, NULL, '', 'por verificar'),
 (113, 7, 8, 840.57, 1.50, '2026-06-04 20:00:52', 560.38, NULL, '232323', 'por verificar'),
 (114, 7, 7, 2241.52, 4.00, '2026-06-04 20:02:09', 560.38, NULL, '21212', 'por verificar'),
-(115, 7, 8, 280.19, 0.50, '2026-06-04 20:02:42', 560.38, NULL, '21212', 'por verificar');
+(115, 7, 8, 280.19, 0.50, '2026-06-04 20:02:42', 560.38, NULL, '21212', 'por verificar'),
+(116, 8, 10, 46708.01, 82.92, '2026-06-05 08:14:45', 563.29, NULL, '185549', 'por verificar'),
+(117, 9, 9, 11547.45, 20.50, '2026-06-05 08:18:20', 563.29, NULL, '2588811', 'por verificar'),
+(118, 10, 10, 5632.90, 10.00, '2026-06-05 10:41:18', 563.29, NULL, '456456454', 'por verificar'),
+(119, 10, 8, 43745.00, 77.66, '2026-06-05 10:41:18', 563.29, NULL, '', 'por verificar'),
+(121, 1, 7, 13518.96, 24.00, '2026-06-05 14:04:05', 563.29, NULL, 'N/A', 'por verificar');
 
 -- --------------------------------------------------------
 
@@ -420,6 +453,9 @@ CREATE TABLE `pedidos` (
   `id_nota_entrega` int(11) DEFAULT NULL,
   `tipo` enum('cliente','proveedor','propios','') NOT NULL,
   `fecha_registro` timestamp NOT NULL DEFAULT current_timestamp(),
+  `fecha_estimada` date DEFAULT NULL,
+  `fecha_recepcion` datetime DEFAULT NULL,
+  `fecha_entrega` datetime DEFAULT NULL,
   `estado` enum('pendiente','confirmado','enviado','recibido','cancelado','entregado') NOT NULL DEFAULT 'pendiente'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -427,16 +463,20 @@ CREATE TABLE `pedidos` (
 -- Volcado de datos para la tabla `pedidos`
 --
 
-INSERT INTO `pedidos` (`id`, `id_proveedor`, `id_cliente`, `id_nota_entrega`, `tipo`, `fecha_registro`, `estado`) VALUES
-(1, 1, NULL, NULL, 'propios', '2026-05-28 04:27:15', 'entregado'),
-(2, 1, 1, NULL, 'cliente', '2026-05-28 04:28:24', 'cancelado'),
-(3, 1, NULL, NULL, 'propios', '2026-05-28 23:19:45', 'entregado'),
-(4, 1, NULL, NULL, 'propios', '2026-05-29 00:00:22', 'recibido'),
-(5, 4, NULL, NULL, 'propios', '2026-05-29 01:04:15', 'recibido'),
-(6, 4, NULL, NULL, 'propios', '2026-05-29 03:51:47', 'recibido'),
-(7, 1, 4, NULL, 'cliente', '2026-06-03 03:52:03', 'pendiente'),
-(8, 4, 13, NULL, 'cliente', '2026-06-03 04:10:11', 'pendiente'),
-(9, 1, NULL, NULL, 'propios', '2026-06-05 00:42:20', 'recibido');
+INSERT INTO `pedidos` (`id`, `id_proveedor`, `id_cliente`, `id_nota_entrega`, `tipo`, `fecha_registro`, `fecha_estimada`, `fecha_recepcion`, `fecha_entrega`, `estado`) VALUES
+(1, 1, NULL, NULL, 'propios', '2026-05-28 04:27:15', NULL, NULL, NULL, 'entregado'),
+(2, 1, 1, NULL, 'cliente', '2026-05-28 04:28:24', NULL, NULL, NULL, 'cancelado'),
+(3, 1, NULL, NULL, 'propios', '2026-05-28 23:19:45', NULL, NULL, NULL, 'entregado'),
+(4, 1, NULL, NULL, 'propios', '2026-05-29 00:00:22', NULL, NULL, NULL, 'recibido'),
+(5, 4, NULL, NULL, 'propios', '2026-05-29 01:04:15', NULL, NULL, NULL, 'recibido'),
+(6, 4, NULL, NULL, 'propios', '2026-05-29 03:51:47', NULL, NULL, NULL, 'recibido'),
+(7, 1, 4, NULL, 'cliente', '2026-06-03 03:52:03', NULL, NULL, NULL, 'pendiente'),
+(8, 4, 13, NULL, 'cliente', '2026-06-03 04:10:11', NULL, NULL, NULL, 'pendiente'),
+(9, 1, NULL, NULL, 'propios', '2026-06-05 00:42:20', NULL, NULL, NULL, 'recibido'),
+(10, 5, NULL, NULL, 'propios', '2026-06-05 12:03:51', NULL, NULL, NULL, 'pendiente'),
+(11, 1, NULL, NULL, 'propios', '2026-06-05 13:28:28', NULL, NULL, NULL, 'recibido'),
+(12, 1, NULL, NULL, 'propios', '2026-06-05 14:19:30', NULL, NULL, NULL, 'cancelado'),
+(13, 1, NULL, NULL, 'propios', '2026-06-05 14:21:22', NULL, NULL, NULL, 'confirmado');
 
 -- --------------------------------------------------------
 
@@ -491,9 +531,11 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`id`, `id_categoria`, `nombre`, `descripcion`, `precio_compra`, `precio_venta`, `precio_oferta`, `stock_minimo`, `marca`, `imagen_principal`, `activo`, `ventas_totales`, `fecha_registro`) VALUES
-(1, 2, 'sueter champions', 'sueter champions', 0.00, 12.00, NULL, 3, NULL, NULL, 1, 0, '2026-05-27 23:18:05'),
-(2, 2, 'Franela', 'franelas', 5.00, 10.37, NULL, 3, NULL, NULL, 1, 0, '2026-05-28 22:57:39'),
-(25, 6, 'perfume sabroso', '', 0.00, 10.00, NULL, 3, 'factory', NULL, 1, 0, '2026-05-29 03:55:06');
+(1, 2, 'sueter champions', 'sueter champions', 14.50, 29.90, NULL, 3, NULL, NULL, 1, 0, '2026-05-27 23:18:05'),
+(2, 2, 'Franela', 'franelas', 20.00, 41.46, NULL, 3, NULL, NULL, 1, 0, '2026-05-28 22:57:39'),
+(25, 6, 'perfume sabroso', '', 0.00, 10.00, NULL, 3, 'factory', NULL, 0, 0, '2026-05-29 03:55:06'),
+(34, 6, 'perfume delicioso', 'fragancia diaria', 5.60, 11.55, 3.74, 3, NULL, NULL, 1, 0, '2026-06-05 13:13:05'),
+(35, 8, 'Zapatos', 'R45-18', 0.00, 23.10, NULL, 3, NULL, NULL, 1, 0, '2026-06-05 13:30:56');
 
 -- --------------------------------------------------------
 
@@ -517,13 +559,16 @@ CREATE TABLE `producto_variantes` (
 --
 
 INSERT INTO `producto_variantes` (`id`, `id_producto`, `nombre_variante`, `atributos`, `precio_adicional`, `stock`, `imagen_variante`, `activo`) VALUES
-(1, 1, 'Principal', '{\"talla\":\"s\",\"color\":\"rojo\"}', 0.00, 10, NULL, 1),
-(2, 2, 'Franela roja', '{\"talla\":\"xxl\",\"color\":\"Rojo\"}', 0.00, 10, NULL, 1),
-(3, 2, 'franela verde', '{\"talla\":\"s\",\"color\":\"verde\"}', 0.00, 1, NULL, 1),
+(1, 1, 'Principal', '{\"talla\":\"s\",\"color\":\"rojo\"}', 0.00, 0, NULL, 1),
+(2, 2, 'Franela roja', '{\"talla\":\"xxl\",\"color\":\"Rojo\"}', 0.00, 7, NULL, 1),
+(3, 2, 'franela verde', '{\"talla\":\"s\",\"color\":\"verde\"}', 0.00, 16, NULL, 1),
 (4, 1, 'Principal', '{\"talla\":\"l\",\"color\":\"gris\"}', 0.00, 1, NULL, 0),
-(27, 25, 'perfume test', '{\"volumen_ml\":\"1\",\"fragancia\":\"prueba\"}', 0.00, 2, 'assets/img/products/perfumes/perfume_sabroso_perfume_test.png', 1),
-(36, 25, 'perfume rico', '{\"volumen_ml\":\"12\",\"fragancia\":\"test2\"}', 0.00, 1, NULL, 1),
-(37, 25, 'perfume pequeno', '{\"volumen_ml\":\"20\",\"fragancia\":\"hallmen\"}', 0.00, 10, 'assets/img/products/perfumes/perfume_sabroso_perfume_pequeno.png', 1);
+(27, 25, 'perfume test2', '{\"volumen_ml\":\"1\",\"fragancia\":\"prueba\"}', 0.00, 2, 'assets/img/products/perfumes/perfume_sabroso_perfume_test.png', 0),
+(36, 25, 'perfume rico', '{\"volumen_ml\":\"12\",\"fragancia\":\"test2\"}', 0.00, 1, NULL, 0),
+(37, 25, 'perfume pequeno', '{\"volumen_ml\":\"25\",\"fragancia\":\"hallmen\"}', 0.00, 10, 'assets/img/products/perfumes/perfume_sabroso_perfume_pequeno.png', 0),
+(38, 34, 'perfume test', '{\"volumen_ml\":\"150\",\"fragancia\":\"citrica\"}', 1.36, 25, 'assets/img/products/perfumes/perfume_sabroso_perfume_test.jpg', 1),
+(39, 34, 'perfume rico', '{\"volumen_ml\":\"150\",\"fragancia\":\"dulce\"}', 1.20, 7, 'assets/img/products/perfumes/perfume_sabroso_perfume_rico.jpg', 1),
+(40, 35, 'Zapatos', '{}', 0.00, 0, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -551,7 +596,8 @@ CREATE TABLE `proveedores` (
 
 INSERT INTO `proveedores` (`id`, `razon_social`, `documento_identidad`, `rif`, `nombre`, `apellido`, `telefono_1`, `telefono_2`, `correo`, `active`, `direccion`) VALUES
 (1, 'shein', 'N/A', NULL, 'shein', '', NULL, NULL, NULL, 1, NULL),
-(4, 'amazon', 'N/A', NULL, 'amazon', '', NULL, NULL, NULL, 1, NULL);
+(4, 'amazon', 'N/A', NULL, 'amazon', '', NULL, NULL, NULL, 1, NULL),
+(5, 'Champions', 'V-27120332', '2161325', 'Pepe', 'Perez', '+584225583005', NULL, 'pepe1112@gmail.com', 1, 's;kndjksbdks');
 
 -- --------------------------------------------------------
 
@@ -623,7 +669,7 @@ CREATE TABLE `tasa` (
 --
 
 INSERT INTO `tasa` (`id`, `nombre`, `valor`, `fecha_actualizacion`) VALUES
-(2, 'BCV', 560.38, '2026-06-04 22:53:09'),
+(2, 'BCV', 563.29, '2026-06-05 03:07:59'),
 (3, 'Zelle', 744.69, '2026-06-03 23:51:44');
 
 -- --------------------------------------------------------
@@ -706,7 +752,8 @@ ALTER TABLE `despachos`
 --
 ALTER TABLE `detalles_entrada`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `id_entrada` (`id_entrada`);
+  ADD KEY `id_entrada` (`id_entrada`),
+  ADD KEY `detalles_entrada_ibfk_variante` (`id_variante`);
 
 --
 -- Indices de la tabla `detalles_pedido`
@@ -758,7 +805,8 @@ ALTER TABLE `pagos`
 ALTER TABLE `pedidos`
   ADD PRIMARY KEY (`id`),
   ADD KEY `pedidos_ibfk2` (`id_proveedor`),
-  ADD KEY `pedidos_ibfk3` (`id_cliente`);
+  ADD KEY `pedidos_ibfk3` (`id_cliente`),
+  ADD KEY `pedidos_ibfk_nota_entrega` (`id_nota_entrega`);
 
 --
 -- Indices de la tabla `preguntas_seguridad`
@@ -772,6 +820,7 @@ ALTER TABLE `preguntas_seguridad`
 --
 ALTER TABLE `productos`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `nombre` (`nombre`),
   ADD KEY `id_categoria` (`id_categoria`),
   ADD KEY `idx_precio` (`precio_venta`);
 
@@ -838,7 +887,7 @@ ALTER TABLE `categorias`
 -- AUTO_INCREMENT de la tabla `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT de la tabla `creditos`
@@ -856,25 +905,25 @@ ALTER TABLE `creditos_cuotas`
 -- AUTO_INCREMENT de la tabla `despachos`
 --
 ALTER TABLE `despachos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `detalles_entrada`
 --
 ALTER TABLE `detalles_entrada`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `detalles_pedido`
 --
 ALTER TABLE `detalles_pedido`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT de la tabla `entradas`
 --
 ALTER TABLE `entradas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT de la tabla `metodos_pago`
@@ -886,25 +935,25 @@ ALTER TABLE `metodos_pago`
 -- AUTO_INCREMENT de la tabla `notas_entrega`
 --
 ALTER TABLE `notas_entrega`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `notas_entrega_detalles`
 --
 ALTER TABLE `notas_entrega_detalles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `pagos`
 --
 ALTER TABLE `pagos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=116;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=122;
 
 --
 -- AUTO_INCREMENT de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de la tabla `preguntas_seguridad`
@@ -916,19 +965,19 @@ ALTER TABLE `preguntas_seguridad`
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT de la tabla `producto_variantes`
 --
 ALTER TABLE `producto_variantes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT de la tabla `proveedores`
 --
 ALTER TABLE `proveedores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `respuestas_seguridad`
@@ -980,7 +1029,8 @@ ALTER TABLE `despachos`
 -- Filtros para la tabla `detalles_entrada`
 --
 ALTER TABLE `detalles_entrada`
-  ADD CONSTRAINT `detalles_entrada_ibfk_1` FOREIGN KEY (`id_entrada`) REFERENCES `entradas` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `detalles_entrada_ibfk_1` FOREIGN KEY (`id_entrada`) REFERENCES `entradas` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `detalles_entrada_ibfk_variante` FOREIGN KEY (`id_variante`) REFERENCES `producto_variantes` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `detalles_pedido`
@@ -1020,7 +1070,8 @@ ALTER TABLE `pagos`
 --
 ALTER TABLE `pedidos`
   ADD CONSTRAINT `pedidos_ibfk2` FOREIGN KEY (`id_proveedor`) REFERENCES `proveedores` (`id`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `pedidos_ibfk4` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `pedidos_ibfk4` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `pedidos_ibfk_nota_entrega` FOREIGN KEY (`id_nota_entrega`) REFERENCES `notas_entrega` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `productos`
