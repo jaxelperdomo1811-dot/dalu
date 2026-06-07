@@ -19,6 +19,9 @@
             // Cargar datos para el módulo de entradas
             $entradasLista = (new Entradas())->search();
             $productosDisponibles = (new Productos())->search();
+            
+            require_once __DIR__ . '/../Models/Categorias.php';
+            $categorias = (new \Lenovo\Dalu\Models\Categorias())->search();
 
             require_once __DIR__ . '/../Views/V_Proveedores.php';
             break;

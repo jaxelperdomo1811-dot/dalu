@@ -15,6 +15,12 @@ switch ($accion) {
         $pedidosP = (new Pedidos())->getByTipo('proveedor');
         $clientes = (new Clientes())->search();
         $proveedores = (new Proveedores())->search();
+        
+        $prodModel = new Productos();
+        $productos = $prodModel->search();
+        foreach ($productos as &$p) {
+            $p['variantes'] = $prodModel->getVariantesByProducto($p['id']);
+        }
         require_once __DIR__ . '/../Views/V_Pedidos.php';
         break;
 

@@ -68,7 +68,9 @@
                                 <tr>
                                     <th scope="col">Nro #</th>
                                     <th scope="col">Nombre Cliente</th>
-                                    <th scope="col">Fecha Pedido</th>
+                                    <th scope="col">Fecha de Registro</th>
+                                    <th scope="col">Fecha Estimada de Llegada</th>
+                                    <th scope="col">Fecha Real de Llegada</th>
                                     <th scope="col">Estado</th>
                                     <th scope="col">Accion</th>
                                 </tr>
@@ -79,6 +81,8 @@
                                         <td><?php echo htmlspecialchars($p['id']); ?></td>
                                         <td><?php echo htmlspecialchars($p['nombre_cliente'] ?? ''); ?></td>
                                         <td><?php echo htmlspecialchars($p['fecha_pedido'] ?? ''); ?></td>
+                                        <td><?php echo htmlspecialchars($p['fecha_estimada'] ?? '-'); ?></td>
+                                        <td><?php echo htmlspecialchars($p['fecha_recepcion'] ?? '-'); ?></td>
                                         <td><?php echo htmlspecialchars($p['estado']); ?></td>
                                         <td>
                                             <button type="button" class="btn btn-sm btn-info m-1 btn-ver-detalles" data-id="<?= $p['id'] ?>">Detalles</button>

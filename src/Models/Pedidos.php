@@ -224,7 +224,16 @@ use Lenovo\Dalu\Models\Conexion;
          * Actualizar estado del pedido
          */
         public function updateEstado() {
-            $sql = "UPDATE pedidos SET estado = :estado WHERE id = :id";
+            $updateDates = "";
+            if ($this->estado === 'enviado') {
+                $updateDates = ", fecha_estimada = DATE_ADD(CURRENT_DATE, INTERVAL 24 DAY)";
+            } elseif ($this->estado === 'recibido') {
+                $updateDates = ", fecha_recepcion = CURRENT_TIMESTAMP";
+            } elseif ($this->estado === 'entregado') {
+                $updateDates = ", fecha_entrega = CURRENT_TIMESTAMP";
+            }
+            
+            $sql = "UPDATE pedidos SET estado = :estado {$updateDates} WHERE id = :id";
             $stmt = $this->prepare($sql);
             $stmt->bindParam(":estado", $this->estado);
             $stmt->bindParam(":id", $this->id);

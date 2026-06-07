@@ -12,7 +12,11 @@
             $pedidosC = (new Pedidos())->getByTipo('cliente');
             $clientes = (new Clientes())->search();
             $proveedores = (new Proveedores())->search();
-            $productos = (new Productos())->search();
+            $prodModel = new Productos();
+            $productos = $prodModel->search();
+            foreach ($productos as &$p) {
+                $p['variantes'] = $prodModel->getVariantesByProducto($p['id']);
+            }
             
             // Cargar tasa
             $tasaModel = new \Lenovo\Dalu\Models\Tasa();

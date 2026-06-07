@@ -383,6 +383,71 @@ case "update":
         require_once __DIR__ . "/../Views/V_ProductosVariantes.php";
         break;
     
+    case "addProducto":
+        // Agregar producto rapido desde modal
+        if (empty($_POST['id_categoria']) || empty($_POST['nombre'])) {
+            if (isset($_POST['ajax'])) {
+                header('Content-Type: application/json');
+                echo json_encode(['error' => 'Datos incompletos para agregar producto.']);
+                exit();
+            }
+            $_SESSION['error'] = "Datos incompletos para agregar producto.";
+            header("Location: ?c=productos&accion=view");
+            exit();
+        }
+        
+        $precio_compra = !empty($_POST['precio_compra']) ? floatval($_POST['precio_compra']) : 0;
+        $tempProducto = new Productos();
+        $precio_venta = $precio_compra > 0 ? $tempProducto->calcularPrecioVentaDesdeCompra($precio_compra) : (!empty($_POST['precio_venta']) ? floatval($_POST['precio_venta']) : 0);
+        
+        $producto = new Productos(
+            null,                           
+            $_POST['id_categoria'],      
+            $_POST['nombre'],              
+            $_POST['descripcion'] ?? '',          
+            $precio_venta,                 
+            $precio_compra,                 
+            null       
+        );
+        $producto->setStockMinimo(3);
+        
+        try {
+            $producto_id = $producto->insert();
+            
+            // CREAR VARIANTE PRINCIPAL CON LOS ATRIBUTOS SI SE ENVIARON
+            $atributos = !empty($_POST['atributos']) ? json_decode($_POST['atributos'], true) : [];
+            if (!is_array($atributos)) $atributos = [];
+            
+            $varianteData = [
+                'nombre_variante' => 'Principal',
+                'atributos' => $atributos,
+                'precio_adicional' => 0,
+                'stock' => 0,
+                'imagen_variante' => null
+            ];
+            $producto->addVariante($producto_id, $varianteData);
+
+            if (isset($_POST['ajax'])) {
+                header('Content-Type: application/json');
+                if ($producto_id) {
+                    echo json_encode(['success' => true, 'producto' => ['id' => $producto_id, 'nombre' => $_POST['nombre']]]);
+                } else {
+                    echo json_encode(['error' => 'Error al agregar el producto.']);
+                }
+                exit();
+            }
+        } catch (\Exception $e) {
+            if (isset($_POST['ajax'])) {
+                header('Content-Type: application/json');
+                echo json_encode(['error' => 'Error al registrar producto: ' . $e->getMessage()]);
+                exit();
+            }
+        }
+        
+        header("Location: ?c=productos&accion=view");
+        exit();
+        break;
+
     case "addVariante":
         // Agregar variante a producto existente
         if (empty($_POST['id_producto']) || empty($_POST['nombre_variante']) || !isset($_POST['stock'])) {

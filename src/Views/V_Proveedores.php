@@ -452,7 +452,7 @@
 
     <!-- formulario de registro de entradas -->
     <div class="modal fade" id="entradaModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5">Registrar Entrada (Compra)</h1>
@@ -488,15 +488,18 @@
                         <div id="productos_container">
                             <div class="row mb-2 producto-row">
                                 <div class="col-md-4">
-                                    <select class="form-select producto-select" name="id_producto[]" required>
-                                        <option value="" disabled selected>Seleccione un producto</option>
-                                        <?php if(isset($productosDisponibles)) { foreach ($productosDisponibles as $prod): ?>
-                                            <option value="<?= $prod['id'] ?>"><?= htmlspecialchars($prod['nombre']) ?></option>
-                                        <?php endforeach; } ?>
-                                    </select>
+                                    <div class="input-group flex-nowrap">
+                                        <select class="form-select producto-select" name="id_producto[]" required>
+                                            <option value="" disabled selected>Seleccione un producto</option>
+                                            <?php if(isset($productosDisponibles)) { foreach ($productosDisponibles as $prod): ?>
+                                                <option value="<?= $prod['id'] ?>"><?= htmlspecialchars($prod['nombre']) ?></option>
+                                            <?php endforeach; } ?>
+                                        </select>
+                                        <button type="button" class="btn btn-outline-secondary btn-add-producto" title="Nuevo Producto">+</button>
+                                    </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <div class="input-group">
+                                    <div class="input-group flex-nowrap">
                                         <select class="form-select variante-select" name="id_variante[]" required>
                                             <option value="" disabled selected>Seleccione variante</option>
                                         </select>
@@ -534,6 +537,57 @@
                 </div>
                 <div class="modal-body" id="contenidoEntradasInsumo">
                     
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Agregar Producto Rápido -->
+    <div class="modal fade" id="modalAgregarProductoRapido" tabindex="-1" aria-hidden="true" style="z-index: 1060;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Nuevo Producto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formProductoRapido">
+                        <input type="hidden" name="ajax" value="1">
+                        <div class="mb-3">
+                            <label class="form-label">Categoría *</label>
+                            <select class="form-select" name="id_categoria" id="pr_categoria" required>
+                                <option value="" disabled selected>Seleccione una categoría</option>
+                                <?php if(isset($categorias)) { foreach($categorias as $cat): ?>
+                                    <option value="<?= $cat['id'] ?>"><?= htmlspecialchars($cat['nombre']) ?></option>
+                                <?php endforeach; } ?>
+                            </select>
+                            <div id="pr_dynamic_attributes" class="mt-2"></div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Nombre *</label>
+                                <input type="text" class="form-control" name="nombre" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Precio Compra</label>
+                                <input type="number" step="0.01" min="0" class="form-control" name="precio_compra">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Precio Venta</label>
+                                <input type="number" step="0.01" min="0" class="form-control" name="precio_venta">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Descripción</label>
+                                <input type="text" class="form-control" name="descripcion">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnGuardarProductoRapido">Guardar</button>
                 </div>
             </div>
         </div>

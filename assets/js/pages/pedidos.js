@@ -46,6 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div style="width: 18%;">
                     <select name="detalles[${idx}][id_variante]" class="form-select form-select-sm sel-variante no-select2 w-100"><option value="">-- Variante --</option></select>
+                    <div class="stock-info text-success fw-bold text-end pe-1" style="font-size: 0.75rem; margin-top: 2px;"></div>
                 </div>
                 <div style="width: 15%;">
                     <input type="text" name="detalles[${idx}][nombre_producto]" class="form-control form-control-sm w-100" placeholder="Nombre (opc)">
@@ -72,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Eventos para la nueva fila
             const selProd = row.querySelector('.sel-producto');
             const selVar = row.querySelector('.sel-variante');
+            const stockInfo = row.querySelector('.stock-info');
             const inCant = row.querySelector('.in-cantidad');
             const inPre = row.querySelector('.in-precio');
             const inLink = row.querySelector('.input-link');
@@ -80,6 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
             $(selProd).on('change', (e) => {
                 const prodId = e.target.value;
                 selVar.innerHTML = '<option value="">-- Variante --</option>';
+                stockInfo.innerText = '';
                 inPre.value = '';
                 
                 if (prodId && window.PRODUCTS) {
@@ -95,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             const precioAdicional = parseFloat(v.precio_adicional || 0);
                             const precioTotalVariante = precioBase + precioAdicional;
                             
-                            selVar.innerHTML += `<option value="${v.id}" data-precio="${precioTotalVariante}" data-stock="${v.stock}">${v.nombre_variante} (Disp: ${v.stock})</option>`;
+                            selVar.innerHTML += `<option value="${v.id}" data-precio="${precioTotalVariante}" data-stock="${v.stock}">${v.nombre_variante}</option>`;
                         });
                     }
                 }
@@ -108,11 +111,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     inPre.value = selected.dataset.precio;
                     
                     if (selected.dataset.stock) {
+                        stockInfo.innerText = `Disp: ${selected.dataset.stock}`;
                         inCant.max = selected.dataset.stock;
                         if (parseInt(inCant.value) > parseInt(selected.dataset.stock)) {
                             inCant.value = selected.dataset.stock;
                         }
+                    } else {
+                        stockInfo.innerText = '';
                     }
+                } else {
+                    stockInfo.innerText = '';
                 }
                 inPre.dispatchEvent(new Event('input', { bubbles: true }));
             });
@@ -122,6 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (inLink.value.trim() !== '' || (inFile.files && inFile.files.length > 0)) {
                     $(selProd).val('').trigger('change.select2');
                     selVar.innerHTML = '<option value="">-- Variante --</option>';
+                    stockInfo.innerText = '';
                 }
             };
 

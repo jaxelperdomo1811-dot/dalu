@@ -170,6 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnAddProducto = document.getElementById('btn_add_producto');
     const container = document.getElementById('productos_container');
     let currentVarianteSelect = null;
+    let currentProductoSelect = null;
 
     if (btnAddProducto && container) {
         btnAddProducto.addEventListener('click', () => {
@@ -202,7 +203,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
             
-            if (e.target.classList.contains('btn-add-variante')) {
+            if (e.target.classList.contains('btn-add-producto') || e.target.closest('.btn-add-producto')) {
+                const row = e.target.closest('.producto-row');
+                currentProductoSelect = row.querySelector('.producto-select');
+                document.getElementById('formProductoRapido').reset();
+                const modalEl = document.getElementById('modalAgregarProductoRapido');
+                if (modalEl) {
+                    const modal = new bootstrap.Modal(modalEl);
+                    modal.show();
+                }
+            }
+            
+            if (e.target.classList.contains('btn-add-variante') || e.target.closest('.btn-add-variante')) {
                 const row = e.target.closest('.producto-row');
                 const prodSelect = row.querySelector('.producto-select');
                 const idProd = prodSelect.value;
@@ -299,6 +311,17 @@ document.addEventListener('DOMContentLoaded', () => {
         return '';
     };
 
+    const prCategoria = document.getElementById('pr_categoria');
+    if (prCategoria) {
+        prCategoria.addEventListener('change', function() {
+            const catName = this.options[this.selectedIndex].text;
+            const container = document.getElementById('pr_dynamic_attributes');
+            if (container) {
+                container.innerHTML = getVariantExtrasHtml(catName);
+            }
+        });
+    }
+
     const btnGuardarVR = document.getElementById('btnGuardarVarianteRapida');
     if (btnGuardarVR) {
         btnGuardarVR.addEventListener('click', async () => {
@@ -342,6 +365,70 @@ document.addEventListener('DOMContentLoaded', () => {
             } finally {
                 btnGuardarVR.disabled = false;
                 btnGuardarVR.textContent = 'Guardar';
+            }
+        });
+    }
+
+    const btnGuardarPR = document.getElementById('btnGuardarProductoRapido');
+    if (btnGuardarPR) {
+        btnGuardarPR.addEventListener('click', async () => {
+            const form = document.getElementById('formProductoRapido');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            
+            const formData = new FormData(form);
+            
+            // Recoger los campos dinámicos
+            const dynamicContainer = document.getElementById('pr_dynamic_attributes');
+            if (dynamicContainer) {
+                const inputs = dynamicContainer.querySelectorAll('input, select');
+                const atributos = {};
+                inputs.forEach(input => {
+                    if (input.name && input.value) {
+                        atributos[input.name] = input.value;
+                    }
+                });
+                formData.append('atributos', JSON.stringify(atributos));
+            }
+            
+            btnGuardarPR.disabled = true;
+            btnGuardarPR.textContent = 'Guardando...';
+            
+            try {
+                const response = await fetch('?c=productos&accion=addProducto', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                
+                if (data.success && data.producto) {
+                    const newOption = new Option(data.producto.nombre, data.producto.id, false, true);
+                    if (currentProductoSelect) {
+                        currentProductoSelect.add(newOption);
+                        currentProductoSelect.value = data.producto.id;
+                        currentProductoSelect.dispatchEvent(new Event('change', { bubbles: true }));
+                    } else {
+                        document.querySelectorAll('.producto-select').forEach(sel => {
+                            sel.add(new Option(data.producto.nombre, data.producto.id));
+                        });
+                    }
+                    
+                    const modalEl = document.getElementById('modalAgregarProductoRapido');
+                    const modal = bootstrap.Modal.getInstance(modalEl);
+                    if (modal) modal.hide();
+                    
+                    alert('Producto agregado exitosamente.');
+                } else {
+                    alert(data.error || 'Error al guardar el producto.');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Ocurrió un error en la conexión.');
+            } finally {
+                btnGuardarPR.disabled = false;
+                btnGuardarPR.textContent = 'Guardar';
             }
         });
     }
