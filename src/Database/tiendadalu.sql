@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 07-06-2026 a las 03:36:42
+-- Tiempo de generación: 07-06-2026 a las 04:26:22
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -417,7 +417,7 @@ CREATE TABLE `pagos` (
   `tasa` decimal(10,2) NOT NULL,
   `comprobante` varchar(500) DEFAULT NULL,
   `referencia` varchar(500) DEFAULT NULL,
-  `estado` enum('por verificar','verificado','','') NOT NULL
+  `estado` enum('por verificar','verificado','rechazado','') NOT NULL DEFAULT 'por verificar'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --
@@ -669,7 +669,7 @@ CREATE TABLE `tasa` (
 --
 
 INSERT INTO `tasa` (`id`, `nombre`, `valor`, `fecha_actualizacion`) VALUES
-(2, 'BCV', 563.29, '2026-06-05 03:07:59'),
+(2, 'BCV', 563.29, '2026-06-06 22:20:48'),
 (3, 'Zelle', 744.69, '2026-06-03 23:51:44');
 
 -- --------------------------------------------------------

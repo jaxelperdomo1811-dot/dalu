@@ -7,9 +7,53 @@ use Lenovo\Dalu\Models\Tasa;
 use Lenovo\Dalu\Models\NotasEntrega;
 use Lenovo\Dalu\Models\Creditos;
 
-$accion = $_GET['accion'] ?? $_POST['accion'] ?? '';
+$accion = $_GET['accion'] ?? $_POST['accion'] ?? 'view';
 
 switch($accion) {
+    case 'view':
+        $pagosModel = new Pagos();
+        $notasCredito = $pagosModel->getAgrupadosPorNota('credito');
+        $notasDebito = $pagosModel->getAgrupadosPorNota('debito');
+        
+        require_once __DIR__ . '/../Views/V_Pagos.php';
+        break;
+
+    case 'ajaxGetPagos':
+        header('Content-Type: application/json');
+        $id_nota_entrega = $_GET['id_nota'] ?? null;
+        if ($id_nota_entrega) {
+            $pagosModel = new Pagos();
+            $pagos = $pagosModel->getByNotaEntrega($id_nota_entrega);
+            echo json_encode(['success' => true, 'pagos' => $pagos]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'ID de nota no proporcionado']);
+        }
+        exit;
+
+    case 'ajaxUpdateEstado':
+        header('Content-Type: application/json');
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = $_POST['id'] ?? null;
+            $estado = $_POST['estado'] ?? null;
+            
+            if ($id && in_array($estado, ['por verificar', 'verificado', 'rechazado'])) {
+                $pagosModel = new Pagos();
+                $pagosModel->setId($id);
+                $pagosModel->setEstado($estado);
+                
+                if ($pagosModel->updateEstado()) {
+                    echo json_encode(['success' => true]);
+                } else {
+                    echo json_encode(['success' => false, 'message' => 'Error al actualizar el estado en BD']);
+                }
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Datos inválidos']);
+            }
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Método no permitido']);
+        }
+        exit;
+
     case 'insert':
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id_nota_entrega = $_POST['id_nota_entrega'] ?? null;

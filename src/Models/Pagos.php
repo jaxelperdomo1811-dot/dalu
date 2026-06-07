@@ -12,6 +12,7 @@ class Pagos extends Conexion {
     private $monto_usd;
     private $tasa;
     private $referencia;
+    private $estado;
     
     public function __construct() {
         parent::__construct();
@@ -24,6 +25,7 @@ class Pagos extends Conexion {
     public function setMontoUsd($monto_usd) { $this->monto_usd = $monto_usd; return $this; }
     public function setTasa($tasa) { $this->tasa = $tasa; return $this; }
     public function setReferencia($referencia) { $this->referencia = $referencia; return $this; }
+    public function setEstado($estado) { $this->estado = $estado; return $this; }
     
     public function getId() { return $this->id; }
     public function getIdNotaEntrega() { return $this->id_nota_entrega; }
@@ -32,6 +34,7 @@ class Pagos extends Conexion {
     public function getMontoUsd() { return $this->monto_usd; }
     public function getTasa() { return $this->tasa; }
     public function getReferencia() { return $this->referencia; }
+    public function getEstado() { return $this->estado; }
     
     public function getByNotaEntrega($id_nota_entrega) {
         try {
@@ -65,6 +68,49 @@ class Pagos extends Conexion {
             return $stmt->execute();
         } catch (PDOException $e) {
             error_log("Error al insertar pago: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getAgrupadosPorNota($tipo_nota = null) {
+        try {
+            $sql = "SELECT n.id as id_nota, 
+                           CONCAT(c.nombre, ' ', COALESCE(c.apellido, '')) as cliente_nombre,
+                           n.total,
+                           COUNT(pag.id) as total_pagos,
+                           SUM(CASE WHEN pag.estado = 'por verificar' THEN 1 ELSE 0 END) as pagos_por_verificar,
+                           n.tipo as tipo_nota
+                    FROM notas_entrega n
+                    JOIN pagos pag ON n.id = pag.id_nota_entrega
+                    LEFT JOIN clientes c ON n.id_cliente = c.id";
+
+            if ($tipo_nota) {
+                $sql .= " WHERE n.tipo = :tipo_nota";
+            }
+            
+            $sql .= " GROUP BY n.id ORDER BY n.fecha_pedido DESC";
+            
+            $stmt = $this->prepare($sql);
+            if ($tipo_nota) {
+                $stmt->bindParam(":tipo_nota", $tipo_nota);
+            }
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error al agrupar pagos por nota: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    public function updateEstado() {
+        try {
+            $sql = "UPDATE pagos SET estado = :estado WHERE id = :id";
+            $stmt = $this->prepare($sql);
+            $stmt->bindParam(":estado", $this->estado);
+            $stmt->bindParam(":id", $this->id);
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            error_log("Error al actualizar estado del pago: " . $e->getMessage());
             return false;
         }
     }
