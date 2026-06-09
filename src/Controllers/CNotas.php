@@ -169,7 +169,13 @@ switch ($accion) {
                     $monto_por_cuota = ($nro_cuotas > 0) ? ($restante / $nro_cuotas) : 0;
 
                     $creditoModel = new Creditos();
-                    $idCredito = $creditoModel->insertarCredito($idNotaNueva, $porcentaje_inicial, $monto_cuota_inicial, $nro_cuotas, $monto_por_cuota, $frecuencia);
+                    $creditoModel->setIdNotaEntrega($idNotaNueva)
+                                 ->setPorcentajeInicial($porcentaje_inicial)
+                                 ->setMontoCuotaInicial($monto_cuota_inicial)
+                                 ->setNroCuotas($nro_cuotas)
+                                 ->setMontoPorCuota($monto_por_cuota)
+                                 ->setFrecuencia($frecuencia);
+                    $idCredito = $creditoModel->insert();
                     
                     if ($idCredito) {
                         // Insertar cuota inicial (0) vence el mismo dia
