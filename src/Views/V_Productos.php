@@ -15,6 +15,9 @@
     <script src="assets/DataTablet/tabla.js" defer></script>
 
     <title>Productos</title>
+    <link rel="stylesheet" href="assets/css/libs/select2.min.css">
+    <link rel="stylesheet" href="assets/css/libs/select2-bootstrap-5-theme.min.css">
+    <script src="assets/js/libs/select2.min.js" defer></script>
 </head>
 
 <body>
@@ -426,12 +429,44 @@
                                                                 </select>
                                                                 <!-- Contenedor para campos dinámicos según categoría -->
                                                                 <div id="dynamic-attributes-edit-<?= $p['id'] ?>" class="mt-3"></div>
+
+                                                                <?php if (!empty($p['variantes_inactivas'])): ?>
+                                                                    <div class="mt-4 mb-3 border rounded p-3 bg-light">
+                                                                        <h6 class="text-muted mb-3"><i class="fa fa-trash me-2"></i>Variantes Inactivas / Eliminadas</h6>
+                                                                        <div class="table-responsive">
+                                                                            <table class="table table-sm table-bordered mb-0 bg-white">
+                                                                                <thead class="table-light">
+                                                                                    <tr>
+                                                                                        <th>Variante</th>
+                                                                                        <th class="text-center">Stock</th>
+                                                                                        <th class="text-center">Acción</th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    <?php foreach ($p['variantes_inactivas'] as $vi): ?>
+                                                                                        <tr>
+                                                                                            <td class="align-middle text-muted text-decoration-line-through"><?= htmlspecialchars($vi['nombre_variante']) ?></td>
+                                                                                            <td class="align-middle text-center text-muted"><?= htmlspecialchars($vi['stock']) ?></td>
+                                                                                            <td class="align-middle text-center">
+                                                                                                <div class="form-check form-switch d-inline-block">
+                                                                                                    <input class="form-check-input" type="checkbox" name="reactivate_variants[]" value="<?= $vi['id'] ?>" id="reactivate_<?= $vi['id'] ?>">
+                                                                                                    <label class="form-check-label" for="reactivate_<?= $vi['id'] ?>">Restaurar</label>
+                                                                                                </div>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    <?php endforeach; ?>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
+                                                                        <small class="text-muted d-block mt-2">Marca la casilla "Restaurar" y guarda el producto para volver a activar la variante.</small>
+                                                                    </div>
+                                                                <?php endif; ?>
                                                             </div>
                                                             <div class="mb-3">
                                                                 <?php $currentThumb = !empty($p['imagen_principal']) ? $p['imagen_principal'] : 'assets/img/products/default.jpeg'; ?>
                                                                 <label class="form-label">Imagen actual</label>
                                                                 <div class="mb-2">
-                                                                    <img src="<?= htmlspecialchars($currentThumb) ?>" alt="imagen actual" class="img-thumbnail product-thumb" style="width:100px;height:100px;object-fit:cover;cursor:pointer;" data-src="<?= htmlspecialchars($currentThumb) ?>" />
+                                                                    <img src="<?= htmlspecialchars($currentThumb) ?>" onerror="this.src='assets/img/products/default.jpeg'" alt="imagen actual" class="img-thumbnail product-thumb" style="width:100px;height:100px;object-fit:cover;cursor:pointer;" data-src="<?= htmlspecialchars($currentThumb) ?>" />
                                                                 </div>
                                                             </div>
                                                             <div class="mb-3">
@@ -440,7 +475,7 @@
                                                             </div>
                                                             <div class="row mb-3">
                                                                 <div class="col-md-6">
-                                                                    <label for="precio_venta_<?= $p['id'] ?>" class="form-label">Precio</label>
+                                                                    <label for="precio_venta_<?= $p['id'] ?>" class="form-label">Precio Venta</label>
                                                                     <input type="number" step="0.01" min="0" id="precio_venta_<?= $p['id'] ?>" name="precio_venta" class="form-control" value="<?= htmlspecialchars($p['precio_venta'] ?? $p['precio'] ?? '') ?>" required />
                                                                 </div>
                                                                 <div class="col-md-6">
@@ -520,12 +555,44 @@
                                                                 </select>
                                                                 <!-- Contenedor para campos dinámicos según categoría -->
                                                                 <div id="dynamic-attributes-edit-<?= $pIN['id'] ?>" class="mt-3"></div>
+
+                                                                <?php if (!empty($pIN['variantes_inactivas'])): ?>
+                                                                    <div class="mt-4 mb-3 border rounded p-3 bg-light">
+                                                                        <h6 class="text-muted mb-3"><i class="fa fa-trash me-2"></i>Variantes Inactivas / Eliminadas</h6>
+                                                                        <div class="table-responsive">
+                                                                            <table class="table table-sm table-bordered mb-0 bg-white">
+                                                                                <thead class="table-light">
+                                                                                    <tr>
+                                                                                        <th>Variante</th>
+                                                                                        <th class="text-center">Stock</th>
+                                                                                        <th class="text-center">Acción</th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    <?php foreach ($pIN['variantes_inactivas'] as $vi): ?>
+                                                                                        <tr>
+                                                                                            <td class="align-middle text-muted text-decoration-line-through"><?= htmlspecialchars($vi['nombre_variante']) ?></td>
+                                                                                            <td class="align-middle text-center text-muted"><?= htmlspecialchars($vi['stock']) ?></td>
+                                                                                            <td class="align-middle text-center">
+                                                                                                <div class="form-check form-switch d-inline-block">
+                                                                                                    <input class="form-check-input" type="checkbox" name="reactivate_variants[]" value="<?= $vi['id'] ?>" id="reactivate_in_<?= $vi['id'] ?>">
+                                                                                                    <label class="form-check-label" for="reactivate_in_<?= $vi['id'] ?>">Restaurar</label>
+                                                                                                </div>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    <?php endforeach; ?>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
+                                                                        <small class="text-muted d-block mt-2">Marca la casilla "Restaurar" y guarda el producto para volver a activar la variante.</small>
+                                                                    </div>
+                                                                <?php endif; ?>
                                                             </div>
                                                             <div class="mb-3">
                                                                 <?php $currentThumbIN = !empty($pIN['imagen_principal']) ? $pIN['imagen_principal'] : 'assets/img/products/default.jpeg'; ?>
                                                                 <label class="form-label">Imagen actual</label>
                                                                 <div class="mb-2">
-                                                                    <img src="<?= htmlspecialchars($currentThumbIN) ?>" alt="imagen actual" class="img-thumbnail product-thumb" style="width:100px;height:100px;object-fit:cover;cursor:pointer;" data-src="<?= htmlspecialchars($currentThumbIN) ?>" />
+                                                                    <img src="<?= htmlspecialchars($currentThumbIN) ?>" onerror="this.src='assets/img/products/default.jpeg'" alt="imagen actual" class="img-thumbnail product-thumb" style="width:100px;height:100px;object-fit:cover;cursor:pointer;" data-src="<?= htmlspecialchars($currentThumbIN) ?>" />
                                                                 </div>
                                                             </div>
                                                             <div class="mb-3">
@@ -534,7 +601,7 @@
                                                             </div>
                                                             <div class="row mb-3">
                                                                 <div class="col-md-6">
-                                                                    <label for="precio_venta_<?= $pIN['id'] ?>" class="form-label">Precio</label>
+                                                                    <label for="precio_venta_<?= $pIN['id'] ?>" class="form-label">Precio Venta</label>
                                                                     <input type="number" step="0.01" min="0" id="precio_venta_<?= $pIN['id'] ?>" name="precio_venta" class="form-control" value="<?= htmlspecialchars($pIN['precio_venta'] ?? $pIN['precio'] ?? '') ?>" required />
                                                                 </div>
                                                                 <div class="col-md-6">
@@ -628,14 +695,19 @@
                                 id="nombre_input" placeholder="Nombre" required />
                         </div>
                         <div class="col-md-6">
-                            <label for="precio" class="form-label">Precio</label>
+                            <label for="precio" class="form-label">Precio Venta</label>
                             <input type="number" step="0.01" min="0" name="precio_venta" class="form-control"
-                                id="precio" placeholder="Precio" required />
+                                id="precio" placeholder="Precio Venta" required />
                         </div>
                     </div>
 
                     <div class="row mb-3">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label for="precio_compra" class="form-label">Precio Compra</label>
+                            <input type="number" step="0.01" min="0" name="precio_compra" class="form-control"
+                                id="precio_compra" placeholder="Precio Compra" />
+                        </div>
+                        <div class="col-md-6">
                             <label for="descripcion_input" class="form-label">Descripción</label>
                             <input type="text" minlength="5" maxlength="25" name="descripcion" class="form-control"
                                 id="descripcion_input" title="Entre 5 y 25 caracteres" placeholder="Descripción" required />
@@ -704,8 +776,49 @@
         </div>
 
         <!-- Exponer categorías a JS y cargar script de productos -->
+        <?php
+        $ajustesModel = new \Lenovo\Dalu\Models\Ajustes();
+        $tasaModel = new \Lenovo\Dalu\Models\Tasa();
+        
+        $pct_envio = $ajustesModel->get('porcentaje_envio') ?? 20;
+        $pct_ganancia = $ajustesModel->get('porcentaje_ganancia') ?? 30;
+        
+        $factor_envio = 1 + ($pct_envio / 100);
+        $factor_ganancia = 1 + ($pct_ganancia / 100);
+        
+        $tasa_bcv_data = $tasaModel->getLatest('BCV');
+        $tasa_zelle_data = $tasaModel->getLatest('Zelle'); 
+        
+        $tasa_bcv = $tasa_bcv_data ? floatval($tasa_bcv_data['valor']) : 1;
+        $tasa_zelle = $tasa_zelle_data ? floatval($tasa_zelle_data['valor']) : $tasa_bcv;
+        if ($tasa_bcv <= 0) $tasa_bcv = 1;
+        $ratio_tasa = $tasa_zelle / $tasa_bcv;
+        ?>
         <script>
             window.productosCategories = <?php echo json_encode($categorias ?? [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?: '[]'; ?>;
+            window.factorEnvio = <?= json_encode($factor_envio) ?>;
+            window.factorGanancia = <?= json_encode($factor_ganancia) ?>;
+            window.ratioTasa = <?= json_encode($ratio_tasa) ?>;
+
+            document.addEventListener('DOMContentLoaded', function() {
+                // Delegación de eventos para calcular el precio de venta cuando se edite precio_compra
+                document.body.addEventListener('input', function(e) {
+                    if (e.target && e.target.name === 'precio_compra') {
+                        // Encontrar el modal o el form donde estamos
+                        const container = e.target.closest('form');
+                        if (container) {
+                            const inputVenta = container.querySelector('input[name="precio_venta"]');
+                            if (inputVenta) {
+                                const val = parseFloat(e.target.value);
+                                if (!isNaN(val) && val > 0) {
+                                    const calculado = (val * window.factorEnvio * window.factorGanancia) * window.ratioTasa;
+                                    inputVenta.value = calculado.toFixed(2);
+                                }
+                            }
+                        }
+                    }
+                });
+            });
         </script>
     <script>
         document.addEventListener('submit', function(e) {

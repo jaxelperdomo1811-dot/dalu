@@ -20,6 +20,9 @@
     <link rel="stylesheet" href="assets/DataTablet/datatables.css">
 
     <title>cliente</title>
+    <link rel="stylesheet" href="assets/css/libs/select2.min.css">
+    <link rel="stylesheet" href="assets/css/libs/select2-bootstrap-5-theme.min.css">
+    <script src="assets/js/libs/select2.min.js" defer></script>
 </head>
 
 <body>
@@ -53,10 +56,11 @@
                                     <th scope="col">Nombre</th>
                                     <th scope="col">Apellido</th>
                                     <th scope="col">Correo</th>
-                                    <th scope="col">Telefono</th>
+                                    <th scope="col">Teléfono</th>
                                     <th scope="col">Dirección</th>
-                                    <th scope="col">Fecha de registro</th>
-                                    <th scope="col">Accion</th>
+                                    <th scope="col">Palabra Seguridad</th>
+                                    <th scope="col">Fecha Registro</th>
+                                    <th scope="col">Acción</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -68,12 +72,20 @@
                                         <td><?php echo $c['correo']; ?></td>
                                         <td><?php echo $c['telefono']; ?></td>
                                         <td><?php echo $c['direccion']; ?></td>
+                                        <td><?php echo $c['palabra_secreta']; ?></td>
                                         <td><?php echo $c['fecha_registro']; ?></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalEditar<?= $c['id'] ?>">Editar</button>
-                                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminar<?= $c['id'] ?>">Desactivar</button>
+                                        <td class="text-nowrap">
+                                            <div class="d-flex gap-1">
+                                                <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalEditar<?= $c['id'] ?>">Editar</button>
+                                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminar<?= $c['id'] ?>">Desactivar</button>
+                                            </div>
                                         </td>
                                     </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                        
+                        <?php foreach ($clientes as $c): ?>
                                     <!-- Modal Editar -->
                                     <div class="modal fade" id="modalEditar<?= $c['id'] ?>" tabindex="-1">
                                         <div class="modal-dialog">
@@ -87,32 +99,38 @@
                                                     <div class="modal-body">
                                                         <div class="row mb-3">
                                                             <div class="col-md-6">
-                                                                <label for="nombre" class="form-label">Nombre</label>
-                                                                <input type="text" minlength="3" maxlength="20" pattern="[A-Za-z\s]{3,}" title="Ingrese solo texto, entre 3 y 20 caracteres" name="nombre" class="form-control" id="nombre" placeholder="Nombre" value="<?php echo $c['nombre'] ?>" required />
+                                                                <label for="nombre_<?= $c['id'] ?>" class="form-label">Nombre</label>
+                                                                <input type="text" minlength="3" maxlength="20" pattern="[A-Za-z\s]{3,}" title="Ingrese solo texto, entre 3 y 20 caracteres" name="nombre" class="form-control" id="nombre_<?= $c['id'] ?>" placeholder="Nombre" value="<?php echo $c['nombre'] ?>" required />
                                                             </div>
                                                             <div class="col-md-6">
-                                                                <label for="apellido" class="form-label">Apellido</label>
-                                                                <input type="text" minlength="3" maxlength="20" pattern="[A-Za-z\s]{3,}" title="Ingrese solo texto, entre 3 y 20 caracteres" name="apellido" class="form-control" id="apellido" placeholder="Apellido" value="<?php echo $c['apellido'] ?>" required />
+                                                                <label for="apellido_<?= $c['id'] ?>" class="form-label">Apellido</label>
+                                                                <input type="text" minlength="3" maxlength="20" pattern="[A-Za-z\s]{3,}" title="Ingrese solo texto, entre 3 y 20 caracteres" name="apellido" class="form-control" id="apellido_<?= $c['id'] ?>" placeholder="Apellido" value="<?php echo $c['apellido'] ?>" required />
                                                             </div>
                                                         </div>
 
                                                         <div class="row mb-3">
                                                             <div class="col-md-6">
-                                                                <label for="telefono" class="form-label">Teléfono</label>
-                                                                <input type="tel" class="form-control phone-input" title="Ingrese un teléfono válido" id="telefono" name="telefono" placeholder="Teléfono" value="<?php echo $c['telefono'] ?>" required />
+                                                                <label for="telefono_<?= $c['id'] ?>" class="form-label">Teléfono</label>
+                                                                <input type="tel" class="form-control phone-input" title="Ingrese un teléfono válido" id="telefono_<?= $c['id'] ?>" name="telefono"  value="<?php echo $c['telefono'] ?>" required />
                                                                 <span class="error-msg text-danger small" style="display: none; margin-top: 5px;"></span>
                                                                 <span class="valid-msg text-success small" style="display: none; margin-top: 5px;">✓ Válido</span>
                                                             </div>
                                                             <div class="col-md-6">
-                                                                <label for="correo" class="form-label">Correo</label>
-                                                                <input type="email" class="form-control" id="correo" name="correo" placeholder="Correo" value="<?php echo $c['correo'] ?>" required />
+                                                                <label for="correo_<?= $c['id'] ?>" class="form-label">Correo</label>
+                                                                <input type="email" class="form-control" id="correo_<?= $c['id'] ?>" name="correo" placeholder="Correo" value="<?php echo $c['correo'] ?>" required />
                                                             </div>
                                                         </div>
 
                                                         <div class="row mb-3">
                                                             <div class="col-md-12">
-                                                                <label for="direccion" class="form-label">Dirección</label>
-                                                                <input type="text" minlength="5" maxlength="25" name="direccion" class="form-control" id="direccion" title="Entre 5 y 25 caracteres" placeholder="Dirección" value="<?php echo $c['direccion'] ?>" required />
+                                                                <label for="direccion_<?= $c['id'] ?>" class="form-label">Dirección</label>
+                                                                <input type="text" minlength="5" maxlength="25" name="direccion" class="form-control" id="direccion_<?= $c['id'] ?>" title="Entre 5 y 25 caracteres" placeholder="Dirección" value="<?php echo $c['direccion'] ?>" required />
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-3">
+                                                            <div class="col-md-12">
+                                                                <label for="palabra_secreta_<?= $c['id'] ?>" class="form-label">Palabra de seguridad</label>
+                                                                <input type="text" minlength="5" maxlength="25" name="palabra_secreta" class="form-control" id="palabra_secreta_<?= $c['id'] ?>" title="Entre 5 y 25 caracteres" placeholder="Palabra de seguridad" value="<?php echo $c ['palabra_secreta'] ?>" />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -145,9 +163,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
+                        <?php endforeach; ?>
                     </div>
                 </div>
 
@@ -161,10 +177,11 @@
                                     <th scope="col">Nombre</th>
                                     <th scope="col">Apellido</th>
                                     <th scope="col">Correo</th>
-                                    <th scope="col">Telefono</th>
+                                    <th scope="col">Teléfono</th>
                                     <th scope="col">Dirección</th>
-                                    <th scope="col">Fecha de registro</th>
-                                    <th scope="col">Accion</th>
+                                    <th scope="col">Palabra Seguridad</th>
+                                    <th scope="col">Fecha Registro</th>
+                                    <th scope="col">Acción</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -176,12 +193,20 @@
                                         <td><?php echo $cIN['correo']; ?></td>
                                         <td><?php echo $cIN['telefono']; ?></td>
                                         <td><?php echo $cIN['direccion']; ?></td>
+                                        <td><?php echo $cIN['palabra_secreta']; ?></td>
                                         <td><?php echo $cIN['fecha_registro']; ?></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalEditar<?= $cIN['id'] ?>">Editar</button>
-                                            <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#modalConfirmarActivar<?= $cIN['id'] ?>">Activar</button>
+                                        <td class="text-nowrap">
+                                            <div class="d-flex gap-1">
+                                                <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalEditar<?= $cIN['id'] ?>">Editar</button>
+                                                <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#modalConfirmarActivar<?= $cIN['id'] ?>">Activar</button>
+                                            </div>
                                         </td>
                                     </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+
+                        <?php foreach ($clientesInactivos as $cIN): ?>
                                     <!-- Modal Editar -->
                                     <div class="modal fade" id="modalEditar<?= $cIN['id'] ?>" tabindex="-1">
                                         <div class="modal-dialog">
@@ -195,32 +220,38 @@
                                                     <div class="modal-body">
                                                         <div class="row mb-3">
                                                             <div class="col-md-6">
-                                                                <label for="nombre" class="form-label">Nombre</label>
-                                                                <input type="text" minlength="3" max    ength="20" pattern="[A-Za-z\s]{3,}" title="Ingrese solo texto, entre 3 y 20 caracteres" name="nombre" class="form-control" id="nombre" placeholder="Nombre" value="<?php echo $cIN['nombre'] ?>" required />
+                                                                <label for="nombre_in_<?= $cIN['id'] ?>" class="form-label">Nombre</label>
+                                                                <input type="text" minlength="3" maxlength="20" pattern="[A-Za-z\s]{3,}" title="Ingrese solo texto, entre 3 y 20 caracteres" name="nombre" class="form-control" id="nombre_in_<?= $cIN['id'] ?>" placeholder="Nombre" value="<?php echo $cIN['nombre'] ?>" required />
                                                             </div>
                                                             <div class="col-md-6">
-                                                                <label for="apellido" class="form-label">Apellido</label>
-                                                                <input type="text" minlength="3" maxlength="20" pattern="[A-Za-z\s]{3,}" title="Ingrese solo texto, entre 3 y 20 caracteres" name="apellido" class="form-control" id="apellido" placeholder="Apellido" value="<?php echo $cIN['apellido'] ?>" required />
+                                                                <label for="apellido_in_<?= $cIN['id'] ?>" class="form-label">Apellido</label>
+                                                                <input type="text" minlength="3" maxlength="20" pattern="[A-Za-z\s]{3,}" title="Ingrese solo texto, entre 3 y 20 caracteres" name="apellido" class="form-control" id="apellido_in_<?= $cIN['id'] ?>" placeholder="Apellido" value="<?php echo $cIN['apellido'] ?>" required />
                                                             </div>
                                                         </div>
 
                                                         <div class="row mb-3">
                                                             <div class="col-md-6">
-                                                                <label for="telefono" class="form-label">Teléfono</label>
-                                                                <input type="tel" class="form-control phone-input" title="Ingrese un teléfono válido" id="telefono" name="telefono" placeholder="Teléfono" value="<?php echo $cIN['telefono'] ?>" required />
+                                                                <label for="telefono_in_<?= $cIN['id'] ?>" class="form-label">Teléfono</label>
+                                                                <input type="tel" class="form-control phone-input" title="Ingrese un teléfono válido" id="telefono_in_<?= $cIN['id'] ?>" name="telefono"  value="<?php echo $cIN['telefono'] ?>" required />
                                                                 <span class="error-msg text-danger small" style="display: none; margin-top: 5px;"></span>
                                                                 <span class="valid-msg text-success small" style="display: none; margin-top: 5px;">✓ Válido</span>
                                                             </div>
                                                             <div class="col-md-6">
-                                                                <label for="correo" class="form-label">Correo</label>
-                                                                <input type="email" class="form-control" id="correo" name="correo" placeholder="Correo" value="<?php echo $cIN['correo'] ?>" required />
+                                                                <label for="correo_in_<?= $cIN['id'] ?>" class="form-label">Correo</label>
+                                                                <input type="email" class="form-control" id="correo_in_<?= $cIN['id'] ?>" name="correo" placeholder="Correo" value="<?php echo $cIN['correo'] ?>" required />
                                                             </div>
                                                         </div>
 
                                                         <div class="row mb-3">
                                                             <div class="col-md-12">
-                                                                <label for="direccion" class="form-label">Dirección</label>
-                                                                <input type="text" minlength="5" maxlength="25" name="direccion" class="form-control" id="direccion" title="Entre 5 y 25 caracteres" placeholder="Dirección" value="<?php echo $cIN['direccion'] ?>" required />
+                                                                <label for="direccion_in_<?= $cIN['id'] ?>" class="form-label">Dirección</label>
+                                                                <input type="text" minlength="5" maxlength="25" name="direccion" class="form-control" id="direccion_in_<?= $cIN['id'] ?>" title="Entre 5 y 25 caracteres" placeholder="Dirección" value="<?php echo $cIN['direccion'] ?>" required />
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-3">
+                                                            <div class="col-md-12">
+                                                                <label for="palabra_secreta_in_<?= $cIN['id'] ?>" class="form-label">Palabra Secreta</label>
+                                                                <input type="text" minlength="5" maxlength="20" name="palabra_secreta" class="form-control" id="palabra_secreta_in_<?= $cIN['id'] ?>" title="Entre 5 y 20 caracteres" placeholder="Palabra Secreta" value="<?php echo $cIN['palabra_secreta'] ?>" required />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -253,9 +284,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
+                        <?php endforeach; ?>
                     </div>
                 </div>
             </div>
@@ -274,7 +303,7 @@
                 <div class="row mb-3">
                     <div class="col-md-5">
                         <label for="tipo_persona" class="form-label">Tipo de Persona</label>
-                        <select class="form-select" name="tipo_persona" id="tipo_persona" required>
+                        <select class="form-select no-select2" name="tipo_persona" id="tipo_persona" required>
                             <option value="" disabled selected>Seleccione un tipo de persona</option>
                             <option value="V-">Natural (V)</option>
                             <option value="J-">Jurídica (J)</option>
@@ -282,27 +311,27 @@
                         </select>
                     </div>
                     <div class="col-md-7">
-                        <label for="cedula" class="form-label">Cédula</label>
-                        <input type="text" class="form-control" pattern="[0-9]{6,8}" title="Solo números, entre 6 y 8 caracteres" name="cedula" id="cedula" placeholder="Número de Cédula" required />
+                        <label for="cedula" class="form-label">Documento</label>
+                        <input type="number" class="form-control" pattern="[0-9]{6,10}" minlength="6"    maxlength="10" title="Solo números, entre 6 y 10 caracteres" name="cedula" id="cedula" placeholder="Número de Documento" required />
                         <div id="mensaje-cedula" style="color: red; margin-top: 5px;"></div>
                     </div>
                 </div>
 
                 <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label for="nombre" class="form-label">Nombre</label>
+                    <div id="input-nombre-container" class="col-md-6">
+                        <label id="label-nombre" for="nombre" class="form-label">Nombre</label>
                         <input type="text" minlength="3" maxlength="20" pattern="[A-Za-z\s]{3,}" title="Ingrese solo texto, entre 3 y 20 caracteres" name="nombre" class="form-control" id="nombre" placeholder="Nombre" required />
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6" id="input-apellido-container">
                         <label for="apellido" class="form-label">Apellido</label>
-                        <input type="text" minlength="3" maxlength="20" pattern="[A-Za-z\s]{3,}" title="Ingrese solo texto, entre 3 y 20 caracteres" name="apellido" class="form-control" id="apellido" placeholder="Apellido" required />
+                        <input id="input-apellido" type="text" minlength="3" maxlength="20" pattern="[A-Za-z\s]{3,}" title="Ingrese solo texto, entre 3 y 20 caracteres" name="apellido" class="form-control" id="apellido" placeholder="Apellido" required />
                     </div>
                 </div>
 
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label for="telefono-agregar" class="form-label">Teléfono</label>
-                        <input type="tel" class="form-control phone-input" title="Ingrese un teléfono válido" id="telefono-agregar" name="telefono" placeholder="Teléfono" required />
+                        <input type="tel" class="form-control phone-input" title="Ingrese un teléfono válido" id="telefono-agregar" name="telefono"  required />
                         <span class="error-msg text-danger small" style="display: none; margin-top: 5px;"></span>
                         <span class="valid-msg text-success small" style="display: none; margin-top: 5px;">✓ Válido</span>
                     </div>
@@ -316,6 +345,12 @@
                     <div class="col-md-12">
                         <label for="direccion" class="form-label">Dirección</label>
                         <input type="text" minlength="5" maxlength="25" name="direccion" class="form-control" id="direccion" title="Entre 5 y 25 caracteres" placeholder="Dirección" required />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label for="palabra_secreta" class="form-label">Palabra Secreta</label>
+                        <input type="text" minlength="5" pattern="[A-Za-z\s]{5,}" title="Entre 5 y 20 caracteres" name="palabra_secreta" class="form-control" id="palabra_secreta" placeholder="Palabra Secreta" required />
                     </div>
                 </div>
                 <div class="modal-footer">

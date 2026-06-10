@@ -10,7 +10,7 @@
     <link rel="icon" href="assets/img/dalulisto.png">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <script src="assets/js/"></script>
+    <script src="assets/js/libs/jquery-3.7.1.min.js" defer></script>
     
     <style>
         body, html {
@@ -191,6 +191,10 @@
             text-align: center;
         }
     </style>
+    <link rel="stylesheet" href="assets/css/libs/select2.min.css">
+    <link rel="stylesheet" href="assets/css/libs/select2-bootstrap-5-theme.min.css">
+    <script src="assets/js/libs/select2.min.js" defer></script>
+    <script src="assets/js/pages/recover_pass.js" defer></script>
 </head>
 
 <body>

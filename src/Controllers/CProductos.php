@@ -13,12 +13,14 @@ switch($accion) {
         $productos = $productoModel->search();
         foreach ($productos as &$p) {
             $p['variantes'] = $productoModel->getVariantesByProducto($p['id']);
+            $p['variantes_inactivas'] = $productoModel->getInactiveVariantesByProducto($p['id']);
         }
         unset($p);
         
         $productosInactivos = $productoModel->searchInactive();
         foreach ($productosInactivos as &$pIN) {
             $pIN['variantes'] = $productoModel->getVariantesByProducto($pIN['id']);
+            $pIN['variantes_inactivas'] = $productoModel->getInactiveVariantesByProducto($pIN['id']);
         }
         unset($pIN);
 
@@ -29,25 +31,29 @@ switch($accion) {
     
 case "insert":
     // Validar campos requeridos
-    if (empty($_POST['id_categoria']) || empty($_POST['nombre']) || empty($_POST['precio_venta'])) {
+    if (empty($_POST['id_categoria']) || empty($_POST['nombre']) || (empty($_POST['precio_venta']) && empty($_POST['precio_compra']))) {
         $_SESSION['error'] = "Todos los campos requeridos (*) deben ser llenados.";
         header("Location: ?c=productos&accion=view");
         exit();
     }
     
+    $precio_compra = !empty($_POST['precio_compra']) ? floatval($_POST['precio_compra']) : 0;
+    $tempProducto = new Productos();
+    $precio_venta = $precio_compra > 0 ? $tempProducto->calcularPrecioVentaDesdeCompra($precio_compra) : $_POST['precio_venta'];
+    
     $producto = new Productos(
-        null,                           // id
-        $_POST['id_categoria'],         // id_categoria
-        $_POST['nombre'],               // nombre
-        $_POST['descripcion'],          // descripcion
-        $_POST['precio_venta'],         // precio_venta
-        !empty($_POST['precio_compra']) ? $_POST['precio_compra'] : 0,   // precio_compra
-        !empty($_POST['marca']) ? $_POST['marca'] : null         // marca
+        null,                           
+        $_POST['id_categoria'],      
+        $_POST['nombre'],              
+        $_POST['descripcion'],          
+        $precio_venta,                 
+        $precio_compra,                 
+        !empty($_POST['marca']) ? $_POST['marca'] : null       
     );
     
-    // Configurar opciones adicionales
-    $producto->setPrecioOferta($_POST['precio_oferta'] !== '' ? $_POST['precio_oferta'] : null)
-             ->setStockMinimo($_POST['stock_minimo'] !== '' ? $_POST['stock_minimo'] : 3);
+   
+    $producto->setPrecioOferta(isset($_POST['precio_oferta']) && $_POST['precio_oferta'] !== '' ? $_POST['precio_oferta'] : null)
+             ->setStockMinimo(isset($_POST['stock_minimo']) && $_POST['stock_minimo'] !== '' ? $_POST['stock_minimo'] : 3);
     
     // ========== PROCESAR IMAGEN PRINCIPAL CON CATEGORÍA DINÁMICA ==========
     if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
@@ -83,7 +89,7 @@ case "insert":
     // Procesar variantes si existen
     $variantes = [];
     if (isset($_POST['variantes']) && is_array($_POST['variantes'])) {
-        foreach ($_POST['variantes'] as $variante) {
+        foreach ($_POST['variantes'] as $index => $variante) {
             // Validar que la variante tenga al menos nombre y stock
             if (!empty($variante['nombre_variante']) && isset($variante['stock'])) {
                 $atributos = [];
@@ -96,12 +102,41 @@ case "insert":
                 if (!empty($variante['fragancia'])) $atributos['fragancia'] = $variante['fragancia'];
                 if (!empty($variante['tipo_piel'])) $atributos['tipo_piel'] = $variante['tipo_piel'];
                 
+                $imagen_variante = null;
+
+                if (isset($_FILES['imagen_variante']) && isset($_FILES['imagen_variante']['error'][$index]) && $_FILES['imagen_variante']['error'][$index] === UPLOAD_ERR_OK) {
+                    try {
+                        $fileArray = [
+                            'name' => $_FILES['imagen_variante']['name'][$index],
+                            'type' => $_FILES['imagen_variante']['type'][$index],
+                            'tmp_name' => $_FILES['imagen_variante']['tmp_name'][$index],
+                            'error' => $_FILES['imagen_variante']['error'][$index],
+                            'size' => $_FILES['imagen_variante']['size'][$index]
+                        ];
+                        
+                        $categoriaModel = new Categorias();
+                        $categoria = $categoriaModel->searchById($_POST['id_categoria']);
+                        $nombreCategoria = $categoria ? $categoria['nombre'] : 'sin_categoria';
+
+                        $rutaImagenVariante = $producto->subirImagen(
+                            $fileArray,
+                            $nombreCategoria,
+                            $_POST['nombre'] . '_' . $variante['nombre_variante']
+                        );
+                        if ($rutaImagenVariante) {
+                            $imagen_variante = $rutaImagenVariante;
+                        }
+                    } catch (Exception $e) {
+                        // Ignorar error de subida para no detener el proceso
+                    }
+                }
+                
                 $variantes[] = [
                     'nombre_variante' => $variante['nombre_variante'],
                     'atributos' => $atributos,
                     'precio_adicional' => $variante['precio_adicional'] !== '' ? $variante['precio_adicional'] : 0,
                     'stock' => $variante['stock'] !== '' ? $variante['stock'] : 0,
-                    'imagen_variante' => !empty($variante['imagen_variante']) ? $variante['imagen_variante'] : null,
+                    'imagen_variante' => $imagen_variante,
                     'activo' => 1
                 ];
             }
@@ -110,10 +145,18 @@ case "insert":
     
     $producto->setVariantes($variantes);
     
-    if ($producto->insert()) {
-        $_SESSION['success'] = "Producto registrado exitosamente con " . count($variantes) . " variante(s).";
-    } else {
-        $_SESSION['error'] = "Error al registrar el producto.";
+    try {
+        if ($producto->insert()) {
+            $_SESSION['success'] = "Producto registrado exitosamente con " . count($variantes) . " variante(s).";
+        } else {
+            $_SESSION['error'] = "Error al registrar el producto.";
+        }
+    } catch (\PDOException $e) {
+        if ($e->getCode() == 23000) {
+            $_SESSION['error'] = "Error: Ya existe un producto con este nombre o código.";
+        } else {
+            $_SESSION['error'] = "Error de base de datos: " . $e->getMessage();
+        }
     }
     header("Location: ?c=productos&accion=view");
     exit();
@@ -121,21 +164,24 @@ case "insert":
     
 case "update":
     // Validar campos requeridos
-    if (empty($_POST['id']) || empty($_POST['id_categoria']) || empty($_POST['nombre']) || empty($_POST['precio_venta'])) {
+    if (empty($_POST['id']) || empty($_POST['id_categoria']) || empty($_POST['nombre']) || (empty($_POST['precio_venta']) && empty($_POST['precio_compra']))) {
         $_SESSION['error'] = "Todos los campos requeridos (*) deben ser llenados.";
         header("Location: ?c=productos&accion=view");
         exit();
     }
     
+    $precio_compra = !empty($_POST['precio_compra']) ? floatval($_POST['precio_compra']) : 0;
     $producto = new Productos();
+    $precio_venta = $precio_compra > 0 ? $producto->calcularPrecioVentaDesdeCompra($precio_compra) : $_POST['precio_venta'];
+
     $producto->setId($_POST['id'])
              ->setIdCategoria($_POST['id_categoria'])
              ->setNombre($_POST['nombre'])
              ->setDescripcion($_POST['descripcion'])
-             ->setPrecioCompra($_POST['precio_compra'] !== '' ? $_POST['precio_compra'] : 0)
-             ->setPrecioVenta($_POST['precio_venta'])
-             ->setPrecioOferta($_POST['precio_oferta'] !== '' ? $_POST['precio_oferta'] : null)
-             ->setStockMinimo($_POST['stock_minimo'] !== '' ? $_POST['stock_minimo'] : 3)
+             ->setPrecioCompra($precio_compra)
+             ->setPrecioVenta($precio_venta)
+             ->setPrecioOferta(isset($_POST['precio_oferta']) && $_POST['precio_oferta'] !== '' ? $_POST['precio_oferta'] : null)
+             ->setStockMinimo(isset($_POST['stock_minimo']) && $_POST['stock_minimo'] !== '' ? $_POST['stock_minimo'] : 3)
              ->setMarca(!empty($_POST['marca']) ? $_POST['marca'] : null);
     
     // ========== PROCESAR NUEVA IMAGEN SI SE SUBIÓ ==========
@@ -179,50 +225,96 @@ case "update":
         }
     }
     
-    if ($producto->update()) {
-        // ========== PROCESAR VARIANTES ELIMINADAS ==========
-        if (isset($_POST['deleted_variants']) && is_array($_POST['deleted_variants'])) {
-            foreach ($_POST['deleted_variants'] as $variante_id) {
-                if (!empty($variante_id)) {
-                    $producto->deleteVariante($variante_id);
-                }
-            }
-        }
-
-        // ========== PROCESAR VARIANTES (ACTUALIZAR O AGREGAR NUEVAS) ==========
-        if (isset($_POST['variantes']) && is_array($_POST['variantes'])) {
-            foreach ($_POST['variantes'] as $v) {
-                if (!empty($v['nombre_variante']) && isset($v['stock'])) {
-                    $atributos = [];
-                    if (!empty($v['talla'])) $atributos['talla'] = $v['talla'];
-                    if (!empty($v['color'])) $atributos['color'] = $v['color'];
-                    if (!empty($v['volumen_ml'])) $atributos['volumen_ml'] = $v['volumen_ml'];
-                    if (!empty($v['spf'])) $atributos['spf'] = $v['spf'];
-                    if (!empty($v['fragancia'])) $atributos['fragancia'] = $v['fragancia'];
-                    if (!empty($v['tipo_piel'])) $atributos['tipo_piel'] = $v['tipo_piel'];
-
-                    $variante_data = [
-                        'nombre_variante' => $v['nombre_variante'],
-                        'atributos' => $atributos,
-                        'precio_adicional' => isset($v['precio_adicional']) && $v['precio_adicional'] !== '' ? $v['precio_adicional'] : 0,
-                        'stock' => isset($v['stock']) && $v['stock'] !== '' ? $v['stock'] : 0,
-                        'imagen_variante' => !empty($v['imagen_variante']) ? $v['imagen_variante'] : null
-                    ];
-
-                    if (!empty($v['id'])) {
-                        // Actualizar variante existente
-                        $res = $producto->updateVariante($v['id'], $variante_data);
-                    } else {
-                        // Agregar nueva variante
-                        $res = $producto->addVariante($_POST['id'], $variante_data);
+    try {
+        if ($producto->update()) {
+            // ========== PROCESAR VARIANTES ELIMINADAS ==========
+            if (isset($_POST['deleted_variants']) && is_array($_POST['deleted_variants'])) {
+                foreach ($_POST['deleted_variants'] as $variante_id) {
+                    if (!empty($variante_id)) {
+                        $producto->deleteVariante($variante_id);
                     }
                 }
             }
-        }
 
-        $_SESSION['success'] = "Producto y sus variantes actualizados exitosamente.";
-    } else {
-        $_SESSION['error'] = "Error al actualizar el producto.";
+            // ========== PROCESAR VARIANTES REACTIVADAS ==========
+            if (isset($_POST['reactivate_variants']) && is_array($_POST['reactivate_variants'])) {
+                foreach ($_POST['reactivate_variants'] as $variante_id) {
+                    if (!empty($variante_id)) {
+                        $producto->reactivateVariante($variante_id);
+                    }
+                }
+            }
+
+            // ========== PROCESAR VARIANTES (ACTUALIZAR O AGREGAR NUEVAS) ==========
+            if (isset($_POST['variantes']) && is_array($_POST['variantes'])) {
+                foreach ($_POST['variantes'] as $index => $v) {
+                    if (!empty($v['nombre_variante']) && isset($v['stock'])) {
+                        $atributos = [];
+                        if (!empty($v['talla'])) $atributos['talla'] = $v['talla'];
+                        if (!empty($v['color'])) $atributos['color'] = $v['color'];
+                        if (!empty($v['volumen_ml'])) $atributos['volumen_ml'] = $v['volumen_ml'];
+                        if (!empty($v['spf'])) $atributos['spf'] = $v['spf'];
+                        if (!empty($v['fragancia'])) $atributos['fragancia'] = $v['fragancia'];
+                        if (!empty($v['tipo_piel'])) $atributos['tipo_piel'] = $v['tipo_piel'];
+
+                        $imagen_variante = !empty($v['imagen_variante_actual']) ? $v['imagen_variante_actual'] : null;
+
+                        if (isset($_FILES['imagen_variante']) && isset($_FILES['imagen_variante']['error'][$index]) && $_FILES['imagen_variante']['error'][$index] === UPLOAD_ERR_OK) {
+                            try {
+                                $fileArray = [
+                                    'name' => $_FILES['imagen_variante']['name'][$index],
+                                    'type' => $_FILES['imagen_variante']['type'][$index],
+                                    'tmp_name' => $_FILES['imagen_variante']['tmp_name'][$index],
+                                    'error' => $_FILES['imagen_variante']['error'][$index],
+                                    'size' => $_FILES['imagen_variante']['size'][$index]
+                                ];
+                                
+                                $categoriaModel = new Categorias();
+                                $categoria = $categoriaModel->searchById($_POST['id_categoria']);
+                                $nombreCategoria = $categoria ? $categoria['nombre'] : 'sin_categoria';
+
+                                $rutaImagenVariante = $producto->subirImagen(
+                                    $fileArray,
+                                    $nombreCategoria,
+                                    $_POST['nombre'] . '_' . $v['nombre_variante']
+                                );
+                                if ($rutaImagenVariante) {
+                                    $imagen_variante = $rutaImagenVariante;
+                                }
+                            } catch (Exception $e) {
+                                // Ignorar error
+                            }
+                        }
+
+                        $variante_data = [
+                            'nombre_variante' => $v['nombre_variante'],
+                            'atributos' => $atributos,
+                            'precio_adicional' => isset($v['precio_adicional']) && $v['precio_adicional'] !== '' ? $v['precio_adicional'] : 0,
+                            'stock' => isset($v['stock']) && $v['stock'] !== '' ? $v['stock'] : 0,
+                            'imagen_variante' => $imagen_variante
+                        ];
+
+                        if (!empty($v['id'])) {
+                            // Actualizar variante existente
+                            $res = $producto->updateVariante($v['id'], $variante_data);
+                        } else {
+                            // Agregar nueva variante
+                            $res = $producto->addVariante($_POST['id'], $variante_data);
+                        }
+                    }
+                }
+            }
+
+            $_SESSION['success'] = "Producto y sus variantes actualizados exitosamente.";
+        } else {
+            $_SESSION['error'] = "Error al actualizar el producto.";
+        }
+    } catch (\PDOException $e) {
+        if ($e->getCode() == 23000) {
+            $_SESSION['error'] = "Error: Ya existe un producto con este nombre o código.";
+        } else {
+            $_SESSION['error'] = "Error de base de datos: " . $e->getMessage();
+        }
     }
     header("Location: ?c=productos&accion=view");
     exit();
@@ -291,9 +383,79 @@ case "update":
         require_once __DIR__ . "/../Views/V_ProductosVariantes.php";
         break;
     
+    case "addProducto":
+        // Agregar producto rapido desde modal
+        if (empty($_POST['id_categoria']) || empty($_POST['nombre'])) {
+            if (isset($_POST['ajax'])) {
+                header('Content-Type: application/json');
+                echo json_encode(['error' => 'Datos incompletos para agregar producto.']);
+                exit();
+            }
+            $_SESSION['error'] = "Datos incompletos para agregar producto.";
+            header("Location: ?c=productos&accion=view");
+            exit();
+        }
+        
+        $precio_compra = !empty($_POST['precio_compra']) ? floatval($_POST['precio_compra']) : 0;
+        $tempProducto = new Productos();
+        $precio_venta = $precio_compra > 0 ? $tempProducto->calcularPrecioVentaDesdeCompra($precio_compra) : (!empty($_POST['precio_venta']) ? floatval($_POST['precio_venta']) : 0);
+        
+        $producto = new Productos(
+            null,                           
+            $_POST['id_categoria'],      
+            $_POST['nombre'],              
+            $_POST['descripcion'] ?? '',          
+            $precio_venta,                 
+            $precio_compra,                 
+            null       
+        );
+        $producto->setStockMinimo(3);
+        
+        try {
+            $producto_id = $producto->insert();
+            
+            // CREAR VARIANTE PRINCIPAL CON LOS ATRIBUTOS SI SE ENVIARON
+            $atributos = !empty($_POST['atributos']) ? json_decode($_POST['atributos'], true) : [];
+            if (!is_array($atributos)) $atributos = [];
+            
+            $varianteData = [
+                'nombre_variante' => 'Principal',
+                'atributos' => $atributos,
+                'precio_adicional' => 0,
+                'stock' => 0,
+                'imagen_variante' => null
+            ];
+            $producto->addVariante($producto_id, $varianteData);
+
+            if (isset($_POST['ajax'])) {
+                header('Content-Type: application/json');
+                if ($producto_id) {
+                    echo json_encode(['success' => true, 'producto' => ['id' => $producto_id, 'nombre' => $_POST['nombre']]]);
+                } else {
+                    echo json_encode(['error' => 'Error al agregar el producto.']);
+                }
+                exit();
+            }
+        } catch (\Exception $e) {
+            if (isset($_POST['ajax'])) {
+                header('Content-Type: application/json');
+                echo json_encode(['error' => 'Error al registrar producto: ' . $e->getMessage()]);
+                exit();
+            }
+        }
+        
+        header("Location: ?c=productos&accion=view");
+        exit();
+        break;
+
     case "addVariante":
         // Agregar variante a producto existente
         if (empty($_POST['id_producto']) || empty($_POST['nombre_variante']) || !isset($_POST['stock'])) {
+            if (isset($_POST['ajax'])) {
+                header('Content-Type: application/json');
+                echo json_encode(['error' => 'Datos incompletos para agregar variante.']);
+                exit();
+            }
             $_SESSION['error'] = "Datos incompletos para agregar variante.";
             header("Location: ?c=productos&accion=view");
             exit();
@@ -317,6 +479,16 @@ case "update":
         
         $producto = new Productos();
         $variante_id = $producto->addVariante($_POST['id_producto'], $variante_data);
+        
+        if (isset($_POST['ajax'])) {
+            header('Content-Type: application/json');
+            if ($variante_id) {
+                echo json_encode(['success' => true, 'variante' => array_merge(['id' => $variante_id], $variante_data)]);
+            } else {
+                echo json_encode(['error' => 'Error al agregar la variante.']);
+            }
+            exit();
+        }
         
         if ($variante_id) {
             $_SESSION['success'] = "Variante agregada exitosamente.";
@@ -437,7 +609,11 @@ case "update":
             exit();
         }
         
-        $producto = (new Productos())->getById($_GET['id']);
+        $pModel = new Productos();
+        $producto = $pModel->getById($_GET['id']);
+        if ($producto) {
+            $producto['categoria_nombre'] = $pModel->getNombreCategoria($producto['id']);
+        }
         header('Content-Type: application/json');
         echo json_encode($producto);
         exit();

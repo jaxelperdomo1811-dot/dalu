@@ -10,12 +10,15 @@
     <link rel="stylesheet" href="assets/bootstrap.min.css">
     <link rel="icon" href="assets/img/dalulisto.png">
     <script src="assets/js/js.js" defer></script>
-    <script src="assets/js/usuarios.js" defer></script>
+    <script src="assets/js/pages/usuarios.js" defer></script>
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script src="assets/DataTablet/datatables.min.js" defer></script>
     <script src="assets/DataTablet/tabla.js" defer></script>
     <link rel="stylesheet" href="assets/DataTablet/datatables.css">
     <title>Usuarios y Roles</title>
+    <link rel="stylesheet" href="assets/css/libs/select2.min.css">
+    <link rel="stylesheet" href="assets/css/libs/select2-bootstrap-5-theme.min.css">
+    <script src="assets/js/libs/select2.min.js" defer></script>
 </head>
 
 <body>

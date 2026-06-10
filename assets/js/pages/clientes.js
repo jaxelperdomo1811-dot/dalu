@@ -29,10 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
             nationalMode: false,
             showSelectedDialCode: true,
             preferredCountries: ['ve', 'us', 'co'],
-            hiddenInputs: {
-                phone: "phone_full",
-                country: "country_iso2"
-            },
             utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/js/utils.js"
         });
 
@@ -121,6 +117,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const nombreInput = document.getElementById('nombre');
     const apellidoInput = document.getElementById('apellido');
     const mensajeCedula = document.getElementById('mensaje-cedula');
+    const labelNombre = document.getElementById('label-nombre');
+    const inputApellido = document.getElementById('input-apellido');
+    const inputApellidoContainer = document.getElementById('input-apellido-container');
+    const inputNombreContainer = document.getElementById('input-nombre-container');
 
     if (cedulaInput && tipoPersonaSelect) {
         cedulaInput.addEventListener('blur', async () => {
@@ -164,6 +164,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             } else {
                 mensajeCedula.innerText = '';
+            }
+        });
+    }
+    if (tipoPersonaSelect) {
+        tipoPersonaSelect.addEventListener('change', () => {
+            const tipo = tipoPersonaSelect.value;
+            if (tipo === 'J-') {
+                inputNombreContainer.classList.remove('col-md-6');
+                inputNombreContainer.classList.add('col-md-12');
+                labelNombre.innerText = 'Razon Social';
+                inputApellido.value = '';
+                inputApellido.required = false;
+                inputApellido.removeAttribute('required');
+                inputApellidoContainer.style.display = 'none';
+            } else {
+                inputNombreContainer.classList.remove('col-md-12');
+                inputNombreContainer.classList.add('col-md-6');
+                labelNombre.innerText = 'Nombre';
+                inputApellido.value = '';
+                inputApellido.setAttribute('required', '');
+                inputApellidoContainer.style.display = 'block';
             }
         });
     }

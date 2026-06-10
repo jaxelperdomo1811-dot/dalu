@@ -2,8 +2,6 @@
 namespace Lenovo\TiendaDalu\Controllers;
 
 use Lenovo\Dalu\Models\Despachos;
-use Lenovo\Dalu\Models\Clientes;
-use Lenovo\Dalu\Models\Productos;
 
 $accion = $_GET['accion'] ?? $_POST['accion'] ?? 'view';
 
@@ -12,44 +10,26 @@ switch($accion) {
         $modeloDespachos = new Despachos();
         $despachos = $modeloDespachos->search();
         
-        $modeloClientes = new Clientes();
-        $clientes = $modeloClientes->search();
-        
-        $modeloProductos = new Productos();
-        $productos = $modeloProductos->search();
-        
         require_once __DIR__ . "/../Views/V_Despachos.php";
         break;
         
     case "insert":
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $modeloDespachos = new Despachos();
-            $modeloDespachos->setIdCliente($_POST['id_cliente'] ?? null);
-            $modeloDespachos->setNumeroDespacho($_POST['numero_despacho'] ?? 'DSP-' . time());
-            $modeloDespachos->setFechaDespacho($_POST['fecha_despacho'] ?? date('Y-m-d'));
+            $modeloDespachos->setIdNotaEntrega($_POST['id_nota_entrega'] ?? null);
+            $modeloDespachos->setNumeroDespacho('DSP-' . time());
+            $modeloDespachos->setFechaDespacho(date('Y-m-d'));
+            $modeloDespachos->setEstado('enviado'); // Si se crea el despacho asume que ya se envió o está pendiente
             
-            $detalles = [];
-            $total = 0;
-            if (isset($_POST['detalles']) && is_array($_POST['detalles'])) {
-                foreach ($_POST['detalles'] as $detalle) {
-                    if (!empty($detalle['id_producto']) && !empty($detalle['cantidad']) && !empty($detalle['precio_unitario'])) {
-                        $detalles[] = $detalle;
-                        $total += ($detalle['cantidad'] * $detalle['precio_unitario']);
-                    }
-                }
-            }
-            
-            $modeloDespachos->setTotal($total);
-            $modeloDespachos->setDetalles($detalles);
-            
-            if ($modeloDespachos->insert()) {
-                $success = "Despacho registrado correctamente.";
+            if (!empty($_POST['id_nota_entrega']) && $modeloDespachos->insert()) {
+                $_SESSION['success'] = "Despacho creado y vinculado a la nota de entrega.";
             } else {
-                $error = "Error al registrar el despacho.";
+                $_SESSION['error'] = "Error al registrar el despacho.";
             }
             
-            // Recargar vista
-            header("Location: ?c=Despacho&msg=success");
+            // Recargar vista (se puede devolver a Notas o Despachos, dependiendo de donde vino)
+            $referer = $_SERVER['HTTP_REFERER'] ?? '?c=Despacho';
+            header("Location: " . $referer);
             exit;
         }
         break;

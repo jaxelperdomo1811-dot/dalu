@@ -15,10 +15,18 @@ switch ($accion) {
         $categorias = new Categorias();
         $categorias->setNombre($_POST['nombre'] ?? null)
                    ->setDescripcion($_POST['descripcion'] ?? null);
-        if ($categorias->insert()) {
-            $_SESSION['success'] = "Categoría registrada exitosamente.";
-        } else {
-            $_SESSION['error'] = "Error al registrar la categoría.";
+        try {
+            if ($categorias->insert()) {
+                $_SESSION['success'] = "Categoría registrada exitosamente.";
+            } else {
+                $_SESSION['error'] = "Error al registrar la categoría.";
+            }
+        } catch (\PDOException $e) {
+            if ($e->getCode() == 23000) {
+                $_SESSION['error'] = "Error: Ya existe una categoría con este nombre.";
+            } else {
+                $_SESSION['error'] = "Error de base de datos: " . $e->getMessage();
+            }
         }
         header("Location: ?c=productos&accion=view&tab=categorias");
         exit();
@@ -29,10 +37,18 @@ switch ($accion) {
         $categorias->setId($_POST['id'] ?? null)
                    ->setNombre($_POST['nombre'] ?? null)
                    ->setDescripcion($_POST['descripcion'] ?? null);
-        if ($categorias->update()) {
-            $_SESSION['success'] = "Categoría actualizada exitosamente.";
-        } else {
-            $_SESSION['error'] = "Error al actualizar la categoría.";
+        try {
+            if ($categorias->update()) {
+                $_SESSION['success'] = "Categoría actualizada exitosamente.";
+            } else {
+                $_SESSION['error'] = "Error al actualizar la categoría.";
+            }
+        } catch (\PDOException $e) {
+            if ($e->getCode() == 23000) {
+                $_SESSION['error'] = "Error: Ya existe una categoría con este nombre.";
+            } else {
+                $_SESSION['error'] = "Error de base de datos: " . $e->getMessage();
+            }
         }
         header("Location: ?c=productos&accion=view&tab=categorias");
         exit();

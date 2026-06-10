@@ -26,7 +26,7 @@ $variantes = $producto['variantes'] ?? [];
                     <tr>
                         <td class="text-center">
                             <?php if (!empty($v['imagen_variante'])): ?>
-                                <img src="<?= htmlspecialchars($v['imagen_variante']) ?>" alt="Variante" class="img-thumbnail" style="width: 50px; height: 50px; object-fit: cover;">
+                                <img src="<?= htmlspecialchars($v['imagen_variante']) ?>" onerror="this.src='assets/img/products/default.jpeg'" alt="Variante" class="img-thumbnail" style="width: 50px; height: 50px; object-fit: cover;">
                             <?php else: ?>
                                 <span class="text-muted" style="font-size: 0.8em;">N/A</span>
                             <?php endif; ?>

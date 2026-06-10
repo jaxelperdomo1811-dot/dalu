@@ -5,20 +5,40 @@ use PDO;
 use PDOException;
 
 class Entradas extends Conexion {
+    private $id;
+    private $id_proveedor;
+    private $numero_lote;
+    private $fecha_ingreso;
+    private $total;
+    private $detalles = [];
     
     public function __construct() {
         parent::__construct();
     }
+    
+    public function setId($id) { $this->id = $id; return $this; }
+    public function setIdProveedor($id_proveedor) { $this->id_proveedor = $id_proveedor; return $this; }
+    public function setNumeroLote($numero_lote) { $this->numero_lote = $numero_lote; return $this; }
+    public function setFechaIngreso($fecha_ingreso) { $this->fecha_ingreso = $fecha_ingreso; return $this; }
+    public function setTotal($total) { $this->total = $total; return $this; }
+    public function setDetalles($detalles) { $this->detalles = $detalles; return $this; }
+    
+    public function getId() { return $this->id; }
+    public function getIdProveedor() { return $this->id_proveedor; }
+    public function getNumeroLote() { return $this->numero_lote; }
+    public function getFechaIngreso() { return $this->fecha_ingreso; }
+    public function getTotal() { return $this->total; }
+    public function getDetallesArray() { return $this->detalles; }
 
     /**
      * Registra una nueva entrada y sus detalles, actualizando el stock.
      */
-    public function registrarEntrada($id_proveedor, $numero_lote, $fecha_ingreso, $detalles) {
+    public function insert() {
         try {
 
             // Calcular el total de la entrada
             $total_entrada = 0;
-            foreach ($detalles as $detalle) {
+            foreach ($this->detalles as $detalle) {
                 $total_entrada += ($detalle['cantidad'] * $detalle['precio_compra']);
             }
 
@@ -26,32 +46,61 @@ class Entradas extends Conexion {
             $sql = "INSERT INTO entradas (id_proveedor, numero_lote, fecha_ingreso, total) 
                     VALUES (:id_proveedor, :numero_lote, :fecha_ingreso, :total)";
             $stmt = $this->prepare($sql);
-            $stmt->bindParam(":id_proveedor", $id_proveedor);
-            $stmt->bindParam(":numero_lote", $numero_lote);
-            $stmt->bindParam(":fecha_ingreso", $fecha_ingreso);
+            $stmt->bindParam(":id_proveedor", $this->id_proveedor);
+            $stmt->bindParam(":numero_lote", $this->numero_lote);
+            $stmt->bindParam(":fecha_ingreso", $this->fecha_ingreso);
             $stmt->bindParam(":total", $total_entrada);
             $stmt->execute();
 
             $id_entrada = $this->lastInsertId();
 
             // Insertar detalles y actualizar stock
-            foreach ($detalles as $detalle) {
+            foreach ($this->detalles as $detalle) {
                 // Insertar detalle
-                $sqlDetalle = "INSERT INTO detalles_entrada (id_entrada, id_producto, cantidad, precio_compra) 
-                               VALUES (:id_entrada, :id_producto, :cantidad, :precio_compra)";
+                $sqlDetalle = "INSERT INTO detalles_entrada (id_entrada, id_variante, cantidad, precio_compra) 
+                               VALUES (:id_entrada, :id_variante, :cantidad, :precio_compra)";
                 $stmtDetalle = $this->prepare($sqlDetalle);
                 $stmtDetalle->bindParam(":id_entrada", $id_entrada);
-                $stmtDetalle->bindParam(":id_producto", $detalle['id_producto']);
+                
+                $id_variante = !empty($detalle['id_variante']) ? $detalle['id_variante'] : null;
+                $stmtDetalle->bindParam(":id_variante", $id_variante);
+                
                 $stmtDetalle->bindParam(":cantidad", $detalle['cantidad']);
                 $stmtDetalle->bindParam(":precio_compra", $detalle['precio_compra']);
                 $stmtDetalle->execute();
 
-                // Actualizar stock del producto
-                $sqlUpdateStock = "UPDATE productos SET stock_total = stock_total + :cantidad WHERE id = :id_producto";
-                $stmtStock = $this->prepare($sqlUpdateStock);
-                $stmtStock->bindParam(":cantidad", $detalle['cantidad']);
-                $stmtStock->bindParam(":id_producto", $detalle['id_producto']);
-                $stmtStock->execute();
+                // Actualizar precio del producto (usando la fórmula de Ajustes)
+                $id_producto_actualizar = null;
+                if (!empty($detalle['id_variante'])) {
+                    $stmtProd = $this->prepare("SELECT id_producto FROM producto_variantes WHERE id = :id");
+                    $stmtProd->bindParam(":id", $detalle['id_variante']);
+                    $stmtProd->execute();
+                    $resProd = $stmtProd->fetch(PDO::FETCH_ASSOC);
+                    if ($resProd) $id_producto_actualizar = $resProd['id_producto'];
+                } elseif (!empty($detalle['id_producto'])) {
+                    $id_producto_actualizar = $detalle['id_producto'];
+                }
+
+                if ($id_producto_actualizar && floatval($detalle['precio_compra']) > 0) {
+                    $prodModel = new \Lenovo\Dalu\Models\Productos();
+                    $nuevo_precio_venta = $prodModel->calcularPrecioVentaDesdeCompra($detalle['precio_compra']);
+                    
+                    $sqlUpdatePrecio = "UPDATE productos SET precio_compra = :pc, precio_venta = :pv WHERE id = :id";
+                    $stmtUpdPrecio = $this->prepare($sqlUpdatePrecio);
+                    $stmtUpdPrecio->bindParam(":pc", $detalle['precio_compra']);
+                    $stmtUpdPrecio->bindParam(":pv", $nuevo_precio_venta);
+                    $stmtUpdPrecio->bindParam(":id", $id_producto_actualizar);
+                    $stmtUpdPrecio->execute();
+                }
+
+                // Actualizar stock de la variante si aplica
+                if (!empty($detalle['id_variante'])) {
+                    $sqlUpdateVar = "UPDATE producto_variantes SET stock = stock + :cantidad WHERE id = :id_variante";
+                    $stmtVar = $this->prepare($sqlUpdateVar);
+                    $stmtVar->bindParam(":cantidad", $detalle['cantidad']);
+                    $stmtVar->bindParam(":id_variante", $detalle['id_variante']);
+                    $stmtVar->execute();
+                }
             }
 
             return true;
@@ -85,9 +134,10 @@ class Entradas extends Conexion {
      */
     public function getDetalles($id_entrada) {
         try {
-            $sql = "SELECT d.cantidad, d.precio_compra, p.nombre as producto_nombre 
+            $sql = "SELECT d.cantidad, d.precio_compra, p.nombre as producto_nombre, pv.nombre_variante 
                     FROM detalles_entrada d
-                    INNER JOIN productos p ON d.id_producto = p.id
+                    INNER JOIN producto_variantes pv ON d.id_variante = pv.id
+                    INNER JOIN productos p ON pv.id_producto = p.id
                     WHERE d.id_entrada = :id_entrada";
             $stmt = $this->prepare($sql);
             $stmt->bindParam(":id_entrada", $id_entrada);
@@ -140,9 +190,12 @@ class Entradas extends Conexion {
             return ['error' => 'No hay productos válidos para generar la entrada (todos fueron ignorados).'];
         }
         
-        // Obtener o crear proveedor
-        $nombre_proveedor = $pedido['nombre_proveedor'] ?: 'Proveedor Genérico';
-        $id_proveedor = $this->obtenerOCrearProveedor($nombre_proveedor);
+        // Obtener proveedor directamente o crearlo
+        $id_proveedor = $pedido['id_proveedor'] ?? null;
+        if (!$id_proveedor) {
+            $nombre_proveedor = $pedido['nombre_proveedor'] ?: 'Proveedor Genérico';
+            $id_proveedor = $this->obtenerOCrearProveedor($nombre_proveedor);
+        }
         
         $numero_lote = 'LOTE-PED-' . $pedido_id . '-' . date('Ymd');
         $fecha_ingreso = date('Y-m-d');
@@ -179,14 +232,7 @@ class Entradas extends Conexion {
                 $stmtDetalle->bindParam(":precio_compra", $detalle['precio_compra']);
                 $stmtDetalle->execute();
 
-                // Actualizar stock del producto (stock_total)
-                // Usando un query directo como en registrarEntrada
-                $sqlUpdateStock = "UPDATE productos SET stock_total = stock_total + :cantidad WHERE id = :id_producto";
-                $stmtStock = $this->prepare($sqlUpdateStock);
-                $stmtStock->bindParam(":cantidad", $detalle['cantidad']);
-                $stmtStock->bindParam(":id_producto", $detalle['id_producto']);
-                $stmtStock->execute();
-                
+
                 // Actualizar stock de la variante si aplica
                 if (!empty($detalle['id_variante'])) {
                     $sqlUpdateVar = "UPDATE producto_variantes SET stock = stock + :cantidad WHERE id = :id_variante";
@@ -194,6 +240,19 @@ class Entradas extends Conexion {
                     $stmtVar->bindParam(":cantidad", $detalle['cantidad']);
                     $stmtVar->bindParam(":id_variante", $detalle['id_variante']);
                     $stmtVar->execute();
+                }
+
+                // Actualizar precio del producto (usando la fórmula de Ajustes)
+                if (!empty($detalle['id_producto']) && floatval($detalle['precio_compra']) > 0) {
+                    $prodModel = new \Lenovo\Dalu\Models\Productos();
+                    $nuevo_precio_venta = $prodModel->calcularPrecioVentaDesdeCompra($detalle['precio_compra']);
+                    
+                    $sqlUpdatePrecio = "UPDATE productos SET precio_compra = :pc, precio_venta = :pv WHERE id = :id";
+                    $stmtUpdPrecio = $this->prepare($sqlUpdatePrecio);
+                    $stmtUpdPrecio->bindParam(":pc", $detalle['precio_compra']);
+                    $stmtUpdPrecio->bindParam(":pv", $nuevo_precio_venta);
+                    $stmtUpdPrecio->bindParam(":id", $detalle['id_producto']);
+                    $stmtUpdPrecio->execute();
                 }
             }
             

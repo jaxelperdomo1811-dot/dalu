@@ -8,17 +8,17 @@ use Lenovo\Dalu\Models\Conexion;
         private $tipo; // 'cliente' o 'tienda'
         private $estado;
         private $fecha_registro;
-        private $nombre_proveedor; // Para pedidos tipo 'tienda'
+        private $id_proveedor; // Para pedidos tipo 'tienda'
         
         private $detalles = [];
 
-        public function __construct($id = null, $id_cliente = null, $tipo = null, $estado = 'pendiente', $nombre_proveedor = null) {
+        public function __construct($id = null, $id_cliente = null, $tipo = null, $estado = 'pendiente', $id_proveedor = null) {
             parent::__construct();
             $this->id = $id;
             $this->id_cliente = $id_cliente;
             $this->tipo = $tipo;
             $this->estado = $estado;
-            $this->nombre_proveedor = $nombre_proveedor;
+            $this->id_proveedor = $id_proveedor;
         }
         
         // ==================== SETTERS ====================
@@ -26,7 +26,7 @@ use Lenovo\Dalu\Models\Conexion;
         public function setIdCliente($id_cliente) { $this->id_cliente = $id_cliente; return $this; }
         public function setTipo($tipo) { $this->tipo = $tipo; return $this; }
         public function setEstado($estado) { $this->estado = $estado; return $this; }
-        public function setNombreProveedor($nombre_proveedor) { $this->nombre_proveedor = $nombre_proveedor; return $this; }
+        public function setIdProveedor($id_proveedor) { $this->id_proveedor = $id_proveedor; return $this; }
         public function setDetalles($detalles) { $this->detalles = $detalles; return $this; }
         
         // ==================== GETTERS ====================
@@ -34,7 +34,7 @@ use Lenovo\Dalu\Models\Conexion;
         public function getIdCliente() { return $this->id_cliente; }
         public function getTipo() { return $this->tipo; }
         public function getEstado() { return $this->estado; }
-        public function getNombreProveedor() { return $this->nombre_proveedor; }
+        public function getIdProveedor() { return $this->id_proveedor; }
         public function getFechaRegistro() { return $this->fecha_registro; }
         public function getDetalles() { return $this->detalles; }
         
@@ -42,12 +42,12 @@ use Lenovo\Dalu\Models\Conexion;
         
         public function insert() {
             try {
-                $sql = "INSERT INTO pedidos (id_cliente, `nombre proveedor`, tipo, estado) 
-                        VALUES (:id_cliente, :nombre_proveedor, :tipo, :estado)";
+                $sql = "INSERT INTO pedidos (id_cliente, id_proveedor, tipo, estado) 
+                        VALUES (:id_cliente, :id_proveedor, :tipo, :estado)";
                 
                 $stmt = $this->prepare($sql);
                 $stmt->bindParam(":id_cliente", $this->id_cliente);
-                $stmt->bindParam(":nombre_proveedor", $this->nombre_proveedor);
+                $stmt->bindParam(":id_proveedor", $this->id_proveedor);
                 $stmt->bindParam(":tipo", $this->tipo);
                 $stmt->bindParam(":estado", $this->estado);
                 
@@ -74,17 +74,17 @@ use Lenovo\Dalu\Models\Conexion;
             $sql = "INSERT INTO detalles_pedido (
                         id_pedido, tipo, imagen, link, 
                         nombre_producto, cantidad, precio_unitario, 
-                        descripcion_producto, id_producto, id_variante, status_inventario
+                        descripcion_producto, id_variante, status_inventario
                     ) VALUES (
                         :id_pedido, :tipo, :imagen, :link,
                         :nombre_producto, :cantidad, :precio_unitario,
-                        :descripcion_producto, :id_producto, :id_variante, :status_inventario
+                        :descripcion_producto, :id_variante, :status_inventario
                     )";
             
             $stmt = $this->prepare($sql);
             
             foreach ($this->detalles as $detalle) {
-                $status = !empty($detalle['id_producto']) ? 'vinculado' : 'pendiente';
+                $status = !empty($detalle['id_variante']) ? 'vinculado' : 'pendiente';
                 $params = [
                     ':id_pedido' => $pedido_id,
                     ':tipo' => $detalle['tipo'] ?? 'proveedor',
@@ -94,7 +94,6 @@ use Lenovo\Dalu\Models\Conexion;
                     ':cantidad' => !empty($detalle['cantidad']) ? $detalle['cantidad'] : 1,
                     ':precio_unitario' => $detalle['precio_unitario'] ?? null,
                     ':descripcion_producto' => $detalle['descripcion_producto'] ?? null,
-                    ':id_producto' => !empty($detalle['id_producto']) ? $detalle['id_producto'] : null,
                     ':id_variante' => !empty($detalle['id_variante']) ? $detalle['id_variante'] : null,
                     ':status_inventario' => $status,
                 ];
@@ -112,12 +111,13 @@ use Lenovo\Dalu\Models\Conexion;
          */
         public function search() {
             $sql = "SELECT p.*, 
-                    p.`nombre proveedor` AS nombre_proveedor,
+                    COALESCE(NULLIF(pr.razon_social, ''), NULLIF(pr.nombre, ''), 'Proveedor Desconocido') AS nombre_proveedor,
                     c.nombre as cliente_nombre, 
                     c.apellido as cliente_apellido,
                     c.telefono as cliente_telefono
                     FROM pedidos p
                     LEFT JOIN clientes c ON p.id_cliente = c.id
+                    LEFT JOIN proveedores pr ON p.id_proveedor = pr.id
                     WHERE p.estado NOT IN ('recibido', 'cancelado')
                     ORDER BY p.fecha_registro DESC";
             
@@ -131,11 +131,12 @@ use Lenovo\Dalu\Models\Conexion;
          */
         public function searchFinished() {
             $sql = "SELECT p.*, 
-                    p.`nombre proveedor` AS nombre_proveedor,
+                    COALESCE(NULLIF(pr.razon_social, ''), NULLIF(pr.nombre, ''), 'Proveedor Desconocido') AS nombre_proveedor,
                     c.nombre as cliente_nombre, 
                     c.apellido as cliente_apellido
                     FROM pedidos p
                     LEFT JOIN clientes c ON p.id_cliente = c.id
+                    LEFT JOIN proveedores pr ON p.id_proveedor = pr.id
                     WHERE p.estado IN ('recibido', 'cancelado')
                     ORDER BY p.fecha_registro DESC";
             
@@ -149,7 +150,7 @@ use Lenovo\Dalu\Models\Conexion;
          */
         public function getById($id) {
             $sql = "SELECT p.*, 
-                    p.`nombre proveedor` AS nombre_proveedor,
+                    COALESCE(NULLIF(pr.razon_social, ''), NULLIF(pr.nombre, ''), 'Proveedor Desconocido') AS nombre_proveedor,
                     c.nombre as cliente_nombre, 
                     c.apellido as cliente_apellido,
                     c.cedula as cliente_cedula,
@@ -157,6 +158,7 @@ use Lenovo\Dalu\Models\Conexion;
                     c.direccion as cliente_direccion
                     FROM pedidos p
                     LEFT JOIN clientes c ON p.id_cliente = c.id
+                    LEFT JOIN proveedores pr ON p.id_proveedor = pr.id
                     WHERE p.id = :id";
             
             $stmt = $this->prepare($sql);
@@ -176,11 +178,12 @@ use Lenovo\Dalu\Models\Conexion;
          */
         public function getByTipo($tipo) {
             $sql = "SELECT p.*, 
-                    p.`nombre proveedor` AS nombre_proveedor,
+                    COALESCE(NULLIF(pr.razon_social, ''), NULLIF(pr.nombre, ''), 'Proveedor Desconocido') AS nombre_proveedor,
                     c.nombre as cliente_nombre, 
                     c.apellido as cliente_apellido
                     FROM pedidos p
                     LEFT JOIN clientes c ON p.id_cliente = c.id
+                    LEFT JOIN proveedores pr ON p.id_proveedor = pr.id
                     WHERE p.tipo = :tipo
                     ORDER BY p.fecha_registro DESC";
             
@@ -195,11 +198,12 @@ use Lenovo\Dalu\Models\Conexion;
          */
         public function getByCliente($cliente_id) {
             $sql = "SELECT p.*, 
-                    p.`nombre proveedor` AS nombre_proveedor,
+                    COALESCE(NULLIF(pr.razon_social, ''), NULLIF(pr.nombre, ''), 'Proveedor Desconocido') AS nombre_proveedor,
                     c.nombre as cliente_nombre, 
                     c.apellido as cliente_apellido
                     FROM pedidos p
                     LEFT JOIN clientes c ON p.id_cliente = c.id
+                    LEFT JOIN proveedores pr ON p.id_proveedor = pr.id
                     WHERE p.id_cliente = :cliente_id
                     ORDER BY p.fecha_registro DESC";
             
@@ -220,7 +224,16 @@ use Lenovo\Dalu\Models\Conexion;
          * Actualizar estado del pedido
          */
         public function updateEstado() {
-            $sql = "UPDATE pedidos SET estado = :estado WHERE id = :id";
+            $updateDates = "";
+            if ($this->estado === 'enviado') {
+                $updateDates = ", fecha_estimada = DATE_ADD(CURRENT_DATE, INTERVAL 24 DAY)";
+            } elseif ($this->estado === 'recibido') {
+                $updateDates = ", fecha_recepcion = CURRENT_TIMESTAMP";
+            } elseif ($this->estado === 'entregado') {
+                $updateDates = ", fecha_entrega = CURRENT_TIMESTAMP";
+            }
+            
+            $sql = "UPDATE pedidos SET estado = :estado {$updateDates} WHERE id = :id";
             $stmt = $this->prepare($sql);
             $stmt->bindParam(":estado", $this->estado);
             $stmt->bindParam(":id", $this->id);
@@ -257,11 +270,12 @@ use Lenovo\Dalu\Models\Conexion;
             $sql = "SELECT dp.*, 
                     p.nombre as producto_nombre,
                     p.precio_venta as producto_precio,
+                    pv.id_producto,
                     pv.nombre_variante as variante_nombre,
                     pv.atributos as variante_atributos
                     FROM detalles_pedido dp
-                    LEFT JOIN productos p ON dp.id_producto = p.id
                     LEFT JOIN producto_variantes pv ON dp.id_variante = pv.id
+                    LEFT JOIN productos p ON pv.id_producto = p.id
                     WHERE dp.id_pedido = :id_pedido 
                     ORDER BY dp.id";
             
@@ -287,16 +301,16 @@ use Lenovo\Dalu\Models\Conexion;
             $sql = "INSERT INTO detalles_pedido (
                         id_pedido, tipo, imagen, link, 
                         nombre_producto, cantidad, precio_unitario, 
-                        descripcion_producto, id_producto, id_variante, status_inventario
+                        descripcion_producto, id_variante, status_inventario
                     ) VALUES (
                         :id_pedido, :tipo, :imagen, :link,
                         :nombre_producto, :cantidad, :precio_unitario,
-                        :descripcion_producto, :id_producto, :id_variante, :status_inventario
+                        :descripcion_producto, :id_variante, :status_inventario
                     )";
             
             $stmt = $this->prepare($sql);
             
-            $status = !empty($detalle_data['id_producto']) ? 'vinculado' : 'pendiente';
+            $status = !empty($detalle_data['id_variante']) ? 'vinculado' : 'pendiente';
             
             $stmt->bindParam(":id_pedido", $pedido_id);
             $stmt->bindParam(":tipo", $detalle_data['tipo']);
@@ -306,7 +320,6 @@ use Lenovo\Dalu\Models\Conexion;
             $stmt->bindParam(":cantidad", $detalle_data['cantidad']);
             $stmt->bindParam(":precio_unitario", $detalle_data['precio_unitario']);
             $stmt->bindParam(":descripcion_producto", $detalle_data['descripcion_producto']);
-            $stmt->bindParam(":id_producto", $detalle_data['id_producto']);
             $stmt->bindParam(":id_variante", $detalle_data['id_variante']);
             $stmt->bindParam(":status_inventario", $status);
             
@@ -328,14 +341,13 @@ use Lenovo\Dalu\Models\Conexion;
                         cantidad = :cantidad,
                         precio_unitario = :precio_unitario,
                         descripcion_producto = :descripcion_producto,
-                        id_producto = :id_producto,
                         id_variante = :id_variante,
                         status_inventario = :status_inventario
                     WHERE id = :id";
             
             $stmt = $this->prepare($sql);
             
-            $status = !empty($detalle_data['id_producto']) ? 'vinculado' : 'pendiente';
+            $status = !empty($detalle_data['id_variante']) ? 'vinculado' : 'pendiente';
             
             $stmt->bindParam(":tipo", $detalle_data['tipo']);
             $stmt->bindParam(":imagen", $detalle_data['imagen']);
@@ -344,7 +356,6 @@ use Lenovo\Dalu\Models\Conexion;
             $stmt->bindParam(":cantidad", $detalle_data['cantidad']);
             $stmt->bindParam(":precio_unitario", $detalle_data['precio_unitario']);
             $stmt->bindParam(":descripcion_producto", $detalle_data['descripcion_producto']);
-            $stmt->bindParam(":id_producto", $detalle_data['id_producto']);
             $stmt->bindParam(":id_variante", $detalle_data['id_variante']);
             $stmt->bindParam(":status_inventario", $status);
             $stmt->bindParam(":id", $detalle_id);
@@ -396,15 +407,13 @@ use Lenovo\Dalu\Models\Conexion;
         /**
          * Vincular un detalle vago a un producto existente
          */
-        public function vincularDetalleAProducto($detalle_id, $id_producto, $id_variante = null) {
+        public function vincularDetalleAProducto($detalle_id, $id_variante = null) {
             $sql = "UPDATE detalles_pedido 
-                    SET id_producto = :id_producto, 
-                        id_variante = :id_variante,
+                    SET id_variante = :id_variante,
                         status_inventario = 'vinculado'
                     WHERE id = :id";
             
             $stmt = $this->prepare($sql);
-            $stmt->bindParam(":id_producto", $id_producto);
             $stmt->bindParam(":id_variante", $id_variante);
             $stmt->bindParam(":id", $detalle_id);
             return $stmt->execute();
@@ -450,7 +459,24 @@ use Lenovo\Dalu\Models\Conexion;
             $variante_id = $this->lastInsertId();
             
             // Vincular el detalle
-            return $this->vincularDetalleAProducto($detalle_id, $producto_id, $variante_id);
+            return $this->vincularDetalleAProducto($detalle_id, $variante_id);
+        }
+        
+        /**
+         * Crear un nuevo producto desde un detalle usando el objeto Productos completo
+         */
+        public function crearProductoDesdeDetalleObjeto($detalle_id, Productos $producto) {
+            $producto_id = $producto->insert();
+            if (!$producto_id) {
+                return false;
+            }
+            
+            // Obtener la variante creada (usualmente la primera o principal)
+            $variantes = $producto->getVariantesByProducto($producto_id);
+            $variante_id = !empty($variantes) ? $variantes[0]['id'] : null;
+            
+            // Vincular el detalle al nuevo producto y a su primera variante
+            return $this->vincularDetalleAProducto($detalle_id, $variante_id);
         }
         
         /**

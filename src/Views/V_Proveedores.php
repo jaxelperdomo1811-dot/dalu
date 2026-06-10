@@ -21,6 +21,9 @@
     <script src="assets/DataTablet/tabla.js" defer></script>
 
     <title>Proveedores</title>
+    <link rel="stylesheet" href="assets/css/libs/select2.min.css">
+    <link rel="stylesheet" href="assets/css/libs/select2-bootstrap-5-theme.min.css">
+    <script src="assets/js/libs/select2.min.js" defer></script>
 </head>
 
 <body>
@@ -70,7 +73,7 @@
                                             <th scope="col">Apellido</th>
                                             <th scope="col">Razon social</th>
                                             <th scope="col">RIF</th>
-                                            <th scope="col">Documento de identidad</th>
+                                            <th scope="col">Documento identidad</th>
                                             <th scope="col">Teléfono</th>
                                             <th scope="col">Teléfono 2</th>
                                             <th scope="col">Email</th>
@@ -90,12 +93,18 @@
                                                 <td class="align-items-center"><?php echo $p['telefono2']; ?></td>
                                                 <td class="align-items-center"><?php echo $p['email']; ?></td>
                                                 <td class="align-items-center"><?php echo $p['direccion']; ?></td>
-                                                <td class="align-items-center">
-                                                    <button class="btn btn-sm btn-primary m-1" data-bs-toggle="modal" data-bs-target="#modalEditar<?= $p['id'] ?>">Editar</button>
-                                                    <button type="button" class="btn btn-sm btn-danger m-1" data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminar<?= $p['id'] ?>">Desactivar</button>
+                                                <td class="text-nowrap">
+                                                    <div class="d-flex gap-1">
+                                                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalEditar<?= $p['id'] ?>">Editar</button>
+                                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminar<?= $p['id'] ?>">Desactivar</button>
+                                                    </div>
                                                 </td>
                                             </tr>
-
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                                
+                                <?php foreach ($proveedores as $p): ?>
                                             <!-- Modal Editar -->
                                             <div class="modal fade" id="modalEditar<?= $p['id'] ?>" tabindex="-1">
                                                 <div class="modal-dialog">
@@ -109,39 +118,39 @@
                                                             <div class="modal-body">
                                                                 <div class="row mb-3">
                                                                     <div class="col-md-6">
-                                                                        <label for="nombre" class="form-label">Nombre</label>
-                                                                        <input type="text" minlength="3" maxlength="50" pattern="[A-Za-z0-9\s]{3,}" title="Ingrese solo texto, entre 3 y 50 caracteres" name="nombre" class="form-control" placeholder="Nombre" value="<?php echo $p['nombre'] ?>" required />
+                                                                        <label for="nombre_p_<?= $p['id'] ?>" class="form-label">Nombre</label>
+                                                                        <input type="text" minlength="3" maxlength="50" pattern="[A-Za-z0-9\s]{3,}" title="Ingrese solo texto, entre 3 y 50 caracteres" name="nombre" class="form-control" id="nombre_p_<?= $p['id'] ?>" placeholder="Nombre" value="<?php echo $p['nombre'] ?>" required />
                                                                     </div>
                                                                     <div class="col-md-6">
-                                                                        <label for="razon_social" class="form-label">Razon social</label>
-                                                                        <input type="text" minlength="5" maxlength="50" title="Ingrese razon social" name="razon_social" class="form-control" placeholder="Razon social" value="<?php echo $p['razon_social'] ?>" required />
+                                                                        <label for="razon_social_p_<?= $p['id'] ?>" class="form-label">Razon social</label>
+                                                                        <input type="text" minlength="5" maxlength="50" title="Ingrese razon social" name="razon_social" class="form-control" id="razon_social_p_<?= $p['id'] ?>" placeholder="Razon social" value="<?php echo $p['razon_social'] ?>" required />
                                                                     </div>
                                                                 </div>
                                                                 
                                                                 <div class="row mb-3">
                                                                     <div class="col-md-6">
-                                                                        <label for="rif" class="form-label">RIF</label>
-                                                                        <input type="text" minlength="5" maxlength="15" title="Ingrese solo texto/numeros" name="rif" class="form-control" placeholder="RIF" value="<?php echo $p['rif'] ?>" required />
+                                                                        <label for="rif_p_<?= $p['id'] ?>" class="form-label">RIF</label>
+                                                                        <input type="text" minlength="5" maxlength="15" title="Ingrese solo texto/numeros" name="rif" class="form-control" id="rif_p_<?= $p['id'] ?>" placeholder="RIF" value="<?php echo $p['rif'] ?>" required />
                                                                     </div>
                                                                 </div>
 
                                                                 <div class="row mb-3">
                                                                     <div class="col-md-6">
-                                                                        <label for="telefono" class="form-label">Teléfono</label>
-                                                                        <input type="tel" class="form-control phone-input" inputmode="tel" title="Ingrese un teléfono válido" name="telefono" placeholder="Teléfono" value="<?php echo $p['telefono'] ?>" required />
+                                                                        <label for="telefono_p_<?= $p['id'] ?>" class="form-label">Teléfono</label>
+                                                                        <input type="tel" class="form-control phone-input" inputmode="tel" title="Ingrese un teléfono válido" id="telefono_p_<?= $p['id'] ?>" name="telefono"  value="<?php echo $p['telefono'] ?>" required />
                                                                         <span class="error-msg text-danger small" style="display: none; margin-top: 5px;"></span>
                                                                         <span class="valid-msg text-success small" style="display: none; margin-top: 5px;">✓ Válido</span>
                                                                     </div>
                                                                     <div class="col-md-6">
-                                                                        <label for="email" class="form-label">Email</label>
-                                                                        <input type="email" class="form-control" name="email" placeholder="Email" value="<?php echo $p['email'] ?>" required />
+                                                                        <label for="email_p_<?= $p['id'] ?>" class="form-label">Email</label>
+                                                                        <input type="email" class="form-control" name="email" id="email_p_<?= $p['id'] ?>" placeholder="Email" value="<?php echo $p['email'] ?>" required />
                                                                     </div>
                                                                 </div>
 
                                                                 <div class="row mb-3">
                                                                     <div class="col-md-12">
-                                                                        <label for="direccion" class="form-label">Dirección</label>
-                                                                        <input type="text" minlength="5" maxlength="255" name="direccion" class="form-control" title="Mínimo 5 caracteres" placeholder="Dirección" value="<?php echo $p['direccion'] ?>" required />
+                                                                        <label for="direccion_p_<?= $p['id'] ?>" class="form-label">Dirección</label>
+                                                                        <input type="text" minlength="5" maxlength="255" name="direccion" class="form-control" id="direccion_p_<?= $p['id'] ?>" title="Mínimo 5 caracteres" placeholder="Dirección" value="<?php echo $p['direccion'] ?>" required />
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -175,9 +184,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
+                                <?php endforeach; ?>
                             </div>
                         </div>
 
@@ -191,9 +198,9 @@
                                             <th scope="col">Apellido</th>
                                             <th scope="col">Razon social</th>
                                             <th scope="col">RIF</th>
-                                            <th scope="col">Documento de identidad</th>
+                                            <th scope="col">Documento identidad</th>
                                             <th scope="col">Teléfono</th>
-                                            <th scope="col">Teléfono 2 </th>
+                                            <th scope="col">Teléfono 2</th>
                                             <th scope="col">Email</th>
                                             <th scope="col">Dirección</th>
                                             <th scope="col">Acción</th>
@@ -202,8 +209,8 @@
                                     <tbody>
                                         <?php foreach ($proveedoresInactivos as $pIN): ?>
                                             <tr>
-                                                <td><?php echo $pIN['nombre']; ?></t
-                                                <td><?php echo $p['apellido']; ?></td>d>
+                                                <td><?php echo $pIN['nombre']; ?></td>
+                                                <td><?php echo $pIN['apellido']; ?></td>
                                                 <td><?php echo $pIN['razon_social']; ?></td>
                                                 <td><?php echo $pIN['rif']; ?></td>
                                                 <td><?php echo $pIN['documento_identidad']; ?></td>
@@ -211,12 +218,18 @@
                                                 <td><?php echo $pIN['telefono2']; ?></td>
                                                 <td><?php echo $pIN['email']; ?></td>
                                                 <td><?php echo $pIN['direccion']; ?></td>
-                                                <td>
-                                                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalEditarIN<?= $pIN['id'] ?>">Editar</button>
-                                                    <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#modalConfirmarActivar<?= $pIN['id'] ?>">Activar</button>
+                                                <td class="text-nowrap">
+                                                    <div class="d-flex gap-1">
+                                                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalEditarIN<?= $pIN['id'] ?>">Editar</button>
+                                                        <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#modalConfirmarActivar<?= $pIN['id'] ?>">Activar</button>
+                                                    </div>
                                                 </td>
                                             </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
 
+                                <?php foreach ($proveedoresInactivos as $pIN): ?>
                                             <!-- Modal Editar Inactivos -->
                                             <div class="modal fade" id="modalEditarIN<?= $pIN['id'] ?>" tabindex="-1">
                                                 <div class="modal-dialog">
@@ -230,38 +243,38 @@
                                                             <div class="modal-body">
                                                                 <div class="row mb-3">
                                                                     <div class="col-md-6">
-                                                                        <label for="nombre" class="form-label">Nombre</label>
-                                                                        <input type="text" minlength="3" maxlength="50" pattern="[A-Za-z0-9\s]{3,}" title="Ingrese solo texto, entre 3 y 50 caracteres" name="nombre" class="form-control" placeholder="Nombre" value="<?php echo $pIN['nombre'] ?>" required />
+                                                                        <label for="nombre_in_<?= $pIN['id'] ?>" class="form-label">Nombre</label>
+                                                                        <input type="text" minlength="3" maxlength="50" pattern="[A-Za-z0-9\s]{3,}" title="Ingrese solo texto, entre 3 y 50 caracteres" name="nombre" class="form-control" id="nombre_in_<?= $pIN['id'] ?>" placeholder="Nombre" value="<?php echo $pIN['nombre'] ?>" required />
                                                                     </div>
                                                                     <div class="col-md-6">
-                                                                        <label for="razon_social" class="form-label">Razon social</label>
-                                                                        <input type="text" minlength="5" maxlength="50" title="Ingrese razon social" name="razon_social" class="form-control" placeholder="Razon social" value="<?php echo $pIN['razon_social'] ?>" required />
+                                                                        <label for="razon_social_in_<?= $pIN['id'] ?>" class="form-label">Razon social</label>
+                                                                        <input type="text" minlength="5" maxlength="50" title="Ingrese razon social" name="razon_social" class="form-control" id="razon_social_in_<?= $pIN['id'] ?>" placeholder="Razon social" value="<?php echo $pIN['razon_social'] ?>" required />
                                                                     </div>
                                                                 </div>
                                                                 <div class="row mb-3">
                                                                     <div class="col-md-6">
-                                                                        <label for="rif" class="form-label">RIF</label>
-                                                                        <input type="text" minlength="5" maxlength="15" title="Ingrese solo texto/numeros" name="rif" class="form-control" placeholder="RIF" value="<?php echo $pIN['rif'] ?>" required />
+                                                                        <label for="rif_in_<?= $pIN['id'] ?>" class="form-label">RIF</label>
+                                                                        <input type="text" minlength="5" maxlength="15" title="Ingrese solo texto/numeros" name="rif" class="form-control" id="rif_in_<?= $pIN['id'] ?>" placeholder="RIF" value="<?php echo $pIN['rif'] ?>" required />
                                                                     </div>
                                                                 </div>
 
                                                                 <div class="row mb-3">
                                                                     <div class="col-md-6">
-                                                                        <label for="telefono" class="form-label">Teléfono</label>
-                                                                        <input type="tel" class="form-control phone-input" inputmode="tel" title="Ingrese un teléfono válido" name="telefono" placeholder="Teléfono" value="<?php echo $pIN['telefono'] ?>" required />
+                                                                        <label for="telefono_in_<?= $pIN['id'] ?>" class="form-label">Teléfono</label>
+                                                                        <input type="tel" class="form-control phone-input" inputmode="tel" title="Ingrese un teléfono válido" id="telefono_in_<?= $pIN['id'] ?>" name="telefono"  value="<?php echo $pIN['telefono'] ?>" required />
                                                                         <span class="error-msg text-danger small" style="display: none; margin-top: 5px;"></span>
                                                                         <span class="valid-msg text-success small" style="display: none; margin-top: 5px;">✓ Válido</span>
                                                                     </div>
                                                                     <div class="col-md-6">
-                                                                        <label for="email" class="form-label">Email</label>
-                                                                        <input type="email" class="form-control" name="email" placeholder="Email" value="<?php echo $pIN['email'] ?>" required />
+                                                                        <label for="email_in_<?= $pIN['id'] ?>" class="form-label">Email</label>
+                                                                        <input type="email" class="form-control" name="email" id="email_in_<?= $pIN['id'] ?>" placeholder="Email" value="<?php echo $pIN['email'] ?>" required />
                                                                     </div>
                                                                 </div>
 
                                                                 <div class="row mb-3">
                                                                     <div class="col-md-12">
-                                                                        <label for="direccion" class="form-label">Dirección</label>
-                                                                        <input type="text" minlength="5" maxlength="255" name="direccion" class="form-control" title="Mínimo 5 caracteres" placeholder="Dirección" value="<?php echo $pIN['direccion'] ?>" required />
+                                                                        <label for="direccion_in_<?= $pIN['id'] ?>" class="form-label">Dirección</label>
+                                                                        <input type="text" minlength="5" maxlength="255" name="direccion" class="form-control" id="direccion_in_<?= $pIN['id'] ?>" title="Mínimo 5 caracteres" placeholder="Dirección" value="<?php echo $pIN['direccion'] ?>" required />
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -295,7 +308,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        <?php endforeach; ?>
+                                <?php endforeach; ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -439,7 +452,7 @@
 
     <!-- formulario de registro de entradas -->
     <div class="modal fade" id="entradaModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5">Registrar Entrada (Compra)</h1>
@@ -474,18 +487,29 @@
                         <h5>Productos</h5>
                         <div id="productos_container">
                             <div class="row mb-2 producto-row">
-                                <div class="col-md-5">
-                                    <select class="form-select" name="id_producto[]" required>
-                                        <option value="" disabled selected>Seleccione un producto</option>
-                                        <?php if(isset($productosDisponibles)) { foreach ($productosDisponibles as $prod): ?>
-                                            <option value="<?= $prod['id'] ?>"><?= htmlspecialchars($prod['nombre']) ?></option>
-                                        <?php endforeach; } ?>
-                                    </select>
+                                <div class="col-md-4">
+                                    <div class="input-group flex-nowrap">
+                                        <select class="form-select producto-select" name="id_producto[]" required>
+                                            <option value="" disabled selected>Seleccione un producto</option>
+                                            <?php if(isset($productosDisponibles)) { foreach ($productosDisponibles as $prod): ?>
+                                                <option value="<?= $prod['id'] ?>"><?= htmlspecialchars($prod['nombre']) ?></option>
+                                            <?php endforeach; } ?>
+                                        </select>
+                                        <button type="button" class="btn btn-outline-secondary btn-add-producto" title="Nuevo Producto">+</button>
+                                    </div>
                                 </div>
                                 <div class="col-md-3">
+                                    <div class="input-group flex-nowrap">
+                                        <select class="form-select variante-select" name="id_variante[]" required>
+                                            <option value="" disabled selected>Seleccione variante</option>
+                                        </select>
+                                        <button type="button" class="btn btn-outline-secondary btn-add-variante" title="Nueva Variante">+</button>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
                                     <input type="number" class="form-control" name="cantidad[]" placeholder="Cantidad" min="1" required>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <input type="number" step="0.01" class="form-control" name="precio_compra[]" placeholder="Precio ($)" min="0.01" required>
                                 </div>
                                 <div class="col-md-1">
@@ -513,6 +537,88 @@
                 </div>
                 <div class="modal-body" id="contenidoEntradasInsumo">
                     
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Agregar Producto Rápido -->
+    <div class="modal fade" id="modalAgregarProductoRapido" tabindex="-1" aria-hidden="true" style="z-index: 1060;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Nuevo Producto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formProductoRapido">
+                        <input type="hidden" name="ajax" value="1">
+                        <div class="mb-3">
+                            <label class="form-label">Categoría *</label>
+                            <select class="form-select" name="id_categoria" id="pr_categoria" required>
+                                <option value="" disabled selected>Seleccione una categoría</option>
+                                <?php if(isset($categorias)) { foreach($categorias as $cat): ?>
+                                    <option value="<?= $cat['id'] ?>"><?= htmlspecialchars($cat['nombre']) ?></option>
+                                <?php endforeach; } ?>
+                            </select>
+                            <div id="pr_dynamic_attributes" class="mt-2"></div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Nombre *</label>
+                                <input type="text" class="form-control" name="nombre" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Precio Compra</label>
+                                <input type="number" step="0.01" min="0" class="form-control" name="precio_compra">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Precio Venta</label>
+                                <input type="number" step="0.01" min="0" class="form-control" name="precio_venta">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Descripción</label>
+                                <input type="text" class="form-control" name="descripcion">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnGuardarProductoRapido">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Agregar Variante Rápida -->
+    <div class="modal fade" id="modalAgregarVarianteRapida" tabindex="-1" aria-hidden="true" style="z-index: 1060;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Nueva Variante</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formVarianteRapida">
+                        <input type="hidden" name="id_producto" id="vr_id_producto">
+                        <input type="hidden" name="ajax" value="1">
+                        <div class="mb-3">
+                            <label class="form-label">Nombre de Variante *</label>
+                            <input type="text" class="form-control" name="nombre_variante" required>
+                        </div>
+                        <div id="dynamicVariantFields"></div>
+                        <div class="mb-3">
+                            <label class="form-label">Stock Inicial *</label>
+                            <input type="number" class="form-control" name="stock" value="0" min="0" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnGuardarVarianteRapida">Guardar</button>
                 </div>
             </div>
         </div>

@@ -26,10 +26,18 @@
                     ->setRespuestaS2(hash('sha256', $_POST['respuesta_s_2']))
                     ->setPreguntaS3($_POST['pregunta_s_3'])
                     ->setRespuestaS3(hash('sha256', $_POST['respuesta_s_3']));
-            if ($usuario->insert()) {
-                $_SESSION['success'] = "Usuario registrado exitosamente.";
-            } else {
-                $_SESSION['error'] = "Error al registrar el usuario.";
+            try {
+                if ($usuario->insert()) {
+                    $_SESSION['success'] = "Usuario registrado exitosamente.";
+                } else {
+                    $_SESSION['error'] = "Error al registrar el usuario.";
+                }
+            } catch (\PDOException $e) {
+                if ($e->getCode() == 23000) {
+                    $_SESSION['error'] = "Error: Ya existe un usuario con este nombre de usuario.";
+                } else {
+                    $_SESSION['error'] = "Error de base de datos: " . $e->getMessage();
+                }
             }
             header("Location: ?c=usuarios&accion=view");
             exit();
@@ -48,10 +56,18 @@
                 $usuario->setClave($existing['clave']);
             }
 
-            if ($usuario->update()) {
-                $_SESSION['success'] = "Usuario actualizado exitosamente.";
-            } else {
-                $_SESSION['error'] = "Error al actualizar el usuario.";
+            try {
+                if ($usuario->update()) {
+                    $_SESSION['success'] = "Usuario actualizado exitosamente.";
+                } else {
+                    $_SESSION['error'] = "Error al actualizar el usuario.";
+                }
+            } catch (\PDOException $e) {
+                if ($e->getCode() == 23000) {
+                    $_SESSION['error'] = "Error: Ya existe otro usuario con este nombre de usuario.";
+                } else {
+                    $_SESSION['error'] = "Error de base de datos: " . $e->getMessage();
+                }
             }
             header("Location: ?c=usuarios&accion=view");
             exit();
