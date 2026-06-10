@@ -308,10 +308,14 @@ switch ($accion) {
             $detalles = $notasModel->getDetalles($id);
             $nota = $notasModel->getById($id);
             
+            $pagosModel = new \Lenovo\Dalu\Models\Pagos();
+            $pagos = $pagosModel->getByNotaEntrega($id);
+            
             echo json_encode([
                 'success' => true,
                 'nota' => $nota,
-                'detalles' => $detalles
+                'detalles' => $detalles,
+                'pagos' => $pagos
             ]);
         } else {
             echo json_encode(['success' => false, 'error' => 'ID no proporcionado']);

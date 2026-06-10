@@ -245,6 +245,54 @@ document.addEventListener('DOMContentLoaded', () => {
                             </tfoot>
                         </table>
                     `;
+                    
+                    if (data.pagos && data.pagos.length > 0) {
+                        html += `<h5 class="mt-4 border-bottom pb-2">Pagos Vinculados</h5>
+                        <table class="table table-sm table-bordered table-striped mt-2">
+                            <thead class="table-secondary">
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Método</th>
+                                    <th>Referencia</th>
+                                    <th>Monto (USD)</th>
+                                    <th>Monto (Bs)</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
+                        
+                        let totalPagosUsd = 0;
+                        let totalPagosBs = 0;
+                        data.pagos.forEach(p => {
+                            totalPagosUsd += parseFloat(p.monto_usd) || 0;
+                            totalPagosBs += parseFloat(p.monto_bs) || 0;
+                            html += `
+                                <tr>
+                                    <td>${p.fecha ? p.fecha.split(' ')[0] : 'N/A'}</td>
+                                    <td>${p.metodo_pago_nombre || 'N/A'}</td>
+                                    <td>${p.referencia || 'N/A'}</td>
+                                    <td>$${parseFloat(p.monto_usd || 0).toFixed(2)}</td>
+                                    <td>Bs ${parseFloat(p.monto_bs || 0).toFixed(2)}</td>
+                                    <td><span class="badge bg-${p.estado === 'verificado' ? 'success' : (p.estado === 'rechazado' ? 'danger' : 'warning')}">${p.estado || 'por verificar'}</span></td>
+                                </tr>
+                            `;
+                        });
+
+                        html += `
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="3" class="text-end">TOTAL PAGADO:</th>
+                                    <th>$${totalPagosUsd.toFixed(2)}</th>
+                                    <th>Bs ${totalPagosBs.toFixed(2)}</th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                        </table>`;
+                    } else {
+                        html += `<div class="alert alert-warning mt-3 py-2">No hay pagos vinculados a esta nota.</div>`;
+                    }
+
                     modalDetallesBody.innerHTML = html;
                 } else {
                     modalDetallesBody.innerHTML = `<div class="alert alert-danger">Error: ${data.error}</div>`;
