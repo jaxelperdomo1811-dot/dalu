@@ -36,7 +36,7 @@
                 </li>
                 <li class="nav-item">
                     <button class="nav-link" id="tab-inventario" data-bs-toggle="tab" data-bs-target="#inventario"
-                        type="button">Inventario</button>
+                        type="button">Existencias</button>
                 </li>
             </ul>
 
@@ -346,7 +346,7 @@
                 <!-- Inventario -->
                 <div class="tab-pane fade" id="inventario">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h1 class="titulo text-black">Inventario de Productos</h1>
+                        <h1 class="titulo text-black">Existencia de Productos</h1>
                     </div>
 
                     <div class="table-responsive">

@@ -14,7 +14,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/css/intlTelInput.css">
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/js/intlTelInput.min.js" defer></script>
     <link rel="stylesheet" href="assets/DataTablet/datatables.css">
-    <script src="assets/js/proveedores.js" defer></script>
     <script src="assets/js/pages/proveedores.js" defer></script>
     <script src="assets/js/js.js" defer></script>
     <script src="assets/DataTablet/datatables.min.js" defer></script>
