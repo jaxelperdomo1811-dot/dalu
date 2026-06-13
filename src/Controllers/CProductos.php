@@ -52,8 +52,7 @@ case "insert":
     );
     
    
-    $producto->setPrecioOferta(isset($_POST['precio_oferta']) && $_POST['precio_oferta'] !== '' ? $_POST['precio_oferta'] : null)
-             ->setStockMinimo(isset($_POST['stock_minimo']) && $_POST['stock_minimo'] !== '' ? $_POST['stock_minimo'] : 3);
+    $producto->setStockMinimo(isset($_POST['stock_minimo']) && $_POST['stock_minimo'] !== '' ? $_POST['stock_minimo'] : 3);
     
     // ========== PROCESAR IMAGEN PRINCIPAL CON CATEGORÍA DINÁMICA ==========
     if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
@@ -132,6 +131,7 @@ case "insert":
                 }
                 
                 $variantes[] = [
+                    'codigo_producto' => isset($variante['codigo_producto']) && $variante['codigo_producto'] !== '' ? $variante['codigo_producto'] : null,
                     'nombre_variante' => $variante['nombre_variante'],
                     'atributos' => $atributos,
                     'precio_adicional' => $variante['precio_adicional'] !== '' ? $variante['precio_adicional'] : 0,
@@ -180,7 +180,6 @@ case "update":
              ->setDescripcion($_POST['descripcion'])
              ->setPrecioCompra($precio_compra)
              ->setPrecioVenta($precio_venta)
-             ->setPrecioOferta(isset($_POST['precio_oferta']) && $_POST['precio_oferta'] !== '' ? $_POST['precio_oferta'] : null)
              ->setStockMinimo(isset($_POST['stock_minimo']) && $_POST['stock_minimo'] !== '' ? $_POST['stock_minimo'] : 3)
              ->setMarca(!empty($_POST['marca']) ? $_POST['marca'] : null);
     
@@ -287,6 +286,7 @@ case "update":
                         }
 
                         $variante_data = [
+                            'codigo_producto' => isset($v['codigo_producto']) && $v['codigo_producto'] !== '' ? $v['codigo_producto'] : null,
                             'nombre_variante' => $v['nombre_variante'],
                             'atributos' => $atributos,
                             'precio_adicional' => isset($v['precio_adicional']) && $v['precio_adicional'] !== '' ? $v['precio_adicional'] : 0,
@@ -419,6 +419,7 @@ case "update":
             if (!is_array($atributos)) $atributos = [];
             
             $varianteData = [
+                'codigo_producto' => !empty($_POST['codigo_producto']) ? $_POST['codigo_producto'] : null,
                 'nombre_variante' => 'Principal',
                 'atributos' => $atributos,
                 'precio_adicional' => 0,
@@ -470,6 +471,7 @@ case "update":
         if (!empty($_POST['tipo_piel'])) $atributos['tipo_piel'] = $_POST['tipo_piel'];
         
         $variante_data = [
+            'codigo_producto' => !empty($_POST['codigo_producto']) ? $_POST['codigo_producto'] : null,
             'nombre_variante' => $_POST['nombre_variante'],
             'atributos' => $atributos,
             'precio_adicional' => !empty($_POST['precio_adicional']) ? $_POST['precio_adicional'] : 0,
@@ -516,6 +518,7 @@ case "update":
         if (!empty($_POST['tipo_piel'])) $atributos['tipo_piel'] = $_POST['tipo_piel'];
         
         $variante_data = [
+            'codigo_producto' => !empty($_POST['codigo_producto']) ? $_POST['codigo_producto'] : null,
             'nombre_variante' => $_POST['nombre_variante'],
             'atributos' => $atributos,
             'precio_adicional' => !empty($_POST['precio_adicional']) ? $_POST['precio_adicional'] : 0,

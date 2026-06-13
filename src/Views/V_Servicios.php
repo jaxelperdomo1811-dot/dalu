@@ -79,8 +79,8 @@
                                 <?php foreach ($pedidosC as $p): ?>
                                     <tr>
                                         <td><?php echo htmlspecialchars($p['id']); ?></td>
-                                        <td><?php echo htmlspecialchars($p['nombre_cliente'] ?? ''); ?></td>
-                                        <td><?php echo htmlspecialchars($p['fecha_pedido'] ?? ''); ?></td>
+                                        <td><?php echo htmlspecialchars(trim(($p['cliente_nombre'] ?? '') . ' ' . ($p['cliente_apellido'] ?? ''))); ?></td>
+                                        <td><?php echo htmlspecialchars($p['fecha_registro'] ?? ''); ?></td>
                                         <td><?php echo htmlspecialchars($p['fecha_estimada'] ?? '-'); ?></td>
                                         <td><?php echo htmlspecialchars($p['fecha_recepcion'] ?? '-'); ?></td>
                                         <td><?php echo htmlspecialchars($p['estado']); ?></td>
@@ -115,16 +115,18 @@
                             </thead>
                             <tbody>
                                 <?php foreach ($pedidosC as $p): ?>
+                                    <?php if ($p['estado'] === 'recibido'): ?>
                                     <tr>
                                         <td><?php echo htmlspecialchars($p['id']); ?></td>
-                                        <td><?php echo htmlspecialchars($p['nombre_cliente'] ?? ''); ?></td>
-                                        <td><?php echo htmlspecialchars($p['fecha_pedido'] ?? ''); ?></td>
+                                        <td><?php echo htmlspecialchars(trim(($p['cliente_nombre'] ?? '') . ' ' . ($p['cliente_apellido'] ?? ''))); ?></td>
+                                        <td><?php echo htmlspecialchars($p['fecha_registro'] ?? ''); ?></td>
                                         <td><?php echo htmlspecialchars($p['estado']); ?></td>
                                         <td>
                                             <button type="button" class="btn btn-sm btn-info m-1 btn-ver-detalles" data-id="<?= $p['id'] ?>">Ver Detalles de Almacén</button>
                                             <!-- Se pueden agregar más acciones exclusivas de almacén aquí -->
                                         </td>
                                     </tr>
+                                    <?php endif; ?>
                                 <?php endforeach; ?>
                             </tbody>
                         </table>
@@ -152,6 +154,13 @@
                         </div>
                         <div class="modal-body">
                             ¿Estás seguro de que deseas cambiar el estado del pedido nro <?= htmlspecialchars($p['id']) ?> de <strong><?= htmlspecialchars($p['estado']) ?></strong> a <strong class="text-warning"><?= htmlspecialchars($siguienteEstado) ?></strong>?
+                            <?php if ($siguienteEstado === 'entregado'): ?>
+                                <div class="alert alert-info mt-3 mb-0">
+                                    <h6 class="alert-heading fw-bold mb-1">Palabra de Seguridad del Cliente:</h6>
+                                    <p class="mb-0 fs-5"><?= htmlspecialchars($p['cliente_palabra_secreta'] ?: 'No definida') ?></p>
+                                    <small class="text-muted mt-2 d-block">Solicita esta palabra al cliente antes de confirmar la entrega.</small>
+                                </div>
+                            <?php endif; ?>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

@@ -114,7 +114,8 @@ use Lenovo\Dalu\Models\Conexion;
                     COALESCE(NULLIF(pr.razon_social, ''), NULLIF(pr.nombre, ''), 'Proveedor Desconocido') AS nombre_proveedor,
                     c.nombre as cliente_nombre, 
                     c.apellido as cliente_apellido,
-                    c.telefono as cliente_telefono
+                    c.telefono as cliente_telefono,
+                    c.palabra_secreta as cliente_palabra_secreta
                     FROM pedidos p
                     LEFT JOIN clientes c ON p.id_cliente = c.id
                     LEFT JOIN proveedores pr ON p.id_proveedor = pr.id
@@ -133,7 +134,8 @@ use Lenovo\Dalu\Models\Conexion;
             $sql = "SELECT p.*, 
                     COALESCE(NULLIF(pr.razon_social, ''), NULLIF(pr.nombre, ''), 'Proveedor Desconocido') AS nombre_proveedor,
                     c.nombre as cliente_nombre, 
-                    c.apellido as cliente_apellido
+                    c.apellido as cliente_apellido,
+                    c.palabra_secreta as cliente_palabra_secreta
                     FROM pedidos p
                     LEFT JOIN clientes c ON p.id_cliente = c.id
                     LEFT JOIN proveedores pr ON p.id_proveedor = pr.id
@@ -155,7 +157,8 @@ use Lenovo\Dalu\Models\Conexion;
                     c.apellido as cliente_apellido,
                     c.cedula as cliente_cedula,
                     c.telefono as cliente_telefono,
-                    c.direccion as cliente_direccion
+                    c.direccion as cliente_direccion,
+                    c.palabra_secreta as cliente_palabra_secreta
                     FROM pedidos p
                     LEFT JOIN clientes c ON p.id_cliente = c.id
                     LEFT JOIN proveedores pr ON p.id_proveedor = pr.id
@@ -180,7 +183,8 @@ use Lenovo\Dalu\Models\Conexion;
             $sql = "SELECT p.*, 
                     COALESCE(NULLIF(pr.razon_social, ''), NULLIF(pr.nombre, ''), 'Proveedor Desconocido') AS nombre_proveedor,
                     c.nombre as cliente_nombre, 
-                    c.apellido as cliente_apellido
+                    c.apellido as cliente_apellido,
+                    c.palabra_secreta as cliente_palabra_secreta
                     FROM pedidos p
                     LEFT JOIN clientes c ON p.id_cliente = c.id
                     LEFT JOIN proveedores pr ON p.id_proveedor = pr.id
@@ -200,7 +204,8 @@ use Lenovo\Dalu\Models\Conexion;
             $sql = "SELECT p.*, 
                     COALESCE(NULLIF(pr.razon_social, ''), NULLIF(pr.nombre, ''), 'Proveedor Desconocido') AS nombre_proveedor,
                     c.nombre as cliente_nombre, 
-                    c.apellido as cliente_apellido
+                    c.apellido as cliente_apellido,
+                    c.palabra_secreta as cliente_palabra_secreta
                     FROM pedidos p
                     LEFT JOIN clientes c ON p.id_cliente = c.id
                     LEFT JOIN proveedores pr ON p.id_proveedor = pr.id
@@ -517,7 +522,8 @@ use Lenovo\Dalu\Models\Conexion;
         public function getByEstado($estado) {
             $sql = "SELECT p.*, 
                     c.nombre as cliente_nombre, 
-                    c.apellido as cliente_apellido
+                    c.apellido as cliente_apellido,
+                    c.palabra_secreta as cliente_palabra_secreta
                     FROM pedidos p
                     LEFT JOIN clientes c ON p.id_cliente = c.id
                     WHERE p.estado = :estado
@@ -550,7 +556,8 @@ use Lenovo\Dalu\Models\Conexion;
         public function getByFechaRange($fecha_inicio, $fecha_fin) {
             $sql = "SELECT p.*, 
                         c.nombre as cliente_nombre, 
-                        c.apellido as cliente_apellido
+                        c.apellido as cliente_apellido,
+                        c.palabra_secreta as cliente_palabra_secreta
                     FROM pedidos p
                     LEFT JOIN clientes c ON p.id_cliente = c.id
                     WHERE DATE(p.fecha_registro) BETWEEN :fecha_inicio AND :fecha_fin

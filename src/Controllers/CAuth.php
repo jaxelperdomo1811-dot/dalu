@@ -6,10 +6,8 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 $loggeado = isset($_SESSION['id']) && !empty($_SESSION['id']);
 
-// $controlador is defined in index.php
 $controladorVerificar = isset($controlador) ? strtolower($controlador) : 'chome';
 
-// Identificar si la acción es un intento de logout
 $accion = isset($_GET['accion']) ? strtolower($_GET['accion']) : (isset($_POST['accion']) ? strtolower($_POST['accion']) : '');
 $a = isset($_GET['a']) ? strtolower($_GET['a']) : (isset($_POST['a']) ? strtolower($_POST['a']) : '');
 $esLogout = ($accion === 'logout' || $a === 'logout');

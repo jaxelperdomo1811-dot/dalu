@@ -563,11 +563,15 @@
                             <div id="pr_dynamic_attributes" class="mt-2"></div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                                <label class="form-label">Código</label>
+                                <input type="text" class="form-control" name="codigo_producto">
+                            </div>
+                            <div class="col-md-4">
                                 <label class="form-label">Nombre *</label>
                                 <input type="text" class="form-control" name="nombre" required>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label class="form-label">Precio Compra</label>
                                 <input type="number" step="0.01" min="0" class="form-control" name="precio_compra">
                             </div>
@@ -604,6 +608,10 @@
                     <form id="formVarianteRapida">
                         <input type="hidden" name="id_producto" id="vr_id_producto">
                         <input type="hidden" name="ajax" value="1">
+                        <div class="mb-3">
+                            <label class="form-label">Código</label>
+                            <input type="text" class="form-control" name="codigo_producto" placeholder="Ej. 1234">
+                        </div>
                         <div class="mb-3">
                             <label class="form-label">Nombre de Variante *</label>
                             <input type="text" class="form-control" name="nombre_variante" required>

@@ -53,7 +53,7 @@ li {
 	left: 0;
 	height: 100%;
 	overflow-y: auto;
-	scrollbar-width: none;
+	/* scrollbar-width: none; */
 	transition: all .3s ease;
     background-color: #1f1709;
 	z-index: 200;
@@ -65,7 +65,7 @@ li {
 	max-width: 200px;
 }
 #sidebar::-webkit-scrollbar {
-	display: none;
+	/* display: none; */
 }
 #sidebar .brand {
 	font-size: 24px;

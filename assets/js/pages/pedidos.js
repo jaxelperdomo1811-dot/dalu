@@ -97,8 +97,9 @@ document.addEventListener('DOMContentLoaded', () => {
                             const precioBase = parseFloat(prod.precio_venta || 0);
                             const precioAdicional = parseFloat(v.precio_adicional || 0);
                             const precioTotalVariante = precioBase + precioAdicional;
+                            const codigo = v.codigo_producto ? `(Cód: ${v.codigo_producto}) ` : '';
                             
-                            selVar.innerHTML += `<option value="${v.id}" data-precio="${precioTotalVariante}" data-stock="${v.stock}">${v.nombre_variante}</option>`;
+                            selVar.innerHTML += `<option value="${v.id}" data-precio="${precioTotalVariante}" data-stock="${v.stock}">${codigo}${v.nombre_variante}</option>`;
                         });
                     }
                 }

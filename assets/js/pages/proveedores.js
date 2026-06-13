@@ -265,7 +265,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             data.variantes.forEach(v => {
                                 const option = document.createElement('option');
                                 option.value = v.id;
-                                option.textContent = v.nombre_variante;
+                                const codigo = v.codigo_producto ? `(Cód: ${v.codigo_producto}) ` : '';
+                                option.textContent = codigo + v.nombre_variante;
                                 varSelect.appendChild(option);
                             });
                         }

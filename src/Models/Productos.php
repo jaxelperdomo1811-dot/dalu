@@ -12,7 +12,6 @@ class Productos extends Conexion {
     private $descripcion;
     private $precio_compra;
     private $precio_venta;
-    private $precio_oferta;
     private $stock_minimo;
     private $marca;
     private $imagen_principal;
@@ -43,7 +42,6 @@ class Productos extends Conexion {
     public function setDescripcion($descripcion) { $this->descripcion = $descripcion; return $this; }
     public function setPrecioCompra($precio_compra) { $this->precio_compra = $precio_compra; return $this; }
     public function setPrecioVenta($precio_venta) { $this->precio_venta = $precio_venta; return $this; }
-    public function setPrecioOferta($precio_oferta) { $this->precio_oferta = $precio_oferta; return $this; }
     public function setStockMinimo($stock_minimo) { $this->stock_minimo = $stock_minimo; return $this; }
     public function setMarca($marca) { $this->marca = $marca; return $this; }
     public function setImagenPrincipal($imagen_principal) { $this->imagen_principal = $imagen_principal; return $this; }
@@ -56,7 +54,6 @@ class Productos extends Conexion {
     public function getDescripcion() { return $this->descripcion; }
     public function getPrecioCompra() { return $this->precio_compra; }
     public function getPrecioVenta() { return $this->precio_venta; }
-    public function getPrecioOferta() { return $this->precio_oferta; }
     public function getStockMinimo() { return $this->stock_minimo; }
     public function getMarca() { return $this->marca; }
     public function getImagenPrincipal() { return $this->imagen_principal; }
@@ -159,12 +156,12 @@ class Productos extends Conexion {
         try {
             $sql = "INSERT INTO productos (
                         id_categoria, nombre, descripcion, 
-                        precio_venta, precio_oferta,
+                        precio_venta,
                         stock_minimo, marca, imagen_principal, 
                         activo, ventas_totales
                     ) VALUES (
                         :id_categoria, :nombre, :descripcion,
-                        :precio_venta, :precio_oferta,
+                        :precio_venta,
                         :stock_minimo, :marca, :imagen_principal,
                         :activo, :ventas_totales
                     )";
@@ -174,7 +171,6 @@ class Productos extends Conexion {
             $stmt->bindParam(":nombre", $this->nombre);
             $stmt->bindParam(":descripcion", $this->descripcion);
             $stmt->bindParam(":precio_venta", $this->precio_venta);
-            $stmt->bindParam(":precio_oferta", $this->precio_oferta);
             $stmt->bindParam(":stock_minimo", $this->stock_minimo);
             $stmt->bindParam(":marca", $this->marca);
             $stmt->bindParam(":imagen_principal", $this->imagen_principal);
@@ -247,7 +243,6 @@ class Productos extends Conexion {
                         nombre = :nombre,
                         descripcion = :descripcion,
                         precio_venta = :precio_venta,
-                        precio_oferta = :precio_oferta,
                         stock_minimo = :stock_minimo,
                         marca = :marca,
                         imagen_principal = :imagen_principal
@@ -258,7 +253,6 @@ class Productos extends Conexion {
             $stmt->bindParam(":nombre", $this->nombre);
             $stmt->bindParam(":descripcion", $this->descripcion);
             $stmt->bindParam(":precio_venta", $this->precio_venta);
-            $stmt->bindParam(":precio_oferta", $this->precio_oferta);
             $stmt->bindParam(":stock_minimo", $this->stock_minimo);
             $stmt->bindParam(":marca", $this->marca);
             $stmt->bindParam(":imagen_principal", $this->imagen_principal);
@@ -311,10 +305,10 @@ class Productos extends Conexion {
      */
     private function insertVariantes($producto_id) {
         $sql = "INSERT INTO producto_variantes (
-                    id_producto, nombre_variante, atributos, 
+                    id_producto, codigo_producto, nombre_variante, atributos, 
                     precio_adicional, stock, imagen_variante, activo
                 ) VALUES (
-                    :id_producto, :nombre_variante, :atributos,
+                    :id_producto, :codigo_producto, :nombre_variante, :atributos,
                     :precio_adicional, :stock, :imagen_variante, :activo
                 )";
         
@@ -324,8 +318,10 @@ class Productos extends Conexion {
         foreach ($this->variantes as $variante) {
             // Validar que atributos sea JSON válido
             $atributos_json = empty($variante['atributos']) ? '{}' : json_encode($variante['atributos'], JSON_FORCE_OBJECT);
+            $codigo_producto = !empty($variante['codigo_producto']) ? $variante['codigo_producto'] : null;
             
             $stmt->bindParam(":id_producto", $producto_id);
+            $stmt->bindParam(":codigo_producto", $codigo_producto);
             $stmt->bindParam(":nombre_variante", $variante['nombre_variante']);
             $stmt->bindParam(":atributos", $atributos_json);
             $stmt->bindParam(":precio_adicional", $variante['precio_adicional']);
@@ -411,17 +407,19 @@ class Productos extends Conexion {
     public function addVariante($producto_id, $variante_data) {
         try {
             $sql = "INSERT INTO producto_variantes (
-                        id_producto, nombre_variante, atributos, 
+                        id_producto, codigo_producto, nombre_variante, atributos, 
                         precio_adicional, stock, imagen_variante, activo
                     ) VALUES (
-                        :id_producto, :nombre_variante, :atributos,
+                        :id_producto, :codigo_producto, :nombre_variante, :atributos,
                         :precio_adicional, :stock, :imagen_variante, 1
                     )";
             
             $stmt = $this->prepare($sql);
             $atributos_json = empty($variante_data['atributos']) ? '{}' : json_encode($variante_data['atributos'], JSON_FORCE_OBJECT);
+            $codigo_producto = !empty($variante_data['codigo_producto']) ? $variante_data['codigo_producto'] : null;
             
             $stmt->bindParam(":id_producto", $producto_id);
+            $stmt->bindParam(":codigo_producto", $codigo_producto);
             $stmt->bindParam(":nombre_variante", $variante_data['nombre_variante']);
             $stmt->bindParam(":atributos", $atributos_json);
             $stmt->bindParam(":precio_adicional", $variante_data['precio_adicional']);
@@ -446,6 +444,7 @@ class Productos extends Conexion {
     public function updateVariante($variante_id, $variante_data) {
         try {
             $sql = "UPDATE producto_variantes SET 
+                        codigo_producto = :codigo_producto,
                         nombre_variante = :nombre_variante,
                         atributos = :atributos,
                         precio_adicional = :precio_adicional,
@@ -455,7 +454,9 @@ class Productos extends Conexion {
             
             $stmt = $this->prepare($sql);
             $atributos_json = empty($variante_data['atributos']) ? '{}' : json_encode($variante_data['atributos'], JSON_FORCE_OBJECT);
+            $codigo_producto = !empty($variante_data['codigo_producto']) ? $variante_data['codigo_producto'] : null;
             
+            $stmt->bindParam(":codigo_producto", $codigo_producto);
             $stmt->bindParam(":nombre_variante", $variante_data['nombre_variante']);
             $stmt->bindParam(":atributos", $atributos_json);
             $stmt->bindParam(":precio_adicional", $variante_data['precio_adicional']);

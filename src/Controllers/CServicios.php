@@ -74,7 +74,7 @@
             $pedido->setTipo('cliente')
                    ->setEstado($_POST['estado'] ?? 'pendiente')
                    ->setIdCliente($idCliente)
-                   ->setNombreProveedor(null);
+                   ->setIdProveedor(null);
 
             // Procesar detalles opcionales y calcular total
             $productosModel = new Productos();
@@ -168,7 +168,13 @@
                         
                         // 2. Insertar en Creditos (siempre se crea crédito porque el adelanto no cubre todo)
                         $creditoModel = new \Lenovo\Dalu\Models\Creditos();
-                        $idCredito = $creditoModel->insertarCredito($idNotaNueva, $porcentajeInicial, $montoInicial, $nroCuotas, $montoPorCuota, $frecuencia);
+                        $creditoModel->setIdNotaEntrega($idNotaNueva)
+                                     ->setPorcentajeInicial($porcentajeInicial)
+                                     ->setMontoCuotaInicial($montoInicial)
+                                     ->setNroCuotas($nroCuotas)
+                                     ->setMontoPorCuota($montoPorCuota)
+                                     ->setFrecuencia($frecuencia);
+                        $idCredito = $creditoModel->insert();
                         
                         if ($idCredito) {
                             // Crear la cuota inicial (0)

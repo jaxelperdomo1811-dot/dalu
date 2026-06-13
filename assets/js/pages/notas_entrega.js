@@ -7,6 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const pedidoIdCliente = document.getElementById('pedido_id_cliente');
 
     if (pedidoCedula && pedidoTipoPersona) {
+        pedidoCedula.addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '').slice(0, 9);
+        });
         pedidoCedula.addEventListener('blur', async () => {
             const cedula = pedidoCedula.value.trim();
             const tipo = pedidoTipoPersona.value;
@@ -130,8 +133,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         const precioBase = parseFloat(prod.precio_venta || 0);
                         const precioAdicional = parseFloat(v.precio_adicional || 0);
                         const precioTotalVariante = precioBase + precioAdicional;
+                        const codigo = v.codigo_producto ? `(Cód: ${v.codigo_producto}) ` : '';
                         
-                        selVar.innerHTML += `<option value="${v.id}" data-precio="${precioTotalVariante}" data-stock="${v.stock}">${v.nombre_variante} (Disp: ${v.stock})</option>`;
+                        selVar.innerHTML += `<option value="${v.id}" data-precio="${precioTotalVariante}" data-stock="${v.stock}">${codigo}${v.nombre_variante} (Disp: ${v.stock})</option>`;
                     });
                 }
             }

@@ -123,6 +123,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputNombreContainer = document.getElementById('input-nombre-container');
 
     if (cedulaInput && tipoPersonaSelect) {
+        cedulaInput.addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '').slice(0, 9);
+        });
         cedulaInput.addEventListener('blur', async () => {
             const cedula = cedulaInput.value.trim();
             const tipo = tipoPersonaSelect.value;
@@ -150,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             mensajeCedula.innerText = 'Datos encontrados.';
                         } else {
                             mensajeCedula.style.color = 'red';
-                            mensajeCedula.innerText = 'Cédula no encontrada.';
+                            mensajeCedula.innerText = 'Cédula no encontrada. Por favor ingrese su nombre y apellido manualmente';
                         }
                     } catch (e) {
                         console.error('Invalid JSON response', textData);

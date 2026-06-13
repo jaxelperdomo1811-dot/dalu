@@ -7,6 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const pedidoIdCliente = document.getElementById('pedido_id_cliente');
 
     if (pedidoCedula && pedidoTipoPersona) {
+        pedidoCedula.addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '').slice(0, 9);
+        });
         pedidoCedula.addEventListener('blur', async () => {
             const cedula = pedidoCedula.value.trim();
             const tipo = pedidoTipoPersona.value;

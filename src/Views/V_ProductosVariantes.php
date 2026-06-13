@@ -15,6 +15,7 @@ $variantes = $producto['variantes'] ?? [];
             <thead class="table-light">
                 <tr>
                     <th class="text-center" style="width: 70px;">Imagen</th>
+                    <th>Código</th>
                     <th>Nombre de Variante</th>
                     <th>Atributos</th>
                     <th class="text-end">Precio Adicional</th>
@@ -26,11 +27,12 @@ $variantes = $producto['variantes'] ?? [];
                     <tr>
                         <td class="text-center">
                             <?php if (!empty($v['imagen_variante'])): ?>
-                                <img src="<?= htmlspecialchars($v['imagen_variante']) ?>" onerror="this.src='assets/img/products/default.jpeg'" alt="Variante" class="img-thumbnail" style="width: 50px; height: 50px; object-fit: cover;">
+                                <img src="<?= htmlspecialchars($v['imagen_variante']) ?>" onerror="this.src='assets/img/products/default.jpeg'" alt="Variante" class="img-thumbnail product-thumb" style="width: 50px; height: 50px; object-fit: cover; cursor: pointer;" data-src="<?= htmlspecialchars($v['imagen_variante']) ?>">
                             <?php else: ?>
                                 <span class="text-muted" style="font-size: 0.8em;">N/A</span>
                             <?php endif; ?>
                         </td>
+                        <td class="text-muted"><?= htmlspecialchars($v['codigo_producto'] ?? 'N/A') ?></td>
                         <td class="fw-bold"><?= htmlspecialchars($v['nombre_variante']) ?></td>
                         <td>
                             <?php

@@ -407,7 +407,6 @@
 <!-- Modal Editar -->
                                         <div class="modal fade modal-edit-product" id="modalEditar<?= $p['id'] ?>" tabindex="-1" 
                                              data-variantes="<?= htmlspecialchars(json_encode($p['variantes'] ?? []), ENT_QUOTES) ?>"
-                                             data-precio-oferta="<?= htmlspecialchars($p['precio_oferta'] ?? '') ?>"
                                              data-stock-minimo="<?= htmlspecialchars($p['stock_minimo'] ?? '3') ?>">
                                             <div class="modal-dialog modal-lg">
                                                 <div class="modal-content">
@@ -533,7 +532,6 @@
 <!-- Modal Editar -->
                                         <div class="modal fade modal-edit-product" id="modalEditar<?= $pIN['id'] ?>" tabindex="-1" 
                                              data-variantes="<?= htmlspecialchars(json_encode($pIN['variantes'] ?? []), ENT_QUOTES) ?>"
-                                             data-precio-oferta="<?= htmlspecialchars($pIN['precio_oferta'] ?? '') ?>"
                                              data-stock-minimo="<?= htmlspecialchars($pIN['stock_minimo'] ?? '3') ?>">
                                             <div class="modal-dialog modal-lg">
                                                 <div class="modal-content">
@@ -663,7 +661,6 @@
 
                 
     <!-- Modal Agregar Producto -->
-    <!-- Modal Agregar Producto -->
     <div class="modal fade" id="modalAgregar" tabindex="-1">
         <div class="modal-dialog">
             <form action="?c=productos&accion=insert" method="POST" enctype="multipart/form-data" class="modal-content">
@@ -695,17 +692,17 @@
                                 id="nombre_input" placeholder="Nombre" required />
                         </div>
                         <div class="col-md-6">
-                            <label for="precio" class="form-label">Precio Venta</label>
-                            <input type="number" step="0.01" min="0" name="precio_venta" class="form-control"
-                                id="precio" placeholder="Precio Venta" required />
+                            <label for="precio_compra" class="form-label">Precio Compra</label>
+                            <input type="number" step="0.01" min="0" name="precio_compra" class="form-control"
+                                id="precio_compra" placeholder="Precio Compra" />
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="precio_compra" class="form-label">Precio Compra</label>
-                            <input type="number" step="0.01" min="0" name="precio_compra" class="form-control"
-                                id="precio_compra" placeholder="Precio Compra" />
+                            <label for="precio" class="form-label">Precio Venta</label>
+                            <input type="number" step="0.01" min="0" name="precio_venta" class="form-control"
+                                id="precio" placeholder="Precio Venta" required />
                         </div>
                         <div class="col-md-6">
                             <label for="descripcion_input" class="form-label">Descripción</label>

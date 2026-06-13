@@ -10,13 +10,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const selectCat = modal.querySelector('select[name="id_categoria"]');
         const isEdit = modal.classList.contains('modal-edit-product');
         const productId = isEdit ? modal.querySelector('input[name="id"]').value : null;
-        const dynamicContainer = isEdit 
+        const dynamicContainer = isEdit
             ? modal.querySelector(`#dynamic-attributes-edit-${productId}`)
             : modal.querySelector('#dynamic-attributes');
 
         fetch('?c=productos&accion=log_form', {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 log: 'initProductModal',
                 isEdit: isEdit,
@@ -32,14 +32,13 @@ document.addEventListener('DOMContentLoaded', () => {
         let existingVariants = [];
         try {
             existingVariants = isEdit ? JSON.parse(modal.getAttribute('data-variantes') || '[]') : [];
-        } catch(e) {
+        } catch (e) {
             fetch('?c=productos&accion=log_form', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({log: 'JSON parse error', error: e.message, data: modal.getAttribute('data-variantes')})
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ log: 'JSON parse error', error: e.message, data: modal.getAttribute('data-variantes') })
             });
         }
-        const precioOferta = isEdit ? modal.getAttribute('data-precio-oferta') : '';
         const stockMinimo = isEdit ? modal.getAttribute('data-stock-minimo') || '3' : '3';
 
         // Crear contenedor para registrar IDs de variantes eliminadas
@@ -55,17 +54,13 @@ document.addEventListener('DOMContentLoaded', () => {
             return opt ? opt.text : '';
         };
 
-        const productFields = (pOferta = '', sMinimo = '3') => `
+        const productFields = (sMinimo = '3') => `
             <div class="row mb-3">
-                <div class="col-md-4">
-                    <label class="form-label">Precio oferta</label>
-                    <input type="number" step="0.01" min="0" name="precio_oferta" class="form-control" placeholder="Precio oferta" value="${escapeHtml(pOferta)}" />
-                </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <label class="form-label">Stock mínimo</label>
                     <input type="number" min="0" name="stock_minimo" class="form-control" placeholder="Stock mínimo" value="${escapeHtml(sMinimo)}" />
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <label class="form-label">${isEdit ? 'Nueva Imagen principal (Opcional)' : 'Imagen principal'}</label>
                     <input type="file" accept="image/*" name="imagen" class="form-control" />
                 </div>
@@ -112,16 +107,20 @@ document.addEventListener('DOMContentLoaded', () => {
                         <h6 class="mb-0">Variante ${index + 1}</h6>
                         <button type="button" class="btn btn-sm btn-outline-danger remove-variant-btn">Eliminar</button>
                     </div>
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
+                    <div class="row align-items-end">
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label text-nowrap overflow-hidden">Código</label>
+                            <input type="text" name="variantes[${index}][codigo_producto]" class="form-control" placeholder="Código" value="${escapeHtml(values.codigo_producto || '')}" />
+                        </div>
+                        <div class="col-md-3 mb-3">
                             <label class="form-label">Nombre variante</label>
                             <input type="text" name="variantes[${index}][nombre_variante]" class="form-control" placeholder="Ej. Principal" value="${escapeHtml(values.nombre_variante || 'Principal')}" required />
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <label class="form-label">Stock</label>
                             <input type="number" min="0" name="variantes[${index}][stock]" class="form-control" placeholder="Stock" value="${escapeHtml(values.stock || '')}" required />
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <label class="form-label">Precio adicional</label>
                             <input type="number" step="0.01" min="0" name="variantes[${index}][precio_adicional]" class="form-control" placeholder="Precio adicional" value="${escapeHtml(values.precio_adicional || '')}" />
                         </div>
@@ -159,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const rows = Array.from(dynamicContainer.querySelectorAll('.variant-row'));
             rows.forEach((row, newIndex) => {
                 row.setAttribute('data-index', newIndex);
-                
+
                 const header = row.querySelector('h6');
                 if (header) {
                     header.textContent = `Variante ${newIndex + 1}`;
@@ -198,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         const renderDynamicAttributes = (initial = false) => {
-            dynamicContainer.innerHTML = productFields(precioOferta, stockMinimo);
+            dynamicContainer.innerHTML = productFields(stockMinimo);
 
             const addBtn = dynamicContainer.querySelector('.add-variant-btn');
             const rows = dynamicContainer.querySelector('.variant-rows');
@@ -260,8 +259,8 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (e) {
             fetch('?c=productos&accion=log_form', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({log: 'Crash in initProductModal', error: e.message, stack: e.stack, modalId: modal.id})
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ log: 'Crash in initProductModal', error: e.message, stack: e.stack, modalId: modal.id })
             });
             console.error('Error in initProductModal:', e);
         }
@@ -283,13 +282,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const productId = target.getAttribute('data-id');
             const modalBody = document.getElementById('variantsModalBody');
             const modalEl = document.getElementById('variantsModal');
-            
+
             if (modalBody && modalEl && productId) {
                 modalBody.innerHTML = '<div class="text-center"><div class="spinner-border text-primary" role="status"></div><p class="mt-2">Cargando variantes...</p></div>';
-                
+
                 const modal = new bootstrap.Modal(modalEl);
                 modal.show();
-                
+
                 fetch(`?c=productos&accion=viewVariantes&id=${productId}`)
                     .then(response => response.text())
                     .then(html => {

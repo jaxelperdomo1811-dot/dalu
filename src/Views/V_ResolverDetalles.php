@@ -93,7 +93,7 @@
                     <input type="hidden" id="vincular_detalle_id" name="detalle_id">
                     <div class="mb-3">
                         <label class="form-label">Seleccione el producto</label>
-                        <select class="form-select" id="vincular_id_producto" name="id_producto">
+                        <select class="form-select select2-vincular" id="vincular_id_producto" name="id_producto" style="width: 100%;">
                             <option value="">-- Seleccionar --</option>
                             <?php foreach($productos as $prod): ?>
                                 <option value="<?= $prod['id'] ?>"><?= htmlspecialchars($prod['nombre']) ?> (ID: <?= $prod['id'] ?>)</option>
@@ -104,27 +104,27 @@
                     <div id="vincular_variante_container" style="display: none;">
                         <div class="mb-3">
                             <label class="form-label">Seleccione la variante</label>
-                            <select class="form-select" id="vincular_id_variante" name="id_variante">
-                                <option value="">-- Seleccionar variante --</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-check mb-3">
-                            <input class="form-check-input" type="checkbox" id="vincular_nueva_variante">
-                            <label class="form-check-label" for="vincular_nueva_variante">
-                                O registrar una variante nueva
-                            </label>
+                            <div class="input-group flex-nowrap">
+                                <select class="form-select" id="vincular_id_variante" name="id_variante">
+                                    <option value="">-- Seleccionar variante --</option>
+                                </select>
+                                <button type="button" class="btn btn-outline-secondary" id="btn_toggle_nueva_variante" title="Nueva Variante">+</button>
+                            </div>
                         </div>
                         
                         <div id="nueva_variante_form" class="border p-3 rounded" style="display: none; background: #f8f9fa;">
                             <h6>Nueva Variante</h6>
                             <input type="hidden" id="vincular_cat_nombre">
                             <div class="row">
-                                <div class="col-md-6 mb-2">
+                                <div class="col-md-4 mb-2">
+                                    <label class="form-label">Código</label>
+                                    <input type="text" class="form-control form-control-sm" name="codigo_producto" id="vincular_codigo_producto" placeholder="Ej. 123">
+                                </div>
+                                <div class="col-md-4 mb-2">
                                     <label class="form-label">Nombre de variante</label>
                                     <input type="text" class="form-control form-control-sm" name="nombre_variante" id="vincular_nombre_variante" placeholder="Ej. Principal">
                                 </div>
-                                <div class="col-md-6 mb-2">
+                                <div class="col-md-4 mb-2">
                                     <label class="form-label">Stock recibido</label>
                                     <input type="number" min="0" class="form-control form-control-sm" name="stock" id="vincular_stock">
                                 </div>
@@ -212,6 +212,13 @@
 
     <script>
         $(document).ready(function() {
+            if ($.fn.select2) {
+                $('#vincular_id_producto').select2({
+                    theme: 'bootstrap-5',
+                    dropdownParent: $('#modalVincular')
+                });
+            }
+
             // Lógica para renderizar atributos dinámicos basada en categoryName
             function renderVariantExtras(categoryName) {
                 const n = (categoryName || '').toLowerCase();
@@ -236,10 +243,10 @@
             // Vincular
             $('.btn-vincular').click(function() {
                 $('#vincular_detalle_id').val($(this).data('id'));
-                $('#vincular_id_producto').val('');
+                $('#vincular_id_producto').val(null).trigger('change');
                 $('#vincular_variante_container').hide();
-                $('#vincular_nueva_variante').prop('checked', false);
-                $('#nueva_variante_form').hide();
+                $('#nueva_variante_form').hide().data('is-active', false);
+                $('#vincular_id_variante').prop('disabled', false);
                 // Pre-llenar stock sugerido
                 let qty = $(this).closest('tr').find('td:nth-child(3)').text();
                 $('#vincular_stock').val(qty);
@@ -273,14 +280,18 @@
                 });
             });
 
-            $('#vincular_nueva_variante').change(function() {
-                if ($(this).is(':checked')) {
-                    $('#nueva_variante_form').show();
+            $('#btn_toggle_nueva_variante').click(function() {
+                let form = $('#nueva_variante_form');
+                let isActive = !form.data('is-active');
+                form.data('is-active', isActive);
+                
+                if (isActive) {
+                    form.slideDown();
                     $('#vincular_id_variante').prop('disabled', true);
                     $('#vincular_nombre_variante').prop('required', true);
                     $('#vincular_stock').prop('required', true);
                 } else {
-                    $('#nueva_variante_form').hide();
+                    form.slideUp();
                     $('#vincular_id_variante').prop('disabled', false);
                     $('#vincular_nombre_variante').prop('required', false);
                     $('#vincular_stock').prop('required', false);
@@ -292,7 +303,7 @@
                 const prodId = $('#vincular_id_producto').val();
                 if(!prodId) return alert("Seleccione un producto");
                 
-                const isNewVariant = $('#vincular_nueva_variante').is(':checked');
+                const isNewVariant = $('#nueva_variante_form').data('is-active');
                 
                 if (isNewVariant) {
                     // Validar form required
