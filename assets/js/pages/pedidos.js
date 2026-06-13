@@ -222,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const modalTitle = document.getElementById('modalDetallesPedidoTitulo');
         if (!modalEl || !modalBody || !modalTitle) return;
 
-        const bsModal = new bootstrap.Modal(modalEl);
+        const bsModal = bootstrap.Modal.getOrCreateInstance(modalEl);
 
         document.body.addEventListener('click', (event) => {
             const button = event.target.closest('.btn-ver-detalles');

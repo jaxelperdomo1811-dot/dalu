@@ -31,7 +31,6 @@
             
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h1 class="titulo text-black">Gestión de Despachos</h1>
-                <!-- El botón de Nuevo Despacho ha sido eliminado. Los despachos se crean desde Notas de Entrega. -->
             </div>
 
             <div class="table-responsive">
@@ -106,7 +105,6 @@
                                 </tr>
                             </thead>
                             <tbody id="tbodyDetalles">
-                                <!-- Llenado por JS -->
                             </tbody>
                             <tfoot>
                                 <tr>

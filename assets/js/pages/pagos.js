@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-    const modalVerificar = new bootstrap.Modal(document.getElementById('modalVerificarPagos'));
+    const modalVerificar = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalVerificarPagos'));
     
     // Al abrir modal
     $(document).on('click', '.btn-ver-pagos', function() {

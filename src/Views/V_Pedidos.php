@@ -187,10 +187,8 @@
                     <input type="hidden" name="estado" value="pendiente" />
                     <input type="hidden" name="tipo" value="propios" />
 
-                    <!-- Detalles -->
                     <h5 class="mt-4 border-bottom pb-2">Detalles (Productos del Pedido)</h5>
                     <div id="detallesContainerTienda">
-                        <!-- Las filas dinámicas se agregarán aquí desde pedidos.js -->
                     </div>
                     
                     <div class="d-flex justify-content-between align-items-center mt-3">

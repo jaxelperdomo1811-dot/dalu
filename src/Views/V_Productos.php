@@ -402,7 +402,6 @@
         </div>
     </main>
 
-    <!-- MODALES EXTRAÍDOS PARA EVITAR CONFLICTOS DE DOM -->
 <?php foreach ($productos as $p): ?>
 <!-- Modal Editar -->
                                         <div class="modal fade modal-edit-product" id="modalEditar<?= $p['id'] ?>" tabindex="-1" 
@@ -772,7 +771,6 @@
             </div>
         </div>
 
-        <!-- Exponer categorías a JS y cargar script de productos -->
         <?php
         $ajustesModel = new \Lenovo\Dalu\Models\Ajustes();
         $tasaModel = new \Lenovo\Dalu\Models\Tasa();
@@ -798,10 +796,8 @@
             window.ratioTasa = <?= json_encode($ratio_tasa) ?>;
 
             document.addEventListener('DOMContentLoaded', function() {
-                // Delegación de eventos para calcular el precio de venta cuando se edite precio_compra
                 document.body.addEventListener('input', function(e) {
                     if (e.target && e.target.name === 'precio_compra') {
-                        // Encontrar el modal o el form donde estamos
                         const container = e.target.closest('form');
                         if (container) {
                             const inputVenta = container.querySelector('input[name="precio_venta"]');
@@ -829,7 +825,6 @@
                         data[key] = value;
                     }
                 }
-                // Send it to a logging endpoint
                 fetch('?c=productos&accion=log_form', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},

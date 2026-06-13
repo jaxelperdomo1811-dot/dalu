@@ -1,0 +1,100 @@
+    .dashboard-container {
+        padding: 30px;
+        background-color: #f8f9fa;
+        min-height: calc(100vh - 60px);
+        margin-top: 20px;
+    }
+    
+    .welcome-header {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 30px;
+        border-bottom: 4px solid #c5a059;
+        display: inline-block;
+        padding-bottom: 10px;
+    }
+
+    .stat-card {
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        color: white;
+        position: relative;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    }
+
+    .stat-card .card-body {
+        padding: 30px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .stat-card .icon-bg {
+        position: absolute;
+        right: -10px;
+        bottom: -10px;
+        width: 120px;
+        height: 120px;
+        opacity: 0.15;
+        z-index: 1;
+    }
+
+    .stat-card .card-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 15px;
+        color: rgba(255,255,255,0.9);
+    }
+
+    .stat-card .card-text {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 0;
+        line-height: 1;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .stat-card .card-footer {
+        background: rgba(0,0,0,0.15);
+        border-top: none;
+        padding: 15px;
+        text-align: center;
+        z-index: 2;
+        position: relative;
+    }
+
+    .stat-card .btn-link {
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: color 0.3s;
+        display: block;
+    }
+
+    .stat-card .btn-link:hover {
+        color: rgba(255,255,255,0.8);
+    }
+
+    .card-clientes {
+        background: linear-gradient(135deg, #007bff 0%, #00c6ff 100%);
+    }
+    
+    .card-productos {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    }
+    
+    .card-usuarios {
+        background: linear-gradient(135deg, #c5a059 0%, #8a6c38 100%);
+    }

@@ -139,7 +139,6 @@
                                 </tr>
                             </thead>
                             <tbody id="tbodyPagosIndividuales">
-                                <!-- Llenado dinámico vía AJAX -->
                             </tbody>
                         </table>
                     </div>

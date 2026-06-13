@@ -209,7 +209,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('formProductoRapido').reset();
                 const modalEl = document.getElementById('modalAgregarProductoRapido');
                 if (modalEl) {
-                    const modal = new bootstrap.Modal(modalEl);
+                    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
                     modal.show();
                 }
             }
@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 const modalEl = document.getElementById('modalAgregarVarianteRapida');
                 if (modalEl) {
-                    const modal = new bootstrap.Modal(modalEl);
+                    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
                     modal.show();
                 }
             }
@@ -448,7 +448,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Ensure we don't create multiple instances if not needed, but Bootstrap 5 handles it well
                 let modal = bootstrap.Modal.getInstance(modalEl);
                 if (!modal) {
-                    modal = new bootstrap.Modal(modalEl);
+                    modal = bootstrap.Modal.getOrCreateInstance(modalEl);
                 }
                 modal.show();
                 

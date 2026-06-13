@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalWizardEl = document.getElementById('modalWizardPago');
     if (!modalWizardEl) return; // Salir si no estamos en la vista correcta
 
-    const modalWizard = new bootstrap.Modal(modalWizardEl);
+    const modalWizard = bootstrap.Modal.getOrCreateInstance(modalWizardEl);
     const step1 = document.getElementById('wizardStep1');
     const step2 = document.getElementById('wizardStep2');
     

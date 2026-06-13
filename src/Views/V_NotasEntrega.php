@@ -13,7 +13,6 @@
     <script src="assets/js/js.js" defer></script>
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script src="assets/DataTablet/datatables.min.js" defer></script>
-    <!-- Incluimos nuestro nuevo JS para Notas de Entrega -->
     <script src="assets/js/pages/notas_entrega.js" defer></script>
     <script src="assets/DataTablet/tabla.js" defer></script>
     <title>Notas de Entrega</title>

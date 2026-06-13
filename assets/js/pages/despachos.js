@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const totalModal = document.getElementById('detalleModalTotal');
             
             tbody.innerHTML = '<tr><td colspan="4" class="text-center">Cargando...</td></tr>';
-            const modal = new bootstrap.Modal(document.getElementById('modalDetallesDespacho'));
+            const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalDetallesDespacho'));
             modal.show();
 
             fetch(`?c=Despacho&accion=detalles&id=${id}`)

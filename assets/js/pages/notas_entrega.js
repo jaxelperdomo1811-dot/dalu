@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p class="mt-3">Cargando detalle...</p>
                 </div>
             `;
-            const bsModal = new bootstrap.Modal(modalDetalles);
+            const bsModal = bootstrap.Modal.getOrCreateInstance(modalDetalles);
             bsModal.show();
 
             try {

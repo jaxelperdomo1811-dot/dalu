@@ -275,7 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (imgEl) imgEl.src = src;
             const modalEl = document.getElementById('imageModal');
             if (modalEl && typeof bootstrap !== 'undefined') {
-                const modal = new bootstrap.Modal(modalEl);
+                const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
                 modal.show();
             }
         } else if (target && target.classList && target.classList.contains('view-variants-btn')) {
@@ -286,7 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (modalBody && modalEl && productId) {
                 modalBody.innerHTML = '<div class="text-center"><div class="spinner-border text-primary" role="status"></div><p class="mt-2">Cargando variantes...</p></div>';
 
-                const modal = new bootstrap.Modal(modalEl);
+                const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
                 modal.show();
 
                 fetch(`?c=productos&accion=viewVariantes&id=${productId}`)

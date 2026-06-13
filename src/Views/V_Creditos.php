@@ -157,14 +157,13 @@
     </div>
     <?php endforeach; ?>
 
-    <!-- WIZARD DE PAGO (ESTILO CASHEA) -->
+    <!-- MODAL DE PAGO-->
     <div class="modal fade" id="modalWizardPago" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow" style="border-radius: 1rem;">
                 <form action="?c=Pagos&accion=insert" method="POST" id="formWizardPago">
                     <input type="hidden" name="id_nota_entrega" id="wizard_id_nota">
                     
-                    <!-- PASO 1: SELECCION DE MONTO -->
                     <div id="wizardStep1" class="p-4">
                         <div class="d-flex align-items-center mb-4">
                             <h4 class="fw-bold m-0 text-dark">¿Cuánto quieres pagar hoy?</h4>
@@ -221,7 +220,6 @@
                         </div>
                     </div>
 
-                    <!-- PASO 2: METODO DE PAGO -->
                     <div id="wizardStep2" class="p-4 d-none">
                         <div class="d-flex align-items-center mb-4">
                             <button type="button" class="btn btn-link text-dark p-0 me-3 text-decoration-none fs-5" id="btnBackStep1">‹</button>
@@ -234,7 +232,6 @@
                             <small>Equivalente: Bs <span id="wizard_monto_final_bs">0.00</span> (Tasa: <?= $tasaActual['valor'] ?? 1 ?>)</small>
                         </div>
 
-                        <!-- Campos ocultos requeridos por CPagos -->
                         <input type="hidden" name="monto_ingresado[]" id="input_monto_enviar">
                         <input type="hidden" name="moneda[]" id="input_moneda_enviar" value="USD">
 
