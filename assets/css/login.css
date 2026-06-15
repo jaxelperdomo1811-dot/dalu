@@ -2,7 +2,7 @@ body, html {
     height: 100%;
     margin: 0;
     font-family: 'Inter', sans-serif;
-    background-image: url('assets/img/fondodalu.jpeg');
+    background-image: url('../../assets/img/fondodalu.jpeg');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
