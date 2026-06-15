@@ -154,13 +154,7 @@
                         </div>
                         <div class="modal-body">
                             ¿Estás seguro de que deseas cambiar el estado del pedido nro <?= htmlspecialchars($p['id']) ?> de <strong><?= htmlspecialchars($p['estado']) ?></strong> a <strong class="text-warning"><?= htmlspecialchars($siguienteEstado) ?></strong>?
-                            <?php if ($siguienteEstado === 'entregado'): ?>
-                                <div class="alert alert-info mt-3 mb-0">
-                                    <h6 class="alert-heading fw-bold mb-1">Palabra de Seguridad del Cliente:</h6>
-                                    <p class="mb-0 fs-5"><?= htmlspecialchars($p['cliente_palabra_secreta'] ?: 'No definida') ?></p>
-                                    <small class="text-muted mt-2 d-block">Solicita esta palabra al cliente antes de confirmar la entrega.</small>
-                                </div>
-                            <?php endif; ?>
+
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

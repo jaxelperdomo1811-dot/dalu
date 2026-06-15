@@ -100,8 +100,6 @@ $(document).ready(function() {
                         default: badge.addClass('bg-secondary');
                     }
 
-                    // Pequeña notificación visual
-                    // alert('Estado actualizado correctamente');
                 } else {
                     alert('Error: ' + (response.message || 'Error al actualizar'));
                 }
@@ -116,10 +114,7 @@ $(document).ready(function() {
         });
     });
 
-    // Recargar la página principal al cerrar el modal por si cambiaron los conteos generales
     $('#modalVerificarPagos').on('hidden.bs.modal', function () {
-        // En una SPA real actualizaríamos la fila en el DataTable.
-        // Aquí hacemos un reload para asegurar integridad.
         location.reload();
     });
 });

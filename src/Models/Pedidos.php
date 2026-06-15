@@ -5,10 +5,10 @@ use Lenovo\Dalu\Models\Conexion;
     class Pedidos extends Conexion {
         private $id;
         private $id_cliente;
-        private $tipo; // 'cliente' o 'tienda'
+        private $tipo;
         private $estado;
         private $fecha_registro;
-        private $id_proveedor; // Para pedidos tipo 'tienda'
+        private $id_proveedor;
         
         private $detalles = [];
 
@@ -21,7 +21,6 @@ use Lenovo\Dalu\Models\Conexion;
             $this->id_proveedor = $id_proveedor;
         }
         
-        // ==================== SETTERS ====================
         public function setId($id) { $this->id = $id; return $this; }
         public function setIdCliente($id_cliente) { $this->id_cliente = $id_cliente; return $this; }
         public function setTipo($tipo) { $this->tipo = $tipo; return $this; }
@@ -29,7 +28,6 @@ use Lenovo\Dalu\Models\Conexion;
         public function setIdProveedor($id_proveedor) { $this->id_proveedor = $id_proveedor; return $this; }
         public function setDetalles($detalles) { $this->detalles = $detalles; return $this; }
         
-        // ==================== GETTERS ====================
         public function getId() { return $this->id; }
         public function getIdCliente() { return $this->id_cliente; }
         public function getTipo() { return $this->tipo; }
@@ -37,8 +35,6 @@ use Lenovo\Dalu\Models\Conexion;
         public function getIdProveedor() { return $this->id_proveedor; }
         public function getFechaRegistro() { return $this->fecha_registro; }
         public function getDetalles() { return $this->detalles; }
-        
-        // ==================== CRUD PEDIDOS ====================
         
         public function insert() {
             try {
@@ -106,16 +102,13 @@ use Lenovo\Dalu\Models\Conexion;
             return true;
         }
         
-        /**
-         * Buscar pedidos activos (no finalizados)
-         */
+        // Buscar pedidos activos (no finalizados)
         public function search() {
             $sql = "SELECT p.*, 
                     COALESCE(NULLIF(pr.razon_social, ''), NULLIF(pr.nombre, ''), 'Proveedor Desconocido') AS nombre_proveedor,
                     c.nombre as cliente_nombre, 
                     c.apellido as cliente_apellido,
-                    c.telefono as cliente_telefono,
-                    c.palabra_secreta as cliente_palabra_secreta
+                    c.telefono as cliente_telefono
                     FROM pedidos p
                     LEFT JOIN clientes c ON p.id_cliente = c.id
                     LEFT JOIN proveedores pr ON p.id_proveedor = pr.id
@@ -127,15 +120,12 @@ use Lenovo\Dalu\Models\Conexion;
             return $stmt->fetchAll(\PDO::FETCH_ASSOC);
         }
         
-        /**
-         * Buscar pedidos finalizados (recibidos o cancelados)
-         */
+        // Buscar pedidos finalizados (recibidos o cancelados)
         public function searchFinished() {
             $sql = "SELECT p.*, 
                     COALESCE(NULLIF(pr.razon_social, ''), NULLIF(pr.nombre, ''), 'Proveedor Desconocido') AS nombre_proveedor,
                     c.nombre as cliente_nombre, 
-                    c.apellido as cliente_apellido,
-                    c.palabra_secreta as cliente_palabra_secreta
+                    c.apellido as cliente_apellido
                     FROM pedidos p
                     LEFT JOIN clientes c ON p.id_cliente = c.id
                     LEFT JOIN proveedores pr ON p.id_proveedor = pr.id
@@ -147,9 +137,7 @@ use Lenovo\Dalu\Models\Conexion;
             return $stmt->fetchAll(\PDO::FETCH_ASSOC);
         }
         
-        /**
-         * Obtener pedido por ID con sus detalles
-         */
+        // buscar pedido por ID con sus detalles
         public function getById($id) {
             $sql = "SELECT p.*, 
                     COALESCE(NULLIF(pr.razon_social, ''), NULLIF(pr.nombre, ''), 'Proveedor Desconocido') AS nombre_proveedor,
@@ -157,8 +145,7 @@ use Lenovo\Dalu\Models\Conexion;
                     c.apellido as cliente_apellido,
                     c.cedula as cliente_cedula,
                     c.telefono as cliente_telefono,
-                    c.direccion as cliente_direccion,
-                    c.palabra_secreta as cliente_palabra_secreta
+                    c.direccion as cliente_direccion
                     FROM pedidos p
                     LEFT JOIN clientes c ON p.id_cliente = c.id
                     LEFT JOIN proveedores pr ON p.id_proveedor = pr.id
@@ -183,8 +170,7 @@ use Lenovo\Dalu\Models\Conexion;
             $sql = "SELECT p.*, 
                     COALESCE(NULLIF(pr.razon_social, ''), NULLIF(pr.nombre, ''), 'Proveedor Desconocido') AS nombre_proveedor,
                     c.nombre as cliente_nombre, 
-                    c.apellido as cliente_apellido,
-                    c.palabra_secreta as cliente_palabra_secreta
+                    c.apellido as cliente_apellido
                     FROM pedidos p
                     LEFT JOIN clientes c ON p.id_cliente = c.id
                     LEFT JOIN proveedores pr ON p.id_proveedor = pr.id
@@ -204,8 +190,7 @@ use Lenovo\Dalu\Models\Conexion;
             $sql = "SELECT p.*, 
                     COALESCE(NULLIF(pr.razon_social, ''), NULLIF(pr.nombre, ''), 'Proveedor Desconocido') AS nombre_proveedor,
                     c.nombre as cliente_nombre, 
-                    c.apellido as cliente_apellido,
-                    c.palabra_secreta as cliente_palabra_secreta
+                    c.apellido as cliente_apellido
                     FROM pedidos p
                     LEFT JOIN clientes c ON p.id_cliente = c.id
                     LEFT JOIN proveedores pr ON p.id_proveedor = pr.id
@@ -334,9 +319,8 @@ use Lenovo\Dalu\Models\Conexion;
             return false;
         }
         
-        /**
-         * Actualizar detalle
-         */
+
+        // Actualizar detalle
         public function updateDetalle($detalle_id, $detalle_data) {
             $sql = "UPDATE detalles_pedido SET 
                         tipo = :tipo,
@@ -368,9 +352,9 @@ use Lenovo\Dalu\Models\Conexion;
             return $stmt->execute();
         }
         
-        /**
-         * Eliminar detalle
-         */
+
+        //  Eliminar detalle
+
         public function deleteDetalle($detalle_id) {
             $sql = "DELETE FROM detalles_pedido WHERE id = :id";
             $stmt = $this->prepare($sql);
@@ -378,11 +362,10 @@ use Lenovo\Dalu\Models\Conexion;
             return $stmt->execute();
         }
         
-        // ==================== MÉTODOS PARA PRODUCTOS VAGOS ====================
+        // MÉTODOS PARA PRODUCTOS VAGOS
         
-        /**
-         * Obtener detalles pendientes de vincular a inventario
-         */
+
+        //  Obtener detalles pendientes de vincular a inventario
         public function getDetallesPendientes() {
             $sql = "SELECT dp.*, p.tipo as pedido_tipo
                     FROM detalles_pedido dp
@@ -396,9 +379,7 @@ use Lenovo\Dalu\Models\Conexion;
             return $stmt->fetchAll(\PDO::FETCH_ASSOC);
         }
         
-        /**
-         * Obtener pedido completo con solo los detalles pendientes
-         */
+        // Obtener pedido completo con solo los detalles pendientes
         public function getPedidoConDetallesPendientes($pedido_id) {
             $pedido = $this->getById($pedido_id);
             if (!$pedido) return false;
@@ -409,9 +390,7 @@ use Lenovo\Dalu\Models\Conexion;
             return $pedido;
         }
         
-        /**
-         * Vincular un detalle vago a un producto existente
-         */
+        //  Vincular un detalle vago a un producto existente
         public function vincularDetalleAProducto($detalle_id, $id_variante = null) {
             $sql = "UPDATE detalles_pedido 
                     SET id_variante = :id_variante,
@@ -424,10 +403,8 @@ use Lenovo\Dalu\Models\Conexion;
             return $stmt->execute();
         }
         
-        /**
-         * Crear un nuevo producto desde un detalle vago
-         * (para pedidos tipo tienda cuando llega mercancía nueva)
-         */
+        //  Crear un nuevo producto desde un detalle vago
+        //  (para pedidos tipo tienda cuando llega mercancía nueva)
         public function crearProductoDesdeDetalle($detalle_id, $producto_data) {
             $productosModel = new Productos();
             
@@ -467,9 +444,7 @@ use Lenovo\Dalu\Models\Conexion;
             return $this->vincularDetalleAProducto($detalle_id, $variante_id);
         }
         
-        /**
-         * Crear un nuevo producto desde un detalle usando el objeto Productos completo
-         */
+        // Crear un nuevo producto desde un detalle usando el objeto Productos completo
         public function crearProductoDesdeDetalleObjeto($detalle_id, Productos $producto) {
             $producto_id = $producto->insert();
             if (!$producto_id) {
@@ -484,9 +459,7 @@ use Lenovo\Dalu\Models\Conexion;
             return $this->vincularDetalleAProducto($detalle_id, $variante_id);
         }
         
-        /**
-         * Marcar un detalle como ignorado (no se va a inventariar)
-         */
+        // Marcar un detalle como ignorado (no se va a inventariar)
         public function ignorarDetalle($detalle_id) {
             $sql = "UPDATE detalles_pedido 
                     SET status_inventario = 'ignorado'
@@ -497,9 +470,7 @@ use Lenovo\Dalu\Models\Conexion;
             return $stmt->execute();
         }
         
-        /**
-         * Verificar si todos los detalles de un pedido están resueltos
-         */
+        // Verificar si todos los detalles de un pedido están resueltos
         public function allDetallesResueltos() {
             $sql = "SELECT COUNT(*) as pendientes 
                     FROM detalles_pedido 
@@ -514,16 +485,13 @@ use Lenovo\Dalu\Models\Conexion;
             return $result['pendientes'] == 0;
         }
         
-        // ==================== MÉTODOS ADICIONALES ====================
+        // MÉTODOS ADICIONALES 
         
-        /**
-         * Obtener pedidos por estado
-         */
+        // Obtener pedidos por estado
         public function getByEstado($estado) {
             $sql = "SELECT p.*, 
                     c.nombre as cliente_nombre, 
-                    c.apellido as cliente_apellido,
-                    c.palabra_secreta as cliente_palabra_secreta
+                    c.apellido as cliente_apellido
                     FROM pedidos p
                     LEFT JOIN clientes c ON p.id_cliente = c.id
                     WHERE p.estado = :estado
@@ -535,9 +503,7 @@ use Lenovo\Dalu\Models\Conexion;
             return $stmt->fetchAll(\PDO::FETCH_ASSOC);
         }
         
-        /**
-         * Contar pedidos por estado
-         */
+        // Contar pedidos por estado
         public function countByEstado() {
             $sql = "SELECT estado, COUNT(*) as total FROM pedidos GROUP BY estado";
             $stmt = $this->prepare($sql);
@@ -550,14 +516,11 @@ use Lenovo\Dalu\Models\Conexion;
             return $result;
         }
         
-        /**
-         * Buscar pedidos por rango de fechas
-         */
+        // Buscar pedidos por rango de fechas
         public function getByFechaRange($fecha_inicio, $fecha_fin) {
             $sql = "SELECT p.*, 
                         c.nombre as cliente_nombre, 
-                        c.apellido as cliente_apellido,
-                        c.palabra_secreta as cliente_palabra_secreta
+                        c.apellido as cliente_apellido
                     FROM pedidos p
                     LEFT JOIN clientes c ON p.id_cliente = c.id
                     WHERE DATE(p.fecha_registro) BETWEEN :fecha_inicio AND :fecha_fin

@@ -12,17 +12,14 @@
             break;
         case 'insert':
             $telefonoRaw = trim($_POST['phone_full'] ?? $_POST['telefono'] ?? '');
-            // Quitar espacios, guiones y paréntesis
             $telefono = preg_replace('/[^\d+]/', '', $telefonoRaw);
             
-            // Normalizar si se omitió el código de país (asumiendo Venezuela por defecto)
             if (preg_match('/^0[1-9]\d{9}$/', $telefono)) {
                 $telefono = '+58' . substr($telefono, 1);
             } elseif (preg_match('/^[1-9]\d{9}$/', $telefono)) {
                 $telefono = '+58' . $telefono;
             }
 
-            // Validar formato E.164 internacional
             if (!preg_match('/^\+[1-9]\d{6,14}$/', $telefono)) {
                 $_SESSION['error'] = "Error: El número de teléfono no es válido o no tiene el formato correcto (+58...).";
                 header("Location: ?c=clientes&accion=view");
@@ -39,8 +36,7 @@
                     ->setCorreo($_POST['correo'] ?? null)
                     ->setTelefono($telefono)
                     ->setDireccion($_POST['direccion'] ?? null)
-                    ->setCedula($cedulaCompleta !== '' ? $cedulaCompleta : null)
-                    ->setPalabraSecreta($_POST['palabra_secreta'] ?? null);
+                    ->setCedula($cedulaCompleta !== '' ? $cedulaCompleta : null);
             try {
                 if ($cliente->insert()) {
                     $_SESSION['success'] = "Cliente registrado exitosamente.";
@@ -59,10 +55,8 @@
             break;
         case 'update':
             $telefonoRaw = trim($_POST['phone_full'] ?? $_POST['telefono'] ?? '');
-            // Quitar espacios, guiones y paréntesis
             $telefono = preg_replace('/[^\d+]/', '', $telefonoRaw);
             
-            // Normalizar si se omitió el código de país (asumiendo Venezuela por defecto)
             if (preg_match('/^0[1-9]\d{9}$/', $telefono)) {
                 $telefono = '+58' . substr($telefono, 1);
             } elseif (preg_match('/^[1-9]\d{9}$/', $telefono)) {
@@ -70,7 +64,6 @@
             }
             file_put_contents(__DIR__.'/debug_telefono.txt', "update processed: '$telefono'\n", FILE_APPEND);
 
-            // Validar formato E.164 internacional
             if (!preg_match('/^\+[1-9]\d{6,14}$/', $telefono)) {
                 $_SESSION['error'] = "Error: El número de teléfono no es válido o no tiene el formato correcto (+58...).";
                 header("Location: ?c=clientes&accion=view");
@@ -83,8 +76,7 @@
                     ->setApellido($_POST['apellido'] ?? null)
                     ->setCorreo($_POST['correo'] ?? null)
                     ->setTelefono($telefono)
-                    ->setDireccion($_POST['direccion'] ?? null)
-                    ->setPalabraSecreta($_POST['palabra_secreta'] ?? null);
+                    ->setDireccion($_POST['direccion'] ?? null);
             try {
                 if ($cliente->update()) {
                     $_SESSION['success'] = "Cliente actualizado exitosamente.";

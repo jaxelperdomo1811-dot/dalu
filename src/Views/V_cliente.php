@@ -58,7 +58,6 @@
                                     <th scope="col">Correo</th>
                                     <th scope="col">Teléfono</th>
                                     <th scope="col">Dirección</th>
-                                    <th scope="col">Palabra Seguridad</th>
                                     <th scope="col">Fecha Registro</th>
                                     <th scope="col">Acción</th>
                                 </tr>
@@ -72,7 +71,6 @@
                                         <td><?php echo $c['correo']; ?></td>
                                         <td><?php echo $c['telefono']; ?></td>
                                         <td><?php echo $c['direccion']; ?></td>
-                                        <td><?php echo $c['palabra_secreta']; ?></td>
                                         <td><?php echo $c['fecha_registro']; ?></td>
                                         <td class="text-nowrap">
                                             <div class="d-flex gap-1">
@@ -127,11 +125,6 @@
                                                                 <input type="text" minlength="5" maxlength="25" name="direccion" class="form-control" id="direccion_<?= $c['id'] ?>" title="Entre 5 y 25 caracteres" placeholder="Dirección" value="<?php echo $c['direccion'] ?>" required />
                                                             </div>
                                                         </div>
-                                                        <div class="row mb-3">
-                                                            <div class="col-md-12">
-                                                                <label for="palabra_secreta_<?= $c['id'] ?>" class="form-label">Palabra de seguridad</label>
-                                                                <input type="text" minlength="5" maxlength="25" name="palabra_secreta" class="form-control" id="palabra_secreta_<?= $c['id'] ?>" title="Entre 5 y 25 caracteres" placeholder="Palabra de seguridad" value="<?php echo $c ['palabra_secreta'] ?>" />
-                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
@@ -179,7 +172,6 @@
                                     <th scope="col">Correo</th>
                                     <th scope="col">Teléfono</th>
                                     <th scope="col">Dirección</th>
-                                    <th scope="col">Palabra Seguridad</th>
                                     <th scope="col">Fecha Registro</th>
                                     <th scope="col">Acción</th>
                                 </tr>
@@ -193,7 +185,6 @@
                                         <td><?php echo $cIN['correo']; ?></td>
                                         <td><?php echo $cIN['telefono']; ?></td>
                                         <td><?php echo $cIN['direccion']; ?></td>
-                                        <td><?php echo $cIN['palabra_secreta']; ?></td>
                                         <td><?php echo $cIN['fecha_registro']; ?></td>
                                         <td class="text-nowrap">
                                             <div class="d-flex gap-1">
@@ -248,11 +239,6 @@
                                                                 <input type="text" minlength="5" maxlength="25" name="direccion" class="form-control" id="direccion_in_<?= $cIN['id'] ?>" title="Entre 5 y 25 caracteres" placeholder="Dirección" value="<?php echo $cIN['direccion'] ?>" required />
                                                             </div>
                                                         </div>
-                                                        <div class="row mb-3">
-                                                            <div class="col-md-12">
-                                                                <label for="palabra_secreta_in_<?= $cIN['id'] ?>" class="form-label">Palabra Secreta</label>
-                                                                <input type="text" minlength="5" maxlength="20" name="palabra_secreta" class="form-control" id="palabra_secreta_in_<?= $cIN['id'] ?>" title="Entre 5 y 20 caracteres" placeholder="Palabra Secreta" value="<?php echo $cIN['palabra_secreta'] ?>" required />
-                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
@@ -345,12 +331,6 @@
                     <div class="col-md-12">
                         <label for="direccion" class="form-label">Dirección</label>
                         <input type="text" minlength="5" maxlength="25" name="direccion" class="form-control" id="direccion" title="Entre 5 y 25 caracteres" placeholder="Dirección" required />
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-md-12">
-                        <label for="palabra_secreta" class="form-label">Palabra Secreta</label>
-                        <input type="text" minlength="5" pattern="[A-Za-z\s]{5,}" title="Entre 5 y 20 caracteres" name="palabra_secreta" class="form-control" id="palabra_secreta" placeholder="Palabra Secreta" required />
                     </div>
                 </div>
                 <div class="modal-footer">

@@ -1,4 +1,3 @@
-// SIDEBAR DROPDOWN
 const allDropdown = document.querySelectorAll('#sidebar .side-dropdown');
 const sidebar = document.getElementById('sidebar');
 
@@ -25,7 +24,6 @@ allDropdown.forEach(item => {
 
 
 
-// SIDEBAR COLLAPSE
 const toggleSidebar = document.querySelector('nav .toggle-sidebar');
 const allSideDivider = document.querySelectorAll('#sidebar .divider');
 
@@ -76,7 +74,6 @@ function initSelect2() {
                 width: '100%'
             };
             
-            // If inside a modal, set dropdownParent to fix z-index issues
             var $modal = $select.closest('.modal');
             if ($modal.length > 0) {
                 options.dropdownParent = $modal;
@@ -89,5 +86,4 @@ function initSelect2() {
     }
 }
 
-// Run on DOM load
 document.addEventListener('DOMContentLoaded', initSelect2);
