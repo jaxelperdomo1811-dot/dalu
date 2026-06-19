@@ -103,7 +103,6 @@ class NotasEntrega extends Conexion {
 
     public function insert() {
         try {
-            // Nota: No se usan transacciones según solicitud
             $sql = "INSERT INTO notas_entrega (id_cliente, fecha_pedido, estado, tipo, total, observaciones) 
                     VALUES (:id_cliente, :fecha_pedido, :estado, :tipo, :total, :observaciones)";
             $stmt = $this->prepare($sql);
@@ -142,7 +141,6 @@ class NotasEntrega extends Conexion {
             if ($nuevo_estado === 'confirmado') {
                 $detalles = $this->getDetalles($id);
                 foreach ($detalles as $det) {
-                    // Descontar inventario de la variante
                     $sqlVar = "UPDATE producto_variantes SET stock = stock - :cantidad WHERE id = :id_variante";
                     $stmtVar = $this->prepare($sqlVar);
                     $stmtVar->bindParam(":cantidad", $det['cantidad']);

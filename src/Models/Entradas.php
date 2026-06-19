@@ -30,9 +30,7 @@ class Entradas extends Conexion {
     public function getTotal() { return $this->total; }
     public function getDetallesArray() { return $this->detalles; }
 
-    /**
-     * Registra una nueva entrada y sus detalles, actualizando el stock.
-     */
+
     public function insert() {
         try {
 
@@ -111,9 +109,6 @@ class Entradas extends Conexion {
         }
     }
 
-    /**
-     * Obtiene el listado de todas las entradas.
-     */
     public function search() {
         try {
             $sql = "SELECT e.id, e.numero_lote, e.fecha_ingreso, e.total, e.fecha_registro, p.nombre as proveedor_nombre 
@@ -129,9 +124,6 @@ class Entradas extends Conexion {
         }
     }
 
-    /**
-     * Obtiene los detalles de una entrada específica.
-     */
     public function getDetalles($id_entrada) {
         try {
             $sql = "SELECT d.cantidad, d.precio_compra, p.nombre as producto_nombre, pv.nombre_variante 
@@ -149,9 +141,7 @@ class Entradas extends Conexion {
         }
     }
     
-    /**
-     * Crear una entrada a partir de un pedido de tienda resuelto
-     */
+
     public function crearDesdePedido($pedido_id) {
         $pedidoModel = new \Lenovo\Dalu\Models\Pedidos();
         $pedido = $pedidoModel->getById($pedido_id);
@@ -175,7 +165,6 @@ class Entradas extends Conexion {
         foreach ($detallesPedido as $dp) {
             // Solo procesar los vinculados/creados
             if ($dp['status_inventario'] === 'vinculado' || $dp['status_inventario'] === 'creado' || (!empty($dp['id_producto']) && $dp['status_inventario'] !== 'ignorado')) {
-                // Asumimos un precio de compra igual al precio_unitario del pedido, o 0 si no hay
                 $precio_compra = $dp['precio_unitario'] ?? 0;
                 $detallesEntrada[] = [
                     'id_producto' => $dp['id_producto'],

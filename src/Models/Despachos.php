@@ -21,14 +21,12 @@ class Despachos extends Conexion {
         $this->estado = $estado;
     }
     
-    // SETTERS
     public function setId($id) { $this->id = $id; return $this; }
     public function setIdNotaEntrega($id_nota_entrega) { $this->id_nota_entrega = $id_nota_entrega; return $this; }
     public function setNumeroDespacho($numero_despacho) { $this->numero_despacho = $numero_despacho; return $this; }
     public function setFechaDespacho($fecha_despacho) { $this->fecha_despacho = $fecha_despacho; return $this; }
     public function setEstado($estado) { $this->estado = $estado; return $this; }
 
-    // GETTERS
     public function getId() { return $this->id; }
     public function getIdNotaEntrega() { return $this->id_nota_entrega; }
     public function getNumeroDespacho() { return $this->numero_despacho; }
