@@ -125,7 +125,6 @@
                                                                 <input type="text" minlength="5" maxlength="25" name="direccion" class="form-control" id="direccion_<?= $c['id'] ?>" title="Entre 5 y 25 caracteres" placeholder="Dirección" value="<?php echo $c['direccion'] ?>" required />
                                                             </div>
                                                         </div>
-                                                        </div>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -239,7 +238,6 @@
                                                                 <input type="text" minlength="5" maxlength="25" name="direccion" class="form-control" id="direccion_in_<?= $cIN['id'] ?>" title="Entre 5 y 25 caracteres" placeholder="Dirección" value="<?php echo $cIN['direccion'] ?>" required />
                                                             </div>
                                                         </div>
-                                                        </div>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -310,7 +308,7 @@
                     </div>
                     <div class="col-md-6" id="input-apellido-container">
                         <label for="apellido" class="form-label">Apellido</label>
-                        <input id="input-apellido" type="text" minlength="3" maxlength="20" pattern="[A-Za-z\s]{3,}" title="Ingrese solo texto, entre 3 y 20 caracteres" name="apellido" class="form-control" id="apellido" placeholder="Apellido" required />
+                        <input type="text" minlength="3" maxlength="20" pattern="[A-Za-z\s]{3,}" title="Ingrese solo texto, entre 3 y 20 caracteres" name="apellido" class="form-control" id="apellido" placeholder="Apellido" required />
                     </div>
                 </div>
 
