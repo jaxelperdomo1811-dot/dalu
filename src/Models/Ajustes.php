@@ -21,9 +21,7 @@ class Ajustes extends Conexion {
     public function getClave() { return $this->clave; }
     public function getValor() { return $this->valor; }
     
-    /**
-     * Obtiene todos los ajustes como un arreglo asociativo [clave => valor]
-     */
+
     public function getAll() {
         try {
             $stmt = $this->prepare("SELECT * FROM ajustes");
@@ -40,9 +38,6 @@ class Ajustes extends Conexion {
         }
     }
 
-    /**
-     * Obtiene el valor de un ajuste específico por su clave
-     */
     public function get($clave) {
         try {
             $stmt = $this->prepare("SELECT valor FROM ajustes WHERE clave = :clave");
@@ -55,9 +50,6 @@ class Ajustes extends Conexion {
         }
     }
     
-    /**
-     * Actualiza el valor de un ajuste existente
-     */
     public function update() {
         try {
             $stmt = $this->prepare("UPDATE ajustes SET valor = :valor WHERE clave = :clave");

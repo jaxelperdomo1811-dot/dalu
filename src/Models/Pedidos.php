@@ -230,25 +230,16 @@ use Lenovo\Dalu\Models\Conexion;
             return $stmt->execute();
         }
         
-        /**
-         * Marcar pedido como recibido parcialmente
-         */
         public function marcarParcial() {
             $this->estado = 'parcial';
             return $this->updateEstado();
         }
         
-        /**
-         * Marcar pedido como recibido completo
-         */
         public function marcarRecibido() {
             $this->estado = 'recibido';
             return $this->updateEstado();
         }
         
-        /**
-         * Cancelar pedido
-         */
         public function cancel() {
             $this->estado = 'cancelado';
             return $this->updateEstado();
@@ -361,9 +352,6 @@ use Lenovo\Dalu\Models\Conexion;
             return $stmt->execute();
         }
         
-        // MÉTODOS PARA PRODUCTOS VAGOS
-        
-
         //  Obtener detalles pendientes de vincular a inventario
         public function getDetallesPendientes() {
             $sql = "SELECT dp.*, p.tipo as pedido_tipo

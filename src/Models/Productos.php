@@ -61,19 +61,11 @@ class Productos extends Conexion {
     public function getVentasTotales() { return $this->ventas_totales; }
     public function getVariantes() { return $this->variantes; }
     
-    /**
-     * Calcula el precio de venta de un producto aplicando la fórmula de ajustes y tasas.
-     * Fórmula: (Precio Compra * factor_envio * factor_ganancia) * (Tasa Zelle / Tasa BCV)
-     * 
-     * @param float $precio_compra El precio base de compra (ej. Precio Shein en USD)
-     * @return float El precio de venta calculado en la moneda base (USD)
-     */
     public function calcularPrecioVentaDesdeCompra($precio_compra) {
         $ajustesModel = new \Lenovo\Dalu\Models\Ajustes();
         $tasaModel = new \Lenovo\Dalu\Models\Tasa();
         
         // Traer porcentajes y convertirlos a factor multiplicador
-        // Ejemplo: 20% -> 1.20
         $pct_envio = $ajustesModel->get('porcentaje_envio') ?? 20;
         $pct_ganancia = $ajustesModel->get('porcentaje_ganancia') ?? 30;
         
@@ -87,10 +79,8 @@ class Productos extends Conexion {
         $tasa_bcv = $tasa_bcv_data ? floatval($tasa_bcv_data['valor']) : 1;
         $tasa_zelle = $tasa_zelle_data ? floatval($tasa_zelle_data['valor']) : $tasa_bcv; // Si no hay Zelle, usa BCV
         
-        // Evitar división por cero
         if ($tasa_bcv <= 0) $tasa_bcv = 1;
         
-        // Aplicar fórmula
         $precio_venta = ($precio_compra * $factor_envio * $factor_ganancia) * ($tasa_zelle / $tasa_bcv);
         
         return round($precio_venta, 2);
@@ -233,9 +223,6 @@ class Productos extends Conexion {
         return $producto;
     }
     
-    /**
-     * Actualizar producto
-     */
     public function update() {
         try {
             $sql = "UPDATE productos SET 
@@ -266,9 +253,6 @@ class Productos extends Conexion {
         }
     }
     
-    /**
-     * Eliminar producto (borrado lógico)
-     */
     public function delete() {
         $sql = "UPDATE productos SET activo = 0 WHERE id = :id";
         $stmt = $this->prepare($sql);
@@ -282,9 +266,6 @@ class Productos extends Conexion {
         return false;
     }
     
-    /**
-     * Activar producto
-     */
     public function activate() {
         $sql = "UPDATE productos SET activo = 1 WHERE id = :id";
         $stmt = $this->prepare($sql);
@@ -298,11 +279,6 @@ class Productos extends Conexion {
         return false;
     }
     
-    // ==================== CRUD VARIANTES ====================
-    
-    /**
-     * Insertar variantes para un producto
-     */
     private function insertVariantes($producto_id) {
         $sql = "INSERT INTO producto_variantes (
                     id_producto, codigo_producto, nombre_variante, atributos, 
@@ -336,9 +312,6 @@ class Productos extends Conexion {
         return true;
     }
     
-    /**
-     * Obtener todas las variantes de un producto
-     */
     public function getVariantesByProducto($producto_id) {
         $sql = "SELECT * FROM producto_variantes 
                 WHERE id_producto = :id_producto AND activo = 1 
@@ -350,7 +323,6 @@ class Productos extends Conexion {
         
         $variantes = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
-        // Decodificar atributos JSON
         foreach ($variantes as &$variante) {
             $variante['atributos'] = json_decode($variante['atributos'], true);
         }
@@ -358,9 +330,6 @@ class Productos extends Conexion {
         return $variantes;
     }
 
-    /**
-     * Obtener variantes inactivas de un producto
-     */
     public function getInactiveVariantesByProducto($producto_id) {
         $sql = "SELECT * FROM producto_variantes 
                 WHERE id_producto = :id_producto AND activo = 0 
@@ -380,9 +349,6 @@ class Productos extends Conexion {
         return $variantes;
     }
     
-    /**
-     * Obtener una variante específica por ID
-     */
     public function getVarianteById($variante_id) {
         $sql = "SELECT v.*, p.nombre as producto_nombre 
                 FROM producto_variantes v
@@ -401,9 +367,6 @@ class Productos extends Conexion {
         return $variante;
     }
     
-    /**
-     * Agregar variante a producto existente
-     */
     public function addVariante($producto_id, $variante_data) {
         try {
             $sql = "INSERT INTO producto_variantes (
@@ -438,9 +401,6 @@ class Productos extends Conexion {
         }
     }
     
-    /**
-     * Actualizar variante completa
-     */
     public function updateVariante($variante_id, $variante_data) {
         try {
             $sql = "UPDATE producto_variantes SET 
@@ -476,9 +436,6 @@ class Productos extends Conexion {
         }
     }
     
-    /**
-     * Actualizar stock de una variante
-     */
     public function updateVarianteStock($variante_id, $nuevo_stock) {
         try {
             $sql = "UPDATE producto_variantes SET stock = :stock WHERE id = :id";
@@ -497,9 +454,6 @@ class Productos extends Conexion {
         }
     }
     
-    /**
-     * Eliminar variante (borrado lógico)
-     */
     public function deleteVariante($variante_id) {
         try {
             $sql = "UPDATE producto_variantes SET activo = 0 WHERE id = :id";
@@ -516,10 +470,7 @@ class Productos extends Conexion {
             return false;
         }
     }
-
-    /**
-     * Reactivar variante
-     */
+    
     public function reactivateVariante($variante_id) {
         try {
             $sql = "UPDATE producto_variantes SET activo = 1 WHERE id = :id";
@@ -537,9 +488,6 @@ class Productos extends Conexion {
         }
     }
     
-    /**
-     * Desactivar todas las variantes de un producto
-     */
     private function desactivarVariantesByProducto($producto_id) {
         $sql = "UPDATE producto_variantes SET activo = 0 WHERE id_producto = :producto_id";
         $stmt = $this->prepare($sql);
@@ -547,9 +495,6 @@ class Productos extends Conexion {
         return $stmt->execute();
     }
     
-    /**
-     * Activar todas las variantes de un producto
-     */
     private function activarVariantesByProducto($producto_id) {
         $sql = "UPDATE producto_variantes SET activo = 1 WHERE id_producto = :producto_id";
         $stmt = $this->prepare($sql);
@@ -557,11 +502,6 @@ class Productos extends Conexion {
         return $stmt->execute();
     }
     
-    // ==================== MÉTODOS ADICIONALES ÚTILES ====================
-    
-    /**
-     * Buscar productos por categoría
-     */
     public function getByCategoria($categoria_id) {
         $sql = "SELECT * FROM productos 
                 WHERE id_categoria = :categoria_id AND activo = 1 
@@ -581,9 +521,6 @@ class Productos extends Conexion {
         return $productos;
     }
     
-    /**
-     * Buscar productos con bajo stock
-     */
     public function getLowStock() {
         $sql = "SELECT p.*, c.nombre as categoria_nombre, (SELECT COALESCE(SUM(v.stock), 0) FROM producto_variantes v WHERE v.id_producto = p.id AND v.activo = 1) AS stock_total
                 FROM productos p
@@ -596,9 +533,6 @@ class Productos extends Conexion {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
-    /**
-     * Obtener productos destacados (más vendidos)
-     */
     public function getTopSellers($limit = 10) {
         $sql = "SELECT p.*, c.nombre as categoria_nombre
                 FROM productos p
@@ -613,9 +547,6 @@ class Productos extends Conexion {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
-    /**
-     * Buscar productos por texto
-     */
     public function searchByText($texto) {
         $texto = "%{$texto}%";
         $sql = "SELECT p.*, c.nombre as categoria_nombre
@@ -639,9 +570,6 @@ class Productos extends Conexion {
         return $productos;
     }
     
-    /**
-     * Verificar si hay suficiente stock de una variante
-     */
     public function checkStock($variante_id, $cantidad) {
         $sql = "SELECT stock FROM producto_variantes WHERE id = :id AND activo = 1";
         $stmt = $this->prepare($sql);
@@ -652,9 +580,6 @@ class Productos extends Conexion {
         return $result && $result['stock'] >= $cantidad;
     }
     
-    /**
-     * Reducir stock al vender
-     */
     public function reducirStock($variante_id, $cantidad) {
         try {
             // Reducir stock de la variante
@@ -669,18 +594,6 @@ class Productos extends Conexion {
             if (!$stmt->execute() || $stmt->rowCount() == 0) {
                 return false;
             }
-            
-            // Obtener producto_id
-            $variante = $this->getVarianteById($variante_id);
-            if ($variante) {
-                // Incrementar ventas_totales del producto
-                $sql2 = "UPDATE productos SET ventas_totales = ventas_totales + 1 
-                         WHERE id = :producto_id";
-                $stmt2 = $this->prepare($sql2);
-                $stmt2->bindParam(":producto_id", $variante['id_producto']);
-                $stmt2->execute();
-            }
-            
             return true;
             
         } catch (PDOException $e) {
@@ -689,9 +602,6 @@ class Productos extends Conexion {
         }
     }
     
-    /**
-     * Obtener todas las variantes con bajo stock
-     */
     public function getVariantesLowStock() {
         $sql = "SELECT v.*, p.nombre as producto_nombre, p.stock_minimo
                 FROM producto_variantes v

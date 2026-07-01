@@ -47,7 +47,6 @@
             $stmt->bindParam(":correo", $this->correo);
             $stmt->bindParam(":telefono", $this->telefono);
             $stmt->bindParam(":direccion", $this->direccion);
-            $stmt->bindParam(":palabra_secreta", $this->palabra_secreta);
             if ($stmt->execute()) {
                 return true;
             } else {

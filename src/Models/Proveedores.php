@@ -82,7 +82,6 @@
         }
 
         public function search() {
-            // Selecting DB columns but aliasing them to match view expectations
             $sql = "SELECT id, razon_social as razon_social, rif, documento_identidad, nombre, apellido, telefono_1 as telefono, telefono_2 as telefono2, correo as email, direccion 
                     FROM proveedores WHERE active = 1";
             $stmt = $this->prepare($sql);
