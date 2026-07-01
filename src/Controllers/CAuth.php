@@ -12,7 +12,6 @@ $accion = isset($_GET['accion']) ? strtolower($_GET['accion']) : (isset($_POST['
 $a = isset($_GET['a']) ? strtolower($_GET['a']) : (isset($_POST['a']) ? strtolower($_POST['a']) : '');
 $esLogout = ($accion === 'logout' || $a === 'logout');
 
-// Manejar las rutas con un switch siguiendo el estándar de controladores procedimentales
 switch ($controladorVerificar) {
     case 'clogin':
     case 'crecoverpass':

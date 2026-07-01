@@ -12,8 +12,6 @@
     <script src="assets/js/js.js" defer></script>
     <script src="assets/js/cliente.js" defer></script>
     <script src="assets/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/css/intlTelInput.css">
-    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/js/intlTelInput.min.js" defer></script>
     <script src="assets/js/pages/clientes.js" defer></script>
     <script src="assets/DataTablet/datatables.min.js" defer></script>
     <script src="assets/DataTablet/tabla.js" defer></script>
@@ -26,6 +24,15 @@
 </head>
 
 <body>
+    <datalist id="prefijos-venezuela">
+        <option value="0412">
+        <option value="0414">
+        <option value="0416">
+        <option value="0422">
+        <option value="0424">
+        <option value="0426">
+    </datalist>
+
     <?php require_once __DIR__ . "/../Views/layout/header.php"; ?>
 
     <main>
@@ -109,9 +116,8 @@
                                                         <div class="row mb-3">
                                                             <div class="col-md-6">
                                                                 <label for="telefono_<?= $c['id'] ?>" class="form-label">Teléfono</label>
-                                                                <input type="tel" class="form-control phone-input" title="Ingrese un teléfono válido" id="telefono_<?= $c['id'] ?>" name="telefono"  value="<?php echo $c['telefono'] ?>" required />
-                                                                <span class="error-msg text-danger small" style="display: none; margin-top: 5px;"></span>
-                                                                <span class="valid-msg text-success small" style="display: none; margin-top: 5px;">✓ Válido</span>
+                                                                <input type="tel" class="form-control phone-input" inputmode="tel" list="prefijos-venezuela" placeholder="Ej: 04141234567" pattern="^(0(?:412|414|416|422|424|426)\d{7}|\+?[1-9]\d{6,14})$" title="Ingrese un formato nacional (ej. 04141234567) o internacional (ej. +584141234567)" id="telefono_<?= $c['id'] ?>" name="telefono"  value="<?php echo $c['telefono'] ?>" required />
+                                                                <div class="invalid-feedback phone-error">Número de teléfono inválido.</div>
                                                             </div>
                                                             <div class="col-md-6">
                                                                 <label for="correo_<?= $c['id'] ?>" class="form-label">Correo</label>
@@ -223,9 +229,8 @@
                                                         <div class="row mb-3">
                                                             <div class="col-md-6">
                                                                 <label for="telefono_in_<?= $cIN['id'] ?>" class="form-label">Teléfono</label>
-                                                                <input type="tel" class="form-control phone-input" title="Ingrese un teléfono válido" id="telefono_in_<?= $cIN['id'] ?>" name="telefono"  value="<?php echo $cIN['telefono'] ?>" required />
-                                                                <span class="error-msg text-danger small" style="display: none; margin-top: 5px;"></span>
-                                                                <span class="valid-msg text-success small" style="display: none; margin-top: 5px;">✓ Válido</span>
+                                                                <input type="tel" class="form-control phone-input" inputmode="tel" list="prefijos-venezuela" placeholder="Ej: 04141234567" pattern="^(0(?:412|414|416|422|424|426)\d{7}|\+?[1-9]\d{6,14})$" title="Ingrese un formato nacional (ej. 04141234567) o internacional (ej. +584141234567)" id="telefono_in_<?= $cIN['id'] ?>" name="telefono"  value="<?php echo $cIN['telefono'] ?>" required />
+                                                                <div class="invalid-feedback phone-error">Número de teléfono inválido.</div>
                                                             </div>
                                                             <div class="col-md-6">
                                                                 <label for="correo_in_<?= $cIN['id'] ?>" class="form-label">Correo</label>
@@ -317,9 +322,8 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label for="telefono-agregar" class="form-label">Teléfono</label>
-                        <input type="tel" class="form-control phone-input" title="Ingrese un teléfono válido" id="telefono-agregar" name="telefono"  required />
-                        <span class="error-msg text-danger small" style="display: none; margin-top: 5px;"></span>
-                        <span class="valid-msg text-success small" style="display: none; margin-top: 5px;">✓ Válido</span>
+                        <input type="tel" class="form-control phone-input" inputmode="tel" list="prefijos-venezuela" placeholder="Ej: 04141234567" pattern="^(0(?:412|414|416|422|424|426)\d{7}|\+?[1-9]\d{6,14})$" title="Ingrese un formato nacional (ej. 04141234567) o internacional (ej. +584141234567)" id="telefono-agregar" name="telefono"  required />
+                        <div class="invalid-feedback phone-error">Número de teléfono inválido.</div>
                     </div>
                     <div class="col-md-6">
                         <label for="correo" class="form-label">Correo</label>

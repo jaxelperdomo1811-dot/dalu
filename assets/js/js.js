@@ -65,20 +65,20 @@ toggleSidebar.addEventListener('click', function () {
 // Initialize Select2 globally
 function initSelect2() {
     if (typeof jQuery !== 'undefined' && $.fn.select2) {
-        $('select:not(.no-select2)').each(function() {
+        $('select:not(.no-select2)').each(function () {
             var $select = $(this);
             if ($select.hasClass('select2-hidden-accessible')) return; // Already initialized
-            
+
             var options = {
                 theme: 'bootstrap-5',
                 width: '100%'
             };
-            
+
             var $modal = $select.closest('.modal');
             if ($modal.length > 0) {
                 options.dropdownParent = $modal;
             }
-            
+
             $select.select2(options).on('select2:select select2:unselect select2:clear', function () {
                 this.dispatchEvent(new Event('change', { bubbles: true }));
             });
@@ -86,4 +86,6 @@ function initSelect2() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', initSelect2);
+document.addEventListener('DOMContentLoaded', () => {
+    initSelect2();
+});

@@ -71,6 +71,16 @@
             }
         }
 
+        public function getByDocumentoIdentidad($documentoIdentidad) {
+            $sql = "SELECT id, razon_social, rif, documento_identidad, nombre, apellido, telefono_1, telefono_2, correo, direccion 
+                    FROM proveedores WHERE documento_identidad = :doc1 OR rif = :doc2 LIMIT 1";
+            $stmt = $this->prepare($sql);
+            $stmt->bindParam(":doc1", $documentoIdentidad);
+            $stmt->bindParam(":doc2", $documentoIdentidad);
+            $stmt->execute();
+            return $stmt->fetch(\PDO::FETCH_ASSOC);
+        }
+
         public function search() {
             // Selecting DB columns but aliasing them to match view expectations
             $sql = "SELECT id, razon_social as razon_social, rif, documento_identidad, nombre, apellido, telefono_1 as telefono, telefono_2 as telefono2, correo as email, direccion 

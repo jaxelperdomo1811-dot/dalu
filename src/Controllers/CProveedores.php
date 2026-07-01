@@ -33,15 +33,20 @@
             $telefono2 = preg_replace('/[^\d+]/', '', $telefonoRaw2);
             
             // Normalizar si se omitió el código de país (asumiendo Venezuela por defecto)
-            if (preg_match('/^0[1-9]\d{9}$/', $telefono)) {
+            if (preg_match('/^0(?:412|414|416|422|424|426)\d{7}$/', $telefono)) {
                 $telefono = '+58' . substr($telefono, 1);
-            } elseif (preg_match('/^[1-9]\d{9}$/', $telefono)) {
+            } elseif (preg_match('/^(?:412|414|416|422|424|426)\d{7}$/', $telefono)) {
                 $telefono = '+58' . $telefono;
+            } elseif ($telefono !== '' && strpos($telefono, '+') !== 0) {
+                $telefono = '+' . $telefono;
             }
-            if (preg_match('/^0[1-9]\d{9}$/', $telefono2)) {
+
+            if (preg_match('/^0(?:412|414|416|422|424|426)\d{7}$/', $telefono2)) {
                 $telefono2 = '+58' . substr($telefono2, 1);
-            } elseif (preg_match('/^[1-9]\d{9}$/', $telefono2)) {
+            } elseif (preg_match('/^(?:412|414|416|422|424|426)\d{7}$/', $telefono2)) {
                 $telefono2 = '+58' . $telefono2;
+            } elseif ($telefono2 !== '' && strpos($telefono2, '+') !== 0) {
+                $telefono2 = '+' . $telefono2;
             }
 
             // Validar formato E.164 internacional
@@ -50,8 +55,8 @@
                 header("Location: ?c=proveedores&accion=view");
                 exit();
             }
-            if (!preg_match('/^\+[1-9]\d{6,14}$/', $telefono2)) {
-                $_SESSION['error'] = "Error: El número de teléfono no es válido o no tiene el formato correcto (+58...).";
+            if (!empty($telefono2) && !preg_match('/^\+[1-9]\d{6,14}$/', $telefono2)) {
+                $_SESSION['error'] = "Error: El número de teléfono 2 no es válido o no tiene el formato correcto (+58...).";
                 header("Location: ?c=proveedores&accion=view");
                 exit();
             }
@@ -90,10 +95,12 @@
             $telefono = preg_replace('/[^\d+]/', '', $telefonoRaw);
             
             // Normalizar si se omitió el código de país (asumiendo Venezuela por defecto)
-            if (preg_match('/^0[1-9]\d{9}$/', $telefono)) {
+            if (preg_match('/^0(?:412|414|416|422|424|426)\d{7}$/', $telefono)) {
                 $telefono = '+58' . substr($telefono, 1);
-            } elseif (preg_match('/^[1-9]\d{9}$/', $telefono)) {
+            } elseif (preg_match('/^(?:412|414|416|422|424|426)\d{7}$/', $telefono)) {
                 $telefono = '+58' . $telefono;
+            } elseif ($telefono !== '' && strpos($telefono, '+') !== 0) {
+                $telefono = '+' . $telefono;
             }
 
             // Validar formato E.164 internacional
@@ -157,6 +164,20 @@
             header('Content-Type: application/json');
             $tipoPersona = $_GET['tipo_persona'] ?? '';
             $cedula = $_GET['cedula'] ?? '';
+
+            if (empty($tipoPersona) || empty($cedula)) {
+                echo json_encode(['error' => 'Faltan parámetros']);
+                exit;
+            }
+
+            $cedulaCompleta = trim($tipoPersona . $cedula);
+            $proveedorModel = new Proveedores();
+            $proveedorExistente = $proveedorModel->getByDocumentoIdentidad($cedulaCompleta);
+
+            if ($proveedorExistente) {
+                echo json_encode(['error_db' => 'El proveedor ya se encuentra registrado.']);
+                exit;
+            }
             
             $nacionalidad = str_replace('-', '', $tipoPersona);
             

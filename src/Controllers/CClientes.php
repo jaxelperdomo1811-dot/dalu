@@ -14,13 +14,15 @@
             $telefonoRaw = trim($_POST['phone_full'] ?? $_POST['telefono'] ?? '');
             $telefono = preg_replace('/[^\d+]/', '', $telefonoRaw);
             
-            if (preg_match('/^0[1-9]\d{9}$/', $telefono)) {
+            if (preg_match('/^0(?:412|414|416|422|424|426)\d{7}$/', $telefono)) {
                 $telefono = '+58' . substr($telefono, 1);
-            } elseif (preg_match('/^[1-9]\d{9}$/', $telefono)) {
+            } elseif (preg_match('/^(?:412|414|416|422|424|426)\d{7}$/', $telefono)) {
                 $telefono = '+58' . $telefono;
+            } elseif ($telefono !== '' && strpos($telefono, '+') !== 0) {
+                $telefono = '+' . $telefono;
             }
 
-            if (!preg_match('/^\+[1-9]\d{6,14}$/', $telefono)) {
+            if (!empty($telefono) && !preg_match('/^\+[1-9]\d{6,14}$/', $telefono)) {
                 $_SESSION['error'] = "Error: El número de teléfono no es válido o no tiene el formato correcto (+58...).";
                 header("Location: ?c=clientes&accion=view");
                 exit();
@@ -57,14 +59,15 @@
             $telefonoRaw = trim($_POST['phone_full'] ?? $_POST['telefono'] ?? '');
             $telefono = preg_replace('/[^\d+]/', '', $telefonoRaw);
             
-            if (preg_match('/^0[1-9]\d{9}$/', $telefono)) {
+            if (preg_match('/^0(?:412|414|416|422|424|426)\d{7}$/', $telefono)) {
                 $telefono = '+58' . substr($telefono, 1);
-            } elseif (preg_match('/^[1-9]\d{9}$/', $telefono)) {
+            } elseif (preg_match('/^(?:412|414|416|422|424|426)\d{7}$/', $telefono)) {
                 $telefono = '+58' . $telefono;
+            } elseif ($telefono !== '' && strpos($telefono, '+') !== 0) {
+                $telefono = '+' . $telefono;
             }
-            file_put_contents(__DIR__.'/debug_telefono.txt', "update processed: '$telefono'\n", FILE_APPEND);
 
-            if (!preg_match('/^\+[1-9]\d{6,14}$/', $telefono)) {
+            if (!empty($telefono) && !preg_match('/^\+[1-9]\d{6,14}$/', $telefono)) {
                 $_SESSION['error'] = "Error: El número de teléfono no es válido o no tiene el formato correcto (+58...).";
                 header("Location: ?c=clientes&accion=view");
                 exit();
@@ -120,6 +123,20 @@
             header('Content-Type: application/json');
             $tipoPersona = $_GET['tipo_persona'] ?? '';
             $cedula = $_GET['cedula'] ?? '';
+            
+            if (empty($tipoPersona) || empty($cedula)) {
+                echo json_encode(['error' => 'Faltan parámetros']);
+                exit;
+            }
+
+            $cedulaCompleta = trim($tipoPersona . $cedula);
+            $clienteModel = new Clientes();
+            $clienteExistente = $clienteModel->getByCedula($cedulaCompleta);
+
+            if ($clienteExistente) {
+                echo json_encode(['error_db' => 'El cliente ya se encuentra registrado.']);
+                exit;
+            }
             
             $nacionalidad = str_replace('-', '', $tipoPersona);
             

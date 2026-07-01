@@ -320,7 +320,6 @@ use Lenovo\Dalu\Models\Conexion;
         }
         
 
-        // Actualizar detalle
         public function updateDetalle($detalle_id, $detalle_data) {
             $sql = "UPDATE detalles_pedido SET 
                         tipo = :tipo,

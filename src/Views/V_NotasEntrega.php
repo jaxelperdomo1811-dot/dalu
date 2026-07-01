@@ -133,10 +133,10 @@
                                             <button type="button" class="btn btn-sm btn-warning m-1" data-bs-toggle="modal" data-bs-target="#modalAvanzarEstadoNE<?= $n['id'] ?>" <?= in_array($n['estado'], ['entregado','cancelado']) ? ' disabled' : '' ?>>Siguiente estado</button>
                                             
                                             <?php if ($n['puede_despachar']): ?>
-                                            <form action="?c=Despacho&accion=insert" method="POST" class="d-inline">
-                                                <input type="hidden" name="id_nota_entrega" value="<?= $n['id'] ?>">
+                                            <!-- <form action="?c=Despacho&accion=insert" method="POST" class="d-inline">
+                                                <input type="hidden" name="id_nota_entrega" value=" //$n['id'] ?>">
                                                 <button type="submit" class="btn btn-sm btn-primary m-1" onclick="return confirm('¿Crear orden de despacho para esta nota?')">Crear Despacho</button>
-                                            </form>
+                                            </form> -->
                                             <?php endif; ?>
 
                                             <button type="button" class="btn btn-sm btn-danger m-1" data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminarNE<?= $n['id'] ?>" <?= in_array($n['estado'], ['cancelado']) ? ' disabled' : '' ?>>Cancelar</button>
