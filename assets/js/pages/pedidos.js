@@ -84,6 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 selVar.innerHTML = '<option value="">-- Variante --</option>';
                 stockInfo.innerText = '';
                 inPre.value = '';
+                inCant.removeAttribute('max');
                 
                 if (prodId && window.PRODUCTS) {
                     const prod = window.PRODUCTS.find(p => p.id == prodId);
@@ -108,15 +109,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             $(selVar).on('change', (e) => {
                 const selected = selVar.options[selVar.selectedIndex];
+                inCant.removeAttribute('max');
                 if (selected && selected.dataset.precio) {
                     inPre.value = selected.dataset.precio;
                     
                     if (selected.dataset.stock) {
                         stockInfo.innerText = `Disp: ${selected.dataset.stock}`;
-                        inCant.max = selected.dataset.stock;
-                        if (parseInt(inCant.value) > parseInt(selected.dataset.stock)) {
-                            inCant.value = selected.dataset.stock;
-                        }
                     } else {
                         stockInfo.innerText = '';
                     }
