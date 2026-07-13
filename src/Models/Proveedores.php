@@ -1,8 +1,9 @@
 <?php
     namespace Lenovo\Dalu\Models;
     use Lenovo\Dalu\Models\Conexion;
+    use Lenovo\Dalu\Interfaces\IProveedores;
 
-    class Proveedores extends Conexion {
+    class Proveedores extends Conexion implements IProveedores {
         private $id;
         private $nombre;
         private $apellido;

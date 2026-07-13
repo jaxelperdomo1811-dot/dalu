@@ -30,6 +30,13 @@
             break;
             
         case 'insertCliente':
+            // Cargar tasa actual
+            $tasaModel = new \Lenovo\Dalu\Models\Tasa();
+            $tasaActual = $tasaModel->getLatest();
+            if (!$tasaActual || empty($tasaActual['valor']) || floatval($tasaActual['valor']) <= 0) {
+                $tasaActual = ['valor' => 1.0];
+            }
+
             $idCliente = $_POST['id_cliente'] ?? null;
             
             if (empty($idCliente)) {

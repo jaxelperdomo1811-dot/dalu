@@ -74,30 +74,25 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <div class="variant-rows"></div>`;
 
-        const getVariantExtrasHtml = (categoryName, index, values = {}) => {
-            const n = categoryName.toLowerCase();
-            const field = (label, name, type = 'text', value = '') => `
+        let dynamicCampos = [];
+
+        const renderVariantExtrasHtml = (index, values = {}) => {
+            let html = '<div class="row">';
+            dynamicCampos.forEach(campo => {
+                let type = campo.tipo || 'text';
+                let label = campo.nombre.charAt(0).toUpperCase() + campo.nombre.slice(1);
+                let val = escapeHtml(values[campo.nombre] || '');
+                html += `
                 <div class="col-md-6 mb-3">
                     <label class="form-label">${label}</label>
-                    <input type="${type}" name="variantes[${index}][${name}]" class="form-control" placeholder="${label}" value="${escapeHtml(value)}" />
+                    <input type="${type}" name="variantes[${index}][${campo.nombre}]" class="form-control" placeholder="${label}" value="${val}" />
                 </div>`;
-
-            if (n.includes('ropa') || n.includes('camisa') || n.includes('vestido') || n.includes('calzado') || n.includes('zapato') || n.includes('cartera') || n.includes('carteras') || n.includes('bisuter') || n.includes('bisutería')) {
-                return `<div class="row">${field('Talla', 'talla', 'text', values.talla)}${field('Color', 'color', 'text', values.color)}</div>`;
-            }
-
-            if (n.includes('perfume') || n.includes('fragancia') || n.includes('colonia')) {
-                return `<div class="row">${field('Volumen (ml)', 'volumen_ml', 'number', values.volumen_ml)}${field('Fragancia', 'fragancia', 'text', values.fragancia)}</div>`;
-            }
-
-            if (n.includes('cosmet') || n.includes('maquill') || n.includes('piel') || n.includes('spf')) {
-                return `<div class="row">${field('SPF', 'spf', 'number', values.spf)}${field('Tipo de piel', 'tipo_piel', 'text', values.tipo_piel)}${field('Volumen (ml)', 'volumen_ml', 'number', values.volumen_ml)}${field('Fragancia', 'fragancia', 'text', values.fragancia)}</div>`;
-            }
-
-            return '';
+            });
+            html += '</div>';
+            return html;
         };
 
-        const buildVariantRow = (index, category, values = {}) => {
+        const buildVariantRow = (index, values = {}) => {
             const idInput = values.id ? `<input type="hidden" name="variantes[${index}][id]" value="${escapeHtml(values.id)}" />` : '';
             return `
             <div class="card mb-3 variant-row" data-index="${index}" data-variant-id="${values.id || ''}">
@@ -137,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <input type="file" accept="image/*" name="imagen_variante[${index}]" class="form-control" />
                         </div>
                     </div>
-                    <div class="variant-extra-fields">${getVariantExtrasHtml(category, index, values)}</div>
+                    <div class="variant-extra-fields">${renderVariantExtrasHtml(index, values)}</div>
                 </div>
             </div>`;
         };
@@ -150,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (values.atributos && typeof values.atributos === 'object') {
                 Object.assign(normalizedValues, values.atributos);
             }
-            wrapper.innerHTML = buildVariantRow(index, getCategoryName(), normalizedValues);
+            wrapper.innerHTML = buildVariantRow(index, normalizedValues);
             rows.appendChild(wrapper.firstElementChild);
         };
 
@@ -181,7 +176,6 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         const updateVariantExtras = () => {
-            const category = getCategoryName();
             const rows = Array.from(dynamicContainer.querySelectorAll('.variant-row'));
             rows.forEach((row, index) => {
                 const values = {};
@@ -192,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
                 const extra = row.querySelector('.variant-extra-fields');
-                if (extra) extra.innerHTML = getVariantExtrasHtml(category, index, values);
+                if (extra) extra.innerHTML = renderVariantExtrasHtml(index, values);
             });
         };
 
@@ -231,13 +225,34 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        selectCat.addEventListener('change', () => {
-            renderDynamicAttributes(false);
+        const updateCamposAndRender = async (initial = false) => {
+            const catId = selectCat.value;
+            if (!catId) {
+                dynamicCampos = [];
+                renderDynamicAttributes(initial);
+                return;
+            }
+            try {
+                const res = await fetch(`?c=productos&accion=getCamposCategoria&id_categoria=${catId}`);
+                if (res.ok) {
+                    dynamicCampos = await res.json();
+                } else {
+                    dynamicCampos = [];
+                }
+            } catch (e) {
+                console.error(e);
+                dynamicCampos = [];
+            }
+            renderDynamicAttributes(initial);
             updateVariantExtras();
+        };
+
+        selectCat.addEventListener('change', () => {
+            updateCamposAndRender(false);
         });
 
         if (selectCat.value) {
-            renderDynamicAttributes(true);
+            updateCamposAndRender(true);
         }
     };
 
@@ -301,4 +316,78 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
+
+    window.abrirModalCrearCampo = function(btn = null) {
+        if (btn) {
+            window._currentCamposContainer = btn.closest('.mb-3').querySelector('.campos-container');
+        } else {
+            window._currentCamposContainer = null;
+        }
+        const modalEl = document.getElementById('modalCrearCampo');
+        if (modalEl && typeof bootstrap !== 'undefined') {
+            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+            document.getElementById('nuevo_campo_nombre').value = '';
+            document.getElementById('nuevo_campo_tipo').value = 'text';
+            modal.show();
+        }
+    };
+
+    window.guardarNuevoCampo = function() {
+        const nombre = document.getElementById('nuevo_campo_nombre').value.trim();
+        const tipo = document.getElementById('nuevo_campo_tipo').value;
+        if (!nombre) {
+            alert("El nombre es requerido");
+            return;
+        }
+
+        const formData = new URLSearchParams();
+        formData.append('nombre', nombre);
+        formData.append('tipo', tipo);
+
+        fetch('?c=categorias&accion=createCampo', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: formData.toString()
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Add to all campos containers
+                const containers = document.querySelectorAll('.campos-container');
+                containers.forEach(container => {
+                    const html = `
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="campos[]" value="${data.id}" id="add_campo_new_${data.id}">
+                            <label class="form-check-label" for="add_campo_new_${data.id}">
+                                ${escapeHtml(data.nombre)}
+                            </label>
+                        </div>
+                    </div>`;
+                    container.insertAdjacentHTML('beforeend', html);
+                });
+                
+                // Also check it in the current container
+                if (window._currentCamposContainer) {
+                    const newlyAdded = window._currentCamposContainer.querySelector(`input[value="${data.id}"]`);
+                    if (newlyAdded) newlyAdded.checked = true;
+                } else {
+                    // Si se creó desde la tabla de campos, recargar para verlo en la tabla
+                    window.location.reload();
+                    return;
+                }
+                
+                const modalEl = document.getElementById('modalCrearCampo');
+                bootstrap.Modal.getInstance(modalEl).hide();
+            } else {
+                alert(data.error || 'Error al crear el campo');
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Ocurrió un error");
+        });
+    };
 });

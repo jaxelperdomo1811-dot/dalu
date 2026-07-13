@@ -16,7 +16,11 @@ switch ($accion) {
         $categorias->setNombre($_POST['nombre'] ?? null)
                    ->setDescripcion($_POST['descripcion'] ?? null);
         try {
-            if ($categorias->insert()) {
+            $id = $categorias->insert();
+            if ($id) {
+                if (isset($_POST['campos']) && is_array($_POST['campos'])) {
+                    $categorias->setCampos($id, $_POST['campos']);
+                }
                 $_SESSION['success'] = "Categoría registrada exitosamente.";
             } else {
                 $_SESSION['error'] = "Error al registrar la categoría.";
@@ -34,11 +38,17 @@ switch ($accion) {
 
     case "update":
         $categorias = new Categorias();
-        $categorias->setId($_POST['id'] ?? null)
+        $id = $_POST['id'] ?? null;
+        $categorias->setId($id)
                    ->setNombre($_POST['nombre'] ?? null)
                    ->setDescripcion($_POST['descripcion'] ?? null);
         try {
             if ($categorias->update()) {
+                if (isset($_POST['campos']) && is_array($_POST['campos'])) {
+                    $categorias->setCampos($id, $_POST['campos']);
+                } else {
+                    $categorias->setCampos($id, []);
+                }
                 $_SESSION['success'] = "Categoría actualizada exitosamente.";
             } else {
                 $_SESSION['error'] = "Error al actualizar la categoría.";
@@ -77,6 +87,71 @@ switch ($accion) {
         header("Location: ?c=productos&accion=view&tab=categorias");
         exit();
         break;
+        
+    case "createCampo":
+        require_once __DIR__ . "/../Models/CamposVariante.php";
+        $campo = new \Lenovo\Dalu\Models\CamposVariante();
+        $campo->setNombre($_POST['nombre']);
+        $campo->setTipo($_POST['tipo'] ?? 'text');
+        
+        $id = $campo->insert();
+        if ($id) {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => true, 'id' => $id, 'nombre' => $_POST['nombre']]);
+        } else {
+            http_response_code(500);
+            header('Content-Type: application/json');
+            echo json_encode(['error' => 'Error al crear el campo']);
+        }
+        exit();
+        
+    case "updateCampo":
+        require_once __DIR__ . "/../Models/CamposVariante.php";
+        $campo = new \Lenovo\Dalu\Models\CamposVariante();
+        $campo->setId($_POST['id']);
+        $campo->setNombre($_POST['nombre']);
+        $campo->setTipo($_POST['tipo'] ?? 'text');
+        
+        if ($campo->update()) {
+            $_SESSION['success'] = "Campo actualizado exitosamente.";
+        } else {
+            $_SESSION['error'] = "Error al actualizar el campo.";
+        }
+        header("Location: ?c=productos&accion=view&tab=categorias");
+        exit();
+
+    case "deleteCampo":
+        require_once __DIR__ . "/../Models/CamposVariante.php";
+        $campo = new \Lenovo\Dalu\Models\CamposVariante();
+        $campo->setId($_POST['id']);
+        
+        if ($campo->delete()) {
+            $_SESSION['success'] = "Campo inhabilitado exitosamente.";
+        } else {
+            $_SESSION['error'] = "Error al inhabilitar el campo.";
+        }
+        header("Location: ?c=productos&accion=view&tab=categorias");
+        exit();
+
+    case "activeCampo":
+        require_once __DIR__ . "/../Models/CamposVariante.php";
+        $campo = new \Lenovo\Dalu\Models\CamposVariante();
+        $campo->setId($_POST['id']);
+        
+        if ($campo->activate()) {
+            $_SESSION['success'] = "Campo activado exitosamente.";
+        } else {
+            $_SESSION['error'] = "Error al activar el campo.";
+        }
+        header("Location: ?c=productos&accion=view&tab=categorias");
+        exit();
+        
+    case "getTodosCampos":
+        require_once __DIR__ . "/../Models/CamposVariante.php";
+        $campo = new \Lenovo\Dalu\Models\CamposVariante();
+        header('Content-Type: application/json');
+        echo json_encode($campo->search());
+        exit();
 
     default:
         http_response_code(404);

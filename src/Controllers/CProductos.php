@@ -25,7 +25,17 @@ switch($accion) {
         unset($pIN);
 
         $categorias = (new Categorias())->search();
+        foreach ($categorias as &$c) {
+            $c['campos'] = (new Categorias())->getCampos($c['id']);
+        }
+        unset($c);
+
         $categoriasInactivas = (new Categorias())->searchInactive();
+        
+        require_once __DIR__ . "/../Models/CamposVariante.php";
+        $todosCampos = (new \Lenovo\Dalu\Models\CamposVariante())->search();
+        $camposInactivos = (new \Lenovo\Dalu\Models\CamposVariante())->searchInactive();
+        
         require_once __DIR__ . "/../Views/V_Productos.php";
         break;
     
@@ -93,13 +103,12 @@ case "insert":
             if (!empty($variante['nombre_variante']) && isset($variante['stock'])) {
                 $atributos = [];
                 
-                // Construir atributos dinámicos según tipo de producto
-                if (!empty($variante['talla'])) $atributos['talla'] = $variante['talla'];
-                if (!empty($variante['color'])) $atributos['color'] = $variante['color'];
-                if (!empty($variante['volumen_ml'])) $atributos['volumen_ml'] = $variante['volumen_ml'];
-                if (!empty($variante['spf'])) $atributos['spf'] = $variante['spf'];
-                if (!empty($variante['fragancia'])) $atributos['fragancia'] = $variante['fragancia'];
-                if (!empty($variante['tipo_piel'])) $atributos['tipo_piel'] = $variante['tipo_piel'];
+                $camposCategoria = (new Categorias())->getCampos($_POST['id_categoria']);
+                foreach ($camposCategoria as $campo) {
+                    if (!empty($variante[$campo['nombre']])) {
+                        $atributos[$campo['nombre']] = $variante[$campo['nombre']];
+                    }
+                }
                 
                 $imagen_variante = null;
 
@@ -249,12 +258,12 @@ case "update":
                 foreach ($_POST['variantes'] as $index => $v) {
                     if (!empty($v['nombre_variante']) && isset($v['stock'])) {
                         $atributos = [];
-                        if (!empty($v['talla'])) $atributos['talla'] = $v['talla'];
-                        if (!empty($v['color'])) $atributos['color'] = $v['color'];
-                        if (!empty($v['volumen_ml'])) $atributos['volumen_ml'] = $v['volumen_ml'];
-                        if (!empty($v['spf'])) $atributos['spf'] = $v['spf'];
-                        if (!empty($v['fragancia'])) $atributos['fragancia'] = $v['fragancia'];
-                        if (!empty($v['tipo_piel'])) $atributos['tipo_piel'] = $v['tipo_piel'];
+                        $camposCategoria = (new Categorias())->getCampos($_POST['id_categoria']);
+                        foreach ($camposCategoria as $campo) {
+                            if (!empty($v[$campo['nombre']])) {
+                                $atributos[$campo['nombre']] = $v[$campo['nombre']];
+                            }
+                        }
 
                         $imagen_variante = !empty($v['imagen_variante_actual']) ? $v['imagen_variante_actual'] : null;
 
@@ -462,13 +471,14 @@ case "update":
             exit();
         }
         
+        $productoObj = (new Productos())->getById($_POST['id_producto']);
+        $camposCategoria = (new Categorias())->getCampos($productoObj['id_categoria']);
         $atributos = [];
-        if (!empty($_POST['talla'])) $atributos['talla'] = $_POST['talla'];
-        if (!empty($_POST['color'])) $atributos['color'] = $_POST['color'];
-        if (!empty($_POST['volumen_ml'])) $atributos['volumen_ml'] = $_POST['volumen_ml'];
-        if (!empty($_POST['spf'])) $atributos['spf'] = $_POST['spf'];
-        if (!empty($_POST['fragancia'])) $atributos['fragancia'] = $_POST['fragancia'];
-        if (!empty($_POST['tipo_piel'])) $atributos['tipo_piel'] = $_POST['tipo_piel'];
+        foreach ($camposCategoria as $campo) {
+            if (!empty($_POST[$campo['nombre']])) {
+                $atributos[$campo['nombre']] = $_POST[$campo['nombre']];
+            }
+        }
         
         $variante_data = [
             'codigo_producto' => !empty($_POST['codigo_producto']) ? $_POST['codigo_producto'] : null,
@@ -509,13 +519,14 @@ case "update":
             exit();
         }
         
+        $productoObj = (new Productos())->getVarianteById($_POST['variante_id']);
+        $camposCategoria = (new Categorias())->getCampos($productoObj['id_categoria']);
         $atributos = [];
-        if (!empty($_POST['talla'])) $atributos['talla'] = $_POST['talla'];
-        if (!empty($_POST['color'])) $atributos['color'] = $_POST['color'];
-        if (!empty($_POST['volumen_ml'])) $atributos['volumen_ml'] = $_POST['volumen_ml'];
-        if (!empty($_POST['spf'])) $atributos['spf'] = $_POST['spf'];
-        if (!empty($_POST['fragancia'])) $atributos['fragancia'] = $_POST['fragancia'];
-        if (!empty($_POST['tipo_piel'])) $atributos['tipo_piel'] = $_POST['tipo_piel'];
+        foreach ($camposCategoria as $campo) {
+            if (!empty($_POST[$campo['nombre']])) {
+                $atributos[$campo['nombre']] = $_POST[$campo['nombre']];
+            }
+        }
         
         $variante_data = [
             'codigo_producto' => !empty($_POST['codigo_producto']) ? $_POST['codigo_producto'] : null,
@@ -619,6 +630,18 @@ case "update":
         }
         header('Content-Type: application/json');
         echo json_encode($producto);
+        exit();
+        break;
+    
+    case "getCamposCategoria":
+        if (empty($_GET['id_categoria'])) {
+            header('Content-Type: application/json');
+            echo json_encode([]);
+            exit();
+        }
+        $campos = (new Categorias())->getCampos($_GET['id_categoria']);
+        header('Content-Type: application/json');
+        echo json_encode($campos);
         exit();
         break;
     

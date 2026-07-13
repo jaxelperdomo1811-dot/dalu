@@ -1,8 +1,8 @@
 <?php
     namespace Lenovo\Dalu\Models;
     use Lenovo\Dalu\Models\Conexion;
-
-    class Roles extends Conexion {
+    use Lenovo\Dalu\Interfaces\IRoles;
+    class Roles extends Conexion implements IRoles {
         private $id;
         private $nombre;
         private $descripcion;

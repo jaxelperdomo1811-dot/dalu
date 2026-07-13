@@ -150,11 +150,22 @@
                 </div>
 
                 <div class="tab-pane fade" id="categorias">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h1 class="titulo text-black">Categoría de Productos</h1>
-                        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarCategoria">+ Nueva
-                        Categoría</button>
-                    </div>
+                    <ul class="nav nav-tabs mb-3" id="subCategoriasTabs" role="tablist">
+                        <li class="nav-item">
+                            <button class="nav-link active" id="sub-categorias-tab" data-bs-toggle="tab" data-bs-target="#subCategorias" type="button">Categorías de Productos</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" id="sub-campos-tab" data-bs-toggle="tab" data-bs-target="#subCampos" type="button">Campos de Categoría</button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="subCategoriasTabsContent">
+                        <div class="tab-pane fade show active" id="subCategorias">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h1 class="titulo text-black">Categoría de Productos</h1>
+                                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarCategoria">+ Nueva
+                                Categoría</button>
+                            </div>
 
                     <!-- Tabs de Bootstrap -->
                     <ul class="nav nav-tabs mb-3" id="categoriaTabs" role="tablist">
@@ -214,6 +225,26 @@
                                                                     <label for="descripcion_input" class="form-label">Descripción</label>
                                                                     <textarea class="form-control" id="descripcion_input" name="descripcion"
                                                                         rows="3"><?= $c['descripcion'] ?></textarea>
+                                                                </div>
+                                                                <div class="mb-3">
+                                                                    <label class="form-label d-block">Campos de Variante</label>
+                                                                    <div class="row campos-container">
+                                                                        <?php 
+                                                                        $camposIds = array_column($c['campos'] ?? [], 'id');
+                                                                        foreach($todosCampos ?? [] as $tc): 
+                                                                            $checked = in_array($tc['id'], $camposIds) ? 'checked' : '';
+                                                                        ?>
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-check">
+                                                                                <input class="form-check-input" type="checkbox" name="campos[]" value="<?= $tc['id'] ?>" id="edit_campo_<?= $c['id'] ?>_<?= $tc['id'] ?>" <?= $checked ?>>
+                                                                                <label class="form-check-label" for="edit_campo_<?= $c['id'] ?>_<?= $tc['id'] ?>">
+                                                                                    <?= htmlspecialchars($tc['nombre']) ?>
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <?php endforeach; ?>
+                                                                    </div>
+                                                                    <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="abrirModalCrearCampo(this)">+ Crear nuevo campo</button>
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer">
@@ -301,6 +332,26 @@
                                                                     <textarea class="form-control" id="descripcion_input" name="descripcion"
                                                                         rows="3"><?= $cIN['descripcion'] ?></textarea>
                                                                 </div>
+                                                                <div class="mb-3">
+                                                                    <label class="form-label d-block">Campos de Variante</label>
+                                                                    <div class="row campos-container">
+                                                                        <?php 
+                                                                        $camposIds = array_column($cIN['campos'] ?? [], 'id');
+                                                                        foreach($todosCampos ?? [] as $tc): 
+                                                                            $checked = in_array($tc['id'], $camposIds) ? 'checked' : '';
+                                                                        ?>
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-check">
+                                                                                <input class="form-check-input" type="checkbox" name="campos[]" value="<?= $tc['id'] ?>" id="edit_campo_<?= $cIN['id'] ?>_<?= $tc['id'] ?>" <?= $checked ?>>
+                                                                                <label class="form-check-label" for="edit_campo_<?= $cIN['id'] ?>_<?= $tc['id'] ?>">
+                                                                                    <?= htmlspecialchars($tc['nombre']) ?>
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <?php endforeach; ?>
+                                                                    </div>
+                                                                    <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="abrirModalCrearCampo(this)">+ Crear nuevo campo</button>
+                                                                </div>
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-secondary"
@@ -341,6 +392,163 @@
                         </div>
 
 
+                            </div>
+                        </div>
+                        
+                        <div class="tab-pane fade" id="subCampos">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h1 class="titulo text-black">Campos de Variante</h1>
+                                <button class="btn btn-success" onclick="abrirModalCrearCampo()">+ Nuevo Campo</button>
+                            </div>
+
+                            <!-- Tabs Activos/Inactivos para Campos -->
+                            <ul class="nav nav-tabs mb-3" id="camposTabs" role="tablist">
+                                <li class="nav-item">
+                                    <button class="nav-link active" id="campos_activos-tab" data-bs-toggle="tab" data-bs-target="#camposActivos" type="button">Activos</button>
+                                </li>
+                                <li class="nav-item">
+                                    <button class="nav-link" id="campos_inactivos-tab" data-bs-toggle="tab" data-bs-target="#camposInactivos" type="button">Inactivos</button>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content">
+                                <!-- Campos Activos -->
+                                <div class="tab-pane fade show active" id="camposActivos">
+                                    <div class="table-responsive">
+                                        <table class="table-DT table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Nombre</th>
+                                                    <th>Tipo</th>
+                                                    <th>Estado</th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($todosCampos as $tc): ?>
+                                                <tr>
+                                                    <td><?= $tc['id'] ?></td>
+                                                    <td><?= htmlspecialchars($tc['nombre']) ?></td>
+                                                    <td><?= htmlspecialchars($tc['tipo']) ?></td>
+                                                    <td>
+                                                        <span class="badge bg-success">Activo</span>
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalEditarCampo<?= $tc['id'] ?>">Editar</button>
+                                                        <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalInhabilitarCampo<?= $tc['id'] ?>">Inhabilitar</button>
+                                                        
+                                                        <!-- Modal Editar Campo -->
+                                                        <div class="modal fade" id="modalEditarCampo<?= $tc['id'] ?>" tabindex="-1">
+                                                            <div class="modal-dialog modal-sm">
+                                                                <form action="?c=categorias&accion=updateCampo" method="POST" class="modal-content">
+                                                                    <input type="hidden" name="id" value="<?= $tc['id'] ?>">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title">Editar Campo</h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <div class="mb-2">
+                                                                            <label class="form-label">Nombre</label>
+                                                                            <input type="text" name="nombre" class="form-control" value="<?= htmlspecialchars($tc['nombre']) ?>" required>
+                                                                        </div>
+                                                                        <div class="mb-2">
+                                                                            <label class="form-label">Tipo de input</label>
+                                                                            <select name="tipo" class="form-select">
+                                                                                <option value="text" <?= $tc['tipo'] == 'text' ? 'selected' : '' ?>>Texto</option>
+                                                                                <option value="number" <?= $tc['tipo'] == 'number' ? 'selected' : '' ?>>Número</option>
+                                                                                <option value="color" <?= $tc['tipo'] == 'color' ? 'selected' : '' ?>>Color</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                                                        <button type="submit" class="btn btn-primary">Guardar</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Modal Inhabilitar Campo -->
+                                                        <div class="modal fade" id="modalInhabilitarCampo<?= $tc['id'] ?>" tabindex="-1">
+                                                            <div class="modal-dialog">
+                                                                <form action="?c=categorias&accion=deleteCampo" method="POST" class="modal-content">
+                                                                    <input type="hidden" name="id" value="<?= $tc['id'] ?>">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title">Confirmar inhabilitación</h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        ¿Estás seguro de que deseas inhabilitar el campo <?= htmlspecialchars($tc['nombre']) ?>?
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                                        <button type="submit" class="btn btn-danger">Inhabilitar</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <!-- Campos Inactivos -->
+                                <div class="tab-pane fade" id="camposInactivos">
+                                    <div class="table-responsive">
+                                        <table class="table-DT table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Nombre</th>
+                                                    <th>Tipo</th>
+                                                    <th>Estado</th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($camposInactivos as $tcIN): ?>
+                                                <tr>
+                                                    <td><?= $tcIN['id'] ?></td>
+                                                    <td><?= htmlspecialchars($tcIN['nombre']) ?></td>
+                                                    <td><?= htmlspecialchars($tcIN['tipo']) ?></td>
+                                                    <td>
+                                                        <span class="badge bg-danger">Inactivo</span>
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#modalActivarCampo<?= $tcIN['id'] ?>">Activar</button>
+                                                        
+                                                        <!-- Modal Activar Campo -->
+                                                        <div class="modal fade" id="modalActivarCampo<?= $tcIN['id'] ?>" tabindex="-1">
+                                                            <div class="modal-dialog">
+                                                                <form action="?c=categorias&accion=activeCampo" method="POST" class="modal-content">
+                                                                    <input type="hidden" name="id" value="<?= $tcIN['id'] ?>">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title">Confirmar activación</h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        ¿Estás seguro de que deseas activar el campo <?= htmlspecialchars($tcIN['nombre']) ?>?
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                                        <button type="submit" class="btn btn-success">Activar</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!-- Inventario -->
@@ -736,6 +944,22 @@
                         <textarea class="form-control" id="descripcion_input" name="descripcion"
                             rows="3"></textarea>
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label d-block">Campos de Variante</label>
+                        <div class="row campos-container">
+                            <?php foreach($todosCampos ?? [] as $tc): ?>
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="campos[]" value="<?= $tc['id'] ?>" id="add_campo_<?= $tc['id'] ?>">
+                                    <label class="form-check-label" for="add_campo_<?= $tc['id'] ?>">
+                                        <?= htmlspecialchars($tc['nombre']) ?>
+                                    </label>
+                                </div>
+                            </div>
+                            <?php endforeach; ?>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="abrirModalCrearCampo(this)">+ Crear nuevo campo</button>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -770,6 +994,36 @@
                 </div>
             </div>
         </div>
+
+    <!-- Modal Crear Nuevo Campo -->
+    <div class="modal fade" id="modalCrearCampo" tabindex="-1" style="z-index: 1060;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Nuevo Campo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-2">
+                        <label class="form-label">Nombre del campo (ej: material, color)</label>
+                        <input type="text" id="nuevo_campo_nombre" class="form-control" placeholder="Nombre">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">Tipo de input</label>
+                        <select id="nuevo_campo_tipo" class="form-select">
+                            <option value="text">Texto</option>
+                            <option value="number">Número</option>
+                            <option value="color">Color</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="guardarNuevoCampo()">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
         <?php
         $ajustesModel = new \Lenovo\Dalu\Models\Ajustes();

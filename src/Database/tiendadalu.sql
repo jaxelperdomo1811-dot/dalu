@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 15-06-2026 a las 01:52:15
+-- Tiempo de generación: 11-07-2026 a las 18:16:37
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -84,7 +84,6 @@ CREATE TABLE `clientes` (
   `cedula` varchar(150) NOT NULL,
   `telefono` varchar(20) DEFAULT NULL,
   `direccion` varchar(255) DEFAULT NULL,
-  `palabra_secreta` varchar(256) DEFAULT NULL,
   `fecha_registro` timestamp NOT NULL DEFAULT current_timestamp(),
   `activo` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -93,34 +92,35 @@ CREATE TABLE `clientes` (
 -- Volcado de datos para la tabla `clientes`
 --
 
-INSERT INTO `clientes` (`id`, `nombre`, `apellido`, `correo`, `cedula`, `telefono`, `direccion`, `palabra_secreta`, `fecha_registro`, `activo`) VALUES
-(1, 'rollinera', 'perez', 'asasss@gmail.com', 'V-30218994', '+584260563224', '12123133', NULL, '2026-05-28 03:58:21', 1),
-(2, 'JENNYMAR COROMOTO', 'PEREZ COLMANARES', 'NIUSF@GMAIL.COM', 'V-16238398', '+584126749294', 'jdjdjdjdd', NULL, '2026-05-29 03:33:08', 1),
-(3, 'JONATHAN JOSE', 'YEPEZ DIAZ', 'DJDJxxLF@gmail.com', 'V-23834152', '+584165546097', 'JKAFDIHjhvdo7-vSd', NULL, '2026-05-29 20:18:23', 1),
-(4, 'LUIS MANUEL', 'PEREZ ANDRADE', '', 'V-30218990', '', '', NULL, '2026-06-03 03:41:27', 1),
-(12, 'MARIA CLAUDIA', 'SILVA ALVAREZ', NULL, 'V-30218956', NULL, NULL, NULL, '2026-06-03 04:02:28', 1),
-(13, 'Luis', 'Gonzales', NULL, 'V-32218992', NULL, NULL, NULL, '2026-06-03 04:10:11', 1),
-(14, 'Fabrica SA', '', 'NIUaaaSF@GMAIL.COM', 'J-30218990', '+584261289078', 'aqaqaaq1', NULL, '2026-06-03 18:00:40', 1),
-(15, 'FRANCISMAR PAOLA', 'ARROYO RODRIGUEZ', 'NI11aUSF@GMAIL.COM', 'V-30218957', '+584241289078', 'dwqdwfde2', NULL, '2026-06-03 18:02:02', 1),
-(16, 'ANDRES', 'GONZALEZ GONZALEZ', NULL, 'V-26276726', NULL, NULL, NULL, '2026-06-03 22:31:34', 1),
-(17, 'MANUEL RICARDO', 'SANCHEZ TORRES', NULL, 'V-26076726', NULL, NULL, NULL, '2026-06-03 22:31:48', 1),
-(18, 'JESUS ALEXANDER', 'PERDOMO PERDOMO', 'yowdwq21n25@gmail', 'V-27388616', '+584125242517', 'el molino ', 'manguangua', '2026-06-04 15:31:41', 1),
-(19, 'Maria', 'Perez', NULL, 'V-33551766', NULL, NULL, NULL, '2026-06-04 15:39:28', 1),
-(20, 'JESUS GREGORIO', 'PERDOMO ORTIZ', 'aaSF@GMAIL.COM', 'V-12371443', '+584245674001', 'su casa ', NULL, '2026-06-04 20:41:04', 1),
-(21, 'DANIELLA VALENTINA', 'LUNA DIAZ', 'NIUSjhbuggvyrfvyF@GMAIL.COM', 'V-30377063', '+584223174606', 'gtybkjgvtuooyt', NULL, '2026-06-04 21:07:36', 1),
-(22, 'LIVORIO ANTONIO', 'MORENO GIL', NULL, 'V-30377064', NULL, NULL, NULL, '2026-06-04 21:08:47', 1),
-(23, 'HONIS MARIA', 'PEREZ DE SOTO', 'qqdhghh@gmail.com', 'V-12884771', '+573211234567', 'xdawcrwverbvr', NULL, '2026-06-04 21:42:13', 1),
-(24, 'YESSIMAR MARIA', 'SOTO ANDRADE', 'NIZAXAXSWDUSF@GMAIL.COM', 'V-19571909', '+584220563224', '123434567', NULL, '2026-06-05 06:48:16', 1),
-(25, 'JAYKEL', 'PEREZ', NULL, 'V-31041911', NULL, NULL, NULL, '2026-06-05 12:18:20', 1),
-(26, 'jose', 'YEPEZ DIAZ', 'kkjjkhj@gmail.com', 'V-20517658', '+584165589169', 'kkkkkkk', NULL, '2026-06-05 14:12:01', 1),
-(28, 'Raul', 'YEPEZ ', 'xxkjjkhj@gmail.com', 'V-15424587', '+584125497898', 'yyyyyyyy', NULL, '2026-06-05 14:14:40', 1),
-(30, 'MARIA NELLY', 'MARQUEZ GUERRA', NULL, 'V-11899011', NULL, NULL, NULL, '2026-06-05 18:02:45', 0),
-(33, 'VIRGINIA ANTONIA', 'MENDOZA RAMOS', 'yessimarsoto909@gmail.com', 'V-19571908', '+584125244042', 'su casa ', 'arremangala empujala', '2026-06-06 22:25:39', 1),
-(38, 'CARMEN JACQUELINE', 'COLMENARES SEQUERA', NULL, 'V-13197426', NULL, NULL, NULL, '2026-06-10 16:14:57', 1),
-(39, 'elbimar', 'alvares', NULL, 'V-31367266', NULL, NULL, NULL, '2026-06-10 16:20:01', 1),
-(41, 'RAUL', 'SANCHEZ GUILARTE', NULL, 'V-23551758', NULL, NULL, NULL, '2026-06-10 23:50:15', 1),
-(46, 'josue', 'garcia', 'asdasd@gmail.com', 'V-99999999', '+580424536587', 'el molino 2', 'nuevo', '2026-06-12 14:08:57', 1),
-(48, 'JOSMARI ANDREINA', 'COLMENARES SEQUERA', NULL, 'V-30218991', NULL, NULL, NULL, '2026-06-13 16:42:26', 1);
+INSERT INTO `clientes` (`id`, `nombre`, `apellido`, `correo`, `cedula`, `telefono`, `direccion`, `fecha_registro`, `activo`) VALUES
+(1, 'rollinera', 'perez', 'asasss@gmail.com', 'V-30218994', '+584260563224', '12123133', '2026-05-28 03:58:21', 1),
+(2, 'JENNYMAR COROMOTO', 'PEREZ COLMANARES', 'NIUSF@GMAIL.COM', 'V-16238398', '+584126749294', 'jdjdjdjdd', '2026-05-29 03:33:08', 0),
+(3, 'JONATHAN JOSE', 'YEPEZ DIAZ', 'DJDJxxLF@gmail.com', 'V-23834152', '+584165546097', 'JKAFDIHjhvdo7-vSd', '2026-05-29 20:18:23', 1),
+(4, 'LUIS MANUEL', 'PEREZ ANDRADE', '', 'V-30218990', '', '', '2026-06-03 03:41:27', 1),
+(12, 'MARIA CLAUDIA', 'SILVA ALVAREZ', NULL, 'V-30218956', NULL, NULL, '2026-06-03 04:02:28', 1),
+(13, 'Luis', 'Gonzales', NULL, 'V-32218992', NULL, NULL, '2026-06-03 04:10:11', 1),
+(14, 'Fabrica SA', '', 'NIUaaaSF@GMAIL.COM', 'J-30218990', '+584261289078', 'aqaqaaq1', '2026-06-03 18:00:40', 0),
+(15, 'FRANCISMAR PAOLA', 'ARROYO RODRIGUEZ', 'NI11aUSF@GMAIL.COM', 'V-30218957', '+584241289078', 'dwqdwfde2', '2026-06-03 18:02:02', 1),
+(16, 'ANDRES', 'GONZALEZ GONZALEZ', NULL, 'V-26276726', NULL, NULL, '2026-06-03 22:31:34', 1),
+(17, 'MANUEL RICARDO', 'SANCHEZ TORRES', NULL, 'V-26076726', NULL, NULL, '2026-06-03 22:31:48', 1),
+(18, 'JESUS ALEXANDER', 'PERDOMO PERDOMO', 'yowdwq21n25@gmail', 'V-27388616', '+584125242517', 'el molino ', '2026-06-04 15:31:41', 1),
+(19, 'Maria', 'Perez', NULL, 'V-33551766', NULL, NULL, '2026-06-04 15:39:28', 1),
+(20, 'JESUS GREGORIO', 'PERDOMO ORTIZ', 'aaSF@GMAIL.COM', 'V-12371443', '+584245674001', 'su casa ', '2026-06-04 20:41:04', 1),
+(21, 'DANIELLA VALENTINA', 'LUNA DIAZ', 'NIUSjhbuggvyrfvyF@GMAIL.COM', 'V-30377063', '+584223174606', 'gtybkjgvtuooyt', '2026-06-04 21:07:36', 1),
+(22, 'LIVORIO ANTONIO', 'MORENO GIL', NULL, 'V-30377064', NULL, NULL, '2026-06-04 21:08:47', 1),
+(23, 'HONIS MARIA', 'PEREZ DE SOTO', 'qqdhghh@gmail.com', 'V-12884771', '+573211234567', 'xdawcrwverbvr', '2026-06-04 21:42:13', 1),
+(24, 'YESSIMAR MARIA', 'SOTO ANDRADE', 'NIZAXAXSWDUSF@GMAIL.COM', 'V-19571909', '+584220563224', '123434567', '2026-06-05 06:48:16', 1),
+(25, 'JAYKEL', 'PEREZ', NULL, 'V-31041911', NULL, NULL, '2026-06-05 12:18:20', 1),
+(26, 'jose', 'YEPEZ DIAZ', 'kkjjkhj@gmail.com', 'V-20517658', '+584165589169', 'kkkkkkk', '2026-06-05 14:12:01', 1),
+(28, 'Raul', 'YEPEZ ', 'xxkjjkhj@gmail.com', 'V-15424587', '+584125497898', 'yyyyyyyy', '2026-06-05 14:14:40', 1),
+(30, 'MARIA NELLY', 'MARQUEZ GUERRA', NULL, 'V-11899011', NULL, NULL, '2026-06-05 18:02:45', 0),
+(33, 'VIRGINIA ANTONIA', 'MENDOZA RAMOS', 'yessimarsoto909@gmail.com', 'V-19571908', '+584125244042', 'su casa ', '2026-06-06 22:25:39', 1),
+(38, 'CARMEN JACQUELINE', 'COLMENARES SEQUERA', NULL, 'V-13197426', NULL, NULL, '2026-06-10 16:14:57', 1),
+(39, 'elbimar', 'alvares', NULL, 'V-31367266', NULL, NULL, '2026-06-10 16:20:01', 1),
+(41, 'RAUL', 'SANCHEZ GUILARTE', NULL, 'V-23551758', NULL, NULL, '2026-06-10 23:50:15', 1),
+(46, 'josue', 'garcia', 'asdasd@gmail.com', 'V-99999999', '+580424536587', 'el molino 2', '2026-06-12 14:08:57', 1),
+(48, 'JOSMARI ANDREINA', 'COLMENARES SEQUERA', NULL, 'V-30218991', NULL, NULL, '2026-06-13 16:42:26', 1),
+(49, 'ana', 'yepez', 'sgyuf@gmail.com', 'V-23834156', '+584165546902', 'ngqfucd', '2026-07-06 16:06:53', 1);
 
 -- --------------------------------------------------------
 
@@ -145,14 +145,8 @@ CREATE TABLE `creditos` (
 --
 
 INSERT INTO `creditos` (`id`, `id_nota_entrega`, `porcentaje_inicial`, `monto_cuota_inicial`, `nro_cuotas`, `monto_por_cuota`, `frecuencia`, `estado`, `fecha_registro`) VALUES
-(1, 1, 40, 9.60, 4, 3.60, 'semanal', 'pendiente', '2026-06-03 22:32:14'),
-(2, 1, 60, 7.20, 2, 2.40, 'semanal', 'pendiente', '2026-06-04 02:21:50'),
-(3, 1, 60, 12.00, 5, 1.60, 'semanal', 'pendiente', '2026-06-04 15:39:28'),
-(4, 7, 40, 4.00, 4, 1.50, 'semanal', 'pagado', '2026-06-05 00:00:05'),
-(5, 13, 40, 0.82, 2, 0.62, 'semanal', 'pagado', '2026-06-07 04:18:52'),
-(6, 14, 40, 20.50, 2, 15.37, 'semanal', 'pendiente', '2026-06-10 16:20:01'),
-(7, 15, 40, 25.82, 4, 9.68, 'semanal', 'pendiente', '2026-06-10 23:54:30'),
-(8, 18, 40, 40.99, 1, 61.49, 'semanal', 'pendiente', '2026-06-12 00:44:05');
+(14, 26, 40, 61.68, 1, 92.52, 'semanal', 'pendiente', '2026-07-08 03:47:22'),
+(15, 28, 40, 92.52, 1, 138.78, 'semanal', 'pagado', '2026-07-08 13:46:26');
 
 -- --------------------------------------------------------
 
@@ -177,38 +171,10 @@ CREATE TABLE `creditos_cuotas` (
 --
 
 INSERT INTO `creditos_cuotas` (`id`, `id_credito`, `tipo_cuota`, `nro_cuota`, `monto`, `monto_restante`, `fecha_vencimiento`, `estado`, `fecha_pago`) VALUES
-(1, 1, 'inicial', 0, 9.60, 9.60, '2026-06-04', 'pendiente', NULL),
-(2, 1, 'regular', 1, 3.60, 3.60, '2026-06-11', 'pendiente', NULL),
-(3, 1, 'regular', 2, 3.60, 3.60, '2026-06-18', 'pendiente', NULL),
-(4, 1, 'regular', 3, 3.60, 3.60, '2026-06-25', 'pendiente', NULL),
-(5, 1, 'regular', 4, 3.60, 3.60, '2026-07-02', 'pendiente', NULL),
-(6, 2, 'inicial', 0, 7.20, 0.00, '2026-06-04', 'pagado', '2026-06-04 04:21:51'),
-(7, 2, 'regular', 1, 2.40, 2.40, '2026-06-11', 'pendiente', NULL),
-(8, 2, 'regular', 2, 2.40, 2.40, '2026-06-18', 'pendiente', NULL),
-(9, 3, 'inicial', 0, 12.00, 0.00, '2026-06-04', 'pagado', '2026-06-04 17:39:28'),
-(10, 3, 'regular', 1, 1.60, 1.60, '2026-06-11', 'pendiente', NULL),
-(11, 3, 'regular', 2, 1.60, 1.60, '2026-06-18', 'pendiente', NULL),
-(12, 3, 'regular', 3, 1.60, 1.60, '2026-06-25', 'pendiente', NULL),
-(13, 3, 'regular', 4, 1.60, 1.60, '2026-07-02', 'pendiente', NULL),
-(14, 3, 'regular', 5, 1.60, 1.60, '2026-07-09', 'pendiente', NULL),
-(15, 4, 'inicial', 0, 4.00, 0.00, '2026-06-05', 'pagado', '2026-06-05 02:00:05'),
-(16, 4, 'regular', 1, 1.50, 0.00, '2026-06-12', 'pagado', '2026-06-05 02:00:52'),
-(17, 4, 'regular', 2, 1.50, 0.00, '2026-06-19', 'pagado', '2026-06-05 02:02:09'),
-(18, 4, 'regular', 3, 1.50, 0.00, '2026-06-26', 'pagado', '2026-06-05 02:02:09'),
-(19, 4, 'regular', 4, 1.50, 0.00, '2026-07-03', 'pagado', '2026-06-05 02:02:42'),
-(20, 5, 'inicial', 0, 0.82, 0.00, '2026-06-07', 'pagado', '2026-06-07 06:18:52'),
-(21, 5, 'regular', 1, 0.62, 0.00, '2026-06-14', 'pagado', '2026-06-07 06:20:02'),
-(22, 5, 'regular', 2, 0.62, 0.00, '2026-06-21', 'pagado', '2026-06-07 06:20:48'),
-(23, 6, 'inicial', 0, 20.50, 0.00, '2026-06-10', 'pagado', '2026-06-10 18:20:01'),
-(24, 6, 'regular', 1, 15.37, 0.00, '2026-06-17', 'pagado', '2026-06-10 18:21:15'),
-(25, 6, 'regular', 2, 15.37, 10.74, '2026-06-24', 'pendiente', NULL),
-(26, 7, 'inicial', 0, 25.82, 0.00, '2026-06-11', 'pendiente', NULL),
-(27, 7, 'regular', 1, 9.68, 9.68, '2026-06-18', 'pendiente', NULL),
-(28, 7, 'regular', 2, 9.68, 9.68, '2026-06-25', 'pendiente', NULL),
-(29, 7, 'regular', 3, 9.68, 9.68, '2026-07-02', 'pendiente', NULL),
-(30, 7, 'regular', 4, 9.68, 9.68, '2026-07-09', 'pendiente', NULL),
-(31, 8, 'inicial', 0, 40.99, 0.00, '2026-06-12', 'pagado', '2026-06-12 02:44:05'),
-(32, 8, 'regular', 1, 61.49, 61.49, '2026-06-19', 'pendiente', NULL);
+(45, 14, 'inicial', 0, 61.68, 0.00, '2026-07-08', 'pagado', '2026-07-08 05:47:22'),
+(46, 14, 'regular', 1, 92.52, 0.00, '2026-07-15', 'pendiente', NULL),
+(47, 15, 'inicial', 0, 92.52, 0.00, '2026-07-08', 'pagado', '2026-07-08 15:46:26'),
+(48, 15, 'regular', 1, 138.78, 0.00, '2026-07-15', 'pagado', '2026-07-08 15:47:42');
 
 -- --------------------------------------------------------
 
@@ -231,7 +197,9 @@ CREATE TABLE `despachos` (
 
 INSERT INTO `despachos` (`id`, `id_nota_entrega`, `numero_despacho`, `fecha_despacho`, `estado`, `fecha_registro`) VALUES
 (1, 1, 'DSP-1780022201', '2026-05-29', 'entregado', '2026-05-29 02:37:19'),
-(3, 9, 'DSP-1780661915', '2026-06-05', 'entregado', '2026-06-05 12:18:35');
+(3, 9, 'DSP-1780661915', '2026-06-05', 'entregado', '2026-06-05 12:18:35'),
+(4, 19, 'DSP-1783451229', '2026-07-07', 'enviado', '2026-07-07 19:07:09'),
+(5, 27, 'DSP-1783512773', '2026-07-08', 'enviado', '2026-07-08 12:12:53');
 
 -- --------------------------------------------------------
 
@@ -260,7 +228,13 @@ INSERT INTO `detalles_entrada` (`id`, `id_entrada`, `id_variante`, `cantidad`, `
 (13, 21, 1, 40, 10.00),
 (14, 22, 46, 3, 10.00),
 (15, 23, 40, 20, 200.00),
-(16, 26, 47, 10, 5.00);
+(16, 26, 47, 10, 5.00),
+(17, 28, 50, 20, 80.00),
+(18, 32, 54, 10, 20.00),
+(19, 38, 46, 40, 7.00),
+(20, 40, 55, 10, 40.00),
+(21, 40, 56, 10, 40.00),
+(22, 41, 57, 10, 50.00);
 
 -- --------------------------------------------------------
 
@@ -289,29 +263,7 @@ CREATE TABLE `detalles_pedido` (
 --
 
 INSERT INTO `detalles_pedido` (`id`, `id_pedido`, `id_variante`, `tipo`, `imagen`, `link`, `fecha_registro`, `estado`, `nombre_producto`, `cantidad`, `precio_unitario`, `descripcion_producto`, `status_inventario`) VALUES
-(1, 3, NULL, 'proveedor', 'assets/img/products/sin_categoria/franela.png', '', '2026-05-28 23:19:45', 'pendiente', 'franela', 1, NULL, NULL, 'pendiente'),
-(2, 3, NULL, 'proveedor', '', 'facebook.com', '2026-05-28 23:19:45', 'pendiente', 'jean', 1, NULL, NULL, 'pendiente'),
-(3, 4, NULL, 'proveedor', 'assets/img/products/sin_categoria/franela.png', '', '2026-05-29 00:00:22', 'pendiente', 'franela', 1, NULL, NULL, 'vinculado'),
-(4, 5, NULL, 'proveedor', 'assets/img/products/sin_categoria/jean.png', '', '2026-05-29 01:04:15', 'pendiente', 'jean', 1, NULL, NULL, 'ignorado'),
-(5, 5, NULL, 'proveedor', '', 'https://us.shein.com/Women-s-Vest-Brasil-South-America-Flag-Print-Design-Exquisite-Elegant-And-Fashionable-Exuding-Feminine-Charm-Perfect-For-Holiday-Gifts-Mother-s-Day-Coachella-Music-Festival-Memorial-Day-Suitable-For-Spring-And-Summer-Suitable-For-Casual-Sports-Vacation-Travel-Beach-Wear-And-Daily-Wear-Widely-Versatile-Applicable-To-Various-Occasions-Ladies-Elegant-Suits-Blouses-Summer-Outfits-Vacation-Outfits-Women-Travel-Wear-Tank-Top-p-444142921.html?src_identifier=on%3DONE_THIRD_COMPONENT%60cn%3DONE_THIRD_COMPONENT_2%60hz%3D-%60jc%3DsheinPicks_10751%60ps%3D1_4&src_module=all&src_tab_page_id=page_home1780016622648&mallCode=1&pageListType=4&detailBusinessFrom=0-1_444142921%7C0-2', '2026-05-29 01:04:15', 'pendiente', 'franela brasil', 1, NULL, NULL, 'vinculado'),
-(6, 6, NULL, 'proveedor', '', '', '2026-05-29 03:51:47', 'pendiente', 'perfume sabroso', 1, NULL, NULL, 'ignorado'),
-(7, 6, NULL, 'proveedor', '', 'https://us.shein.com/Women-s-Vest-Brasil-South-America-Flag-Print-Design-Exquisite-Elegant-And-Fashionable-Exuding-Feminine-Charm-Perfect-For-Holiday-Gifts-Mother-s-Day-Coachella-Music-Festival-Memorial-Day-Suitable-For-Spring-And-Summer-Suitable-For-Casual-Sports-Vacation-Travel-Beach-Wear-And-Daily-Wear-Widely-Versatile-Applicable-To-Various-Occasions-Ladies-Elegant-Suits-Blouses-Summer-Outfits-Vacation-Outfits-Women-Travel-Wear-Tank-Top-p-444597816.html?src_identifier=on%3DONE_THIRD_COMPONENT%60cn%3DONE_THIRD_COMPONENT_2%60hz%3D-%60jc%3DsheinPicks_10751%60ps%3D1_4&src_module=all&src_tab_page_id=page_home1780016622648&mallCode=1&pageListType=4&detailBusinessFrom=0-1_444142921%7C0-2&main_attr=27_1000112', '2026-05-29 03:51:47', 'pendiente', NULL, 1, NULL, NULL, 'ignorado'),
-(8, 6, NULL, 'proveedor', 'assets/img/products/sin_categoria/detalle_2.png', '', '2026-05-29 03:51:47', 'pendiente', NULL, 1, NULL, NULL, 'ignorado'),
-(12, 9, NULL, 'proveedor', '', 'https://us.shein.com/Women-s-Vest-Brasil-South-America-Flag-Print-Design-Exquisite-Elegant-And-Fashionable-Exuding-Feminine-Charm-Perfect-For-Holiday-Gifts-Mother-s-Day-Coachella-Music-Festival-Memorial-Day-Suitable-For-Spring-And-Summer-Suitable-For-Casual-Sports-Vacation-Travel-Beach-Wear-And-Daily-Wear-Widely-Versatile-Applicable-To-Various-Occasions-Ladies-Elegant-Suits-Blouses-Summer-Outfits-Vacation-Outfits-Women-Travel-Wear-Tank-Top-p-444597816.html?src_identifier=on%3DONE_THIRD_COMPONENT%60cn%3DONE_THIRD_COMPONENT_2%60hz%3D-%60jc%3DsheinPicks_10751%60ps%3D1_4&src_module=all&src_tab_page_id=page_home1780016622648&mallCode=1&pageListType=4&detailBusinessFrom=0-1_444142921%7C0-2&main_attr=27_762', '2026-06-05 00:42:20', 'pendiente', NULL, 1, 10.00, NULL, 'ignorado'),
-(13, 9, NULL, 'proveedor', 'assets/img/products/sin_categoria/detalle_1.jpg', '', '2026-06-05 00:42:20', 'pendiente', NULL, 1, 15.00, NULL, 'ignorado'),
-(14, 10, NULL, 'proveedor', '', '', '2026-06-05 12:03:51', 'pendiente', 'sueter', 1, NULL, NULL, 'pendiente'),
-(15, 11, 1, 'proveedor', '', '', '2026-06-05 13:28:28', 'pendiente', 'sueter', 1, 5.00, NULL, 'vinculado'),
-(16, 11, NULL, 'proveedor', '', 'https://us.shein.com/Women-s-Vest-Brasil-South-America-Flag-Print-Design-Exquisite-Elegant-And-Fashionable-Exuding-Feminine-Charm-Perfect-For-Holiday-Gifts-Mother-s-Day-Coachella-Music-Festival-Memorial-Day-Suitable-For-Spring-And-Summer-Suitable-For-Casual-Sports-Vacation-Travel-Beach-Wear-And-Daily-Wear-Widely-Versatile-Applicable-To-Various-Occasions-Ladies-Elegant-Suits-Blouses-Summer-Outfits-Vacation-Outfits-Women-Travel-Wear-Tank-Top-p-444142921.html?src_identifier=on%3DONE_THIRD_COMPONENT%60cn%3DONE_THIRD_COMPONENT_2%60hz%3D-%60jc%3DsheinPicks_10751%60ps%3D1_4&src_module=all&src_tab_page_id=page_home1780016622648&mallCode=1&pageListType=4&detailBusinessFrom=0-1_444142921%7C0-2', '2026-06-05 13:28:28', 'pendiente', NULL, 1, 8.00, NULL, 'pendiente'),
-(17, 11, NULL, 'proveedor', 'assets/img/products/sin_categoria/detalle_3.jpg', '', '2026-06-05 13:28:28', 'pendiente', NULL, 2, 6.10, NULL, 'pendiente'),
-(18, 12, NULL, 'proveedor', 'assets/img/products/sin_categoria/franela.jpg', '', '2026-06-05 14:19:30', 'pendiente', 'franela', 1, 10.00, NULL, 'pendiente'),
-(19, 13, NULL, 'proveedor', 'assets/img/products/sin_categoria/jean.jpg', '', '2026-06-05 14:21:22', 'pendiente', 'jean', 1, 5.00, NULL, 'pendiente'),
-(20, 14, NULL, 'proveedor', '', '', '2026-06-07 03:59:35', 'pendiente', 'sueter', 1, 1.00, NULL, 'pendiente'),
-(21, 15, 46, 'proveedor', '', '', '2026-06-11 21:09:01', 'pendiente', 'jean', 5, 25.62, NULL, 'vinculado'),
-(23, 17, 46, 'cliente', '', '', '2026-06-12 00:40:49', 'pendiente', NULL, 4, 25.62, NULL, 'vinculado'),
-(24, 18, 46, 'cliente', '', '', '2026-06-12 00:44:05', 'pendiente', NULL, 4, 25.62, NULL, 'vinculado'),
-(25, 19, 47, 'proveedor', '', '', '2026-06-12 14:28:23', 'pendiente', NULL, 20, 80.06, NULL, 'vinculado'),
-(26, 19, 47, 'proveedor', '', '', '2026-06-12 14:28:23', 'pendiente', NULL, 20, 10.06, NULL, 'vinculado'),
-(27, 19, 47, 'proveedor', '', '', '2026-06-12 14:28:23', 'pendiente', NULL, 20, 10.06, NULL, 'vinculado');
+(39, 31, 56, 'proveedor', '', '', '2026-07-08 03:54:02', 'pendiente', NULL, 100, 20.00, NULL, 'vinculado');
 
 -- --------------------------------------------------------
 
@@ -341,7 +293,12 @@ INSERT INTO `entradas` (`id`, `id_proveedor`, `numero_lote`, `fecha_ingreso`, `t
 (21, 1, '14', '2026-06-08', 400.00, '2026-06-08 14:04:02'),
 (22, 1, '55', '2026-06-10', 30.00, '2026-06-10 16:11:43'),
 (23, 5, 'dsp ', '2026-06-11', 4000.00, '2026-06-11 18:14:37'),
-(26, 4, '10', '2029-07-12', 50.00, '2026-06-12 14:23:11');
+(26, 4, '10', '2029-07-12', 50.00, '2026-06-12 14:23:11'),
+(28, 4, '53523', '2026-06-15', 1600.00, '2026-06-15 12:00:13'),
+(32, 4, '5555', '2026-07-06', 200.00, '2026-07-06 18:14:42'),
+(38, 5, '5465', '2026-07-07', 280.00, '2026-07-07 16:49:17'),
+(40, 6, '9505', '2026-07-08', 800.00, '2026-07-08 00:37:19'),
+(41, 6, '3434', '2026-07-08', 500.00, '2026-07-08 00:44:09');
 
 -- --------------------------------------------------------
 
@@ -390,23 +347,9 @@ CREATE TABLE `notas_entrega` (
 --
 
 INSERT INTO `notas_entrega` (`id`, `id_cliente`, `fecha_pedido`, `estado`, `tipo`, `total`, `observaciones`, `fecha_registro`) VALUES
-(1, 4, '2026-06-03 20:43:22', 'cancelado', 'debito', 20.00, '', '2026-06-03 18:43:22'),
-(2, 4, '2026-06-03 21:33:23', 'entregado', 'debito', 10.00, '', '2026-06-03 19:33:23'),
-(3, 4, '2026-06-04 00:29:47', 'recibido', 'credito', 30.00, '', '2026-06-03 22:29:47'),
-(4, 17, '2026-06-04 00:32:13', 'pendiente', 'credito', 24.00, '', '2026-06-03 22:32:14'),
-(5, 4, '2026-06-04 04:21:50', 'pendiente', 'credito', 12.00, '', '2026-06-04 02:21:50'),
-(6, 19, '2026-06-04 17:39:28', 'pendiente', 'credito', 20.00, '', '2026-06-04 15:39:28'),
-(7, 18, '2026-06-05 02:00:05', 'pendiente', 'credito', 10.00, '', '2026-06-05 00:00:05'),
-(8, 18, '2026-06-05 14:14:45', 'entregado', 'debito', 82.92, 'compra', '2026-06-05 12:14:45'),
-(9, 25, '2026-06-05 14:18:20', 'entregado', 'debito', 20.50, 'COMPRA', '2026-06-05 12:18:20'),
-(10, 18, '2026-06-05 16:41:18', 'entregado', 'debito', 87.66, '', '2026-06-05 14:41:18'),
-(12, 4, '2026-06-07 06:16:43', 'pendiente', 'credito', 2.06, '', '2026-06-07 04:16:43'),
-(13, 4, '2026-06-07 06:18:52', 'pendiente', 'credito', 2.06, '', '2026-06-07 04:18:52'),
-(14, 39, '2026-06-10 18:20:01', 'pendiente', 'credito', 51.24, '', '2026-06-10 16:20:01'),
-(15, 41, '2026-06-11 01:54:30', 'pendiente', 'credito', 64.55, '', '2026-06-10 23:54:30'),
-(17, 18, '2026-06-12 02:40:49', '', 'debito', 102.48, 'Generada automáticamente desde Pedido de Servicio #17', '2026-06-12 00:40:49'),
-(18, 18, '2026-06-12 02:44:05', '', 'debito', 102.48, 'Generada automáticamente desde Pedido de Servicio #18', '2026-06-12 00:44:05'),
-(19, 48, '2026-06-13 21:23:57', 'pendiente', 'debito', 10.06, '', '2026-06-13 19:23:57');
+(26, 2, '2026-07-08 05:47:22', 'entregado', 'credito', 154.20, '', '2026-07-08 03:47:22'),
+(27, 2, '2026-07-08 14:12:37', 'cancelado', 'debito', 77.10, '', '2026-07-08 12:12:37'),
+(28, 18, '2026-07-08 15:46:26', 'confirmado', 'credito', 231.30, '', '2026-07-08 13:46:26');
 
 -- --------------------------------------------------------
 
@@ -428,23 +371,9 @@ CREATE TABLE `notas_entrega_detalles` (
 --
 
 INSERT INTO `notas_entrega_detalles` (`id`, `id_nota_entrega`, `id_variante`, `cantidad`, `precio_unitario`, `descripcion`) VALUES
-(1, 1, 36, 1, 10.00, ''),
-(2, 1, 2, 1, 10.00, ''),
-(3, 2, 27, 1, 10.00, ''),
-(4, 3, 37, 3, 10.00, ''),
-(5, 4, 1, 2, 12.00, ''),
-(6, 5, 1, 1, 12.00, ''),
-(7, 6, 37, 2, 10.00, ''),
-(8, 7, 27, 1, 10.00, ''),
-(9, 8, 2, 2, 41.46, ''),
-(10, 9, 1, 1, 20.50, ''),
-(12, 10, 40, 1, 23.10, ''),
-(13, 10, 2, 1, 41.46, ''),
-(15, 12, 44, 1, 2.06, ''),
-(16, 13, 44, 1, 2.06, ''),
-(17, 14, 46, 2, 25.62, ''),
-(18, 15, 38, 5, 12.91, ''),
-(19, 19, 47, 1, 10.06, '');
+(21, 26, 56, 2, 77.10, ''),
+(22, 27, 56, 1, 77.10, ''),
+(23, 28, 55, 3, 77.10, '');
 
 -- --------------------------------------------------------
 
@@ -470,29 +399,12 @@ CREATE TABLE `pagos` (
 --
 
 INSERT INTO `pagos` (`id`, `id_nota_entrega`, `id_metodo_pago`, `monto_bs`, `monto_usd`, `fecha`, `tasa`, `comprobante`, `referencia`, `estado`) VALUES
-(107, 1, 7, 4022.21, 7.20, '2026-06-10 19:09:26', 558.64, NULL, '', 'verificado'),
-(108, 1, 7, 1340.74, 2.40, '2026-06-10 19:08:59', 558.64, NULL, '121233', 'verificado'),
-(109, 1, 7, 1340.74, 2.40, '2026-06-06 22:40:57', 558.64, NULL, '21212', 'rechazado'),
-(110, 1, 10, 6724.56, 12.00, '2026-06-06 22:41:02', 560.38, NULL, '22', 'rechazado'),
-(111, 1, 8, 5.00, 0.01, '2026-06-06 22:40:43', 560.38, NULL, '111', 'rechazado'),
-(112, 7, 7, 2241.52, 4.00, '2026-06-04 20:00:05', 560.38, NULL, '', 'por verificar'),
-(113, 7, 8, 840.57, 1.50, '2026-06-04 20:00:52', 560.38, NULL, '232323', 'por verificar'),
-(114, 7, 7, 2241.52, 4.00, '2026-06-04 20:02:09', 560.38, NULL, '21212', 'por verificar'),
-(115, 7, 8, 280.19, 0.50, '2026-06-04 20:02:42', 560.38, NULL, '21212', 'por verificar'),
-(116, 8, 10, 46708.01, 82.92, '2026-06-10 19:10:42', 563.29, NULL, '185549', 'verificado'),
-(117, 9, 9, 11547.45, 20.50, '2026-06-11 14:16:39', 563.29, NULL, '2588811', 'verificado'),
-(118, 10, 10, 5632.90, 10.00, '2026-06-06 22:45:02', 563.29, NULL, '456456454', 'verificado'),
-(119, 10, 8, 43745.00, 77.66, '2026-06-06 22:45:51', 563.29, NULL, '', 'verificado'),
-(121, 1, 7, 13518.96, 24.00, '2026-06-06 22:40:18', 563.29, NULL, 'N/A', 'verificado'),
-(122, 13, 8, 464.00, 0.82, '2026-06-07 00:19:28', 563.29, NULL, '', 'verificado'),
-(123, 13, 7, 563.29, 1.00, '2026-06-07 00:20:11', 563.29, NULL, 'N/A', 'verificado'),
-(124, 13, 8, 135.19, 0.24, '2026-06-07 00:20:48', 563.29, NULL, 'N/A', 'por verificar'),
-(125, 14, 7, 11547.45, 20.50, '2026-06-10 12:21:45', 563.29, NULL, '', 'verificado'),
-(126, 14, 7, 11265.80, 20.00, '2026-06-10 12:21:52', 563.29, NULL, 'N/A', 'verificado'),
-(127, 15, 8, 14544.00, 25.82, '2026-06-10 19:54:30', 563.29, NULL, '', 'por verificar'),
-(128, 1, 7, 4506.32, 8.00, '2026-06-11 14:16:10', 563.29, NULL, 'N/A', 'por verificar'),
-(129, 1, 10, 924.08, 1.60, '2026-06-11 20:21:42', 577.55, NULL, '567780', 'por verificar'),
-(130, 19, 8, 5810.00, 10.06, '2026-06-13 15:23:57', 577.55, NULL, '', 'por verificar');
+(139, 26, 7, 41629.68, 61.68, '2026-07-07 23:49:18', 674.93, NULL, '', 'verificado'),
+(140, 27, 7, 52037.10, 77.10, '2026-07-08 09:49:19', 674.93, NULL, '', 'verificado'),
+(141, 26, 8, 92.52, 0.14, '2026-07-08 12:08:47', 674.93, NULL, 'N/A', 'rechazado'),
+(142, 26, 8, 62350.03, 92.38, '2026-07-08 12:08:48', 674.93, NULL, 'N/A', 'rechazado'),
+(143, 28, 7, 62444.52, 92.52, '2026-07-08 09:50:03', 674.93, NULL, '', 'verificado'),
+(144, 28, 8, 93666.79, 138.78, '2026-07-08 09:50:02', 674.93, NULL, 'N/A', 'verificado');
 
 -- --------------------------------------------------------
 
@@ -518,21 +430,7 @@ CREATE TABLE `pedidos` (
 --
 
 INSERT INTO `pedidos` (`id`, `id_proveedor`, `id_cliente`, `id_nota_entrega`, `tipo`, `fecha_registro`, `fecha_estimada`, `fecha_recepcion`, `fecha_entrega`, `estado`) VALUES
-(1, 1, NULL, NULL, 'propios', '2026-05-28 04:27:15', NULL, NULL, NULL, 'entregado'),
-(3, 1, NULL, NULL, 'propios', '2026-05-28 23:19:45', NULL, NULL, NULL, 'entregado'),
-(4, 1, NULL, NULL, 'propios', '2026-05-29 00:00:22', NULL, NULL, NULL, 'recibido'),
-(5, 4, NULL, NULL, 'propios', '2026-05-29 01:04:15', NULL, NULL, NULL, 'recibido'),
-(6, 4, NULL, NULL, 'propios', '2026-05-29 03:51:47', NULL, NULL, NULL, 'recibido'),
-(9, 1, NULL, NULL, 'propios', '2026-06-05 00:42:20', NULL, NULL, NULL, 'recibido'),
-(10, 5, NULL, NULL, 'propios', '2026-06-05 12:03:51', NULL, NULL, NULL, 'pendiente'),
-(11, 1, NULL, NULL, 'propios', '2026-06-05 13:28:28', NULL, NULL, NULL, 'recibido'),
-(12, 1, NULL, NULL, 'propios', '2026-06-05 14:19:30', NULL, NULL, NULL, 'cancelado'),
-(13, 1, NULL, NULL, 'propios', '2026-06-05 14:21:22', NULL, NULL, NULL, 'confirmado'),
-(14, 1, NULL, NULL, 'propios', '2026-06-07 03:59:35', '2026-06-30', '2026-06-07 00:00:25', NULL, 'recibido'),
-(15, 4, NULL, NULL, 'propios', '2026-06-11 21:09:01', NULL, NULL, NULL, 'cancelado'),
-(17, NULL, 18, 17, 'cliente', '2026-06-12 00:40:49', '2026-07-05', '2026-06-11 20:48:00', NULL, 'recibido'),
-(18, NULL, 18, 18, 'cliente', '2026-06-12 00:44:05', NULL, NULL, NULL, 'pendiente'),
-(19, 4, NULL, NULL, 'propios', '2026-06-12 14:28:23', NULL, NULL, NULL, 'pendiente');
+(31, 6, NULL, NULL, 'propios', '2026-07-08 03:54:02', '2026-07-31', '2026-07-07 23:54:13', NULL, 'recibido');
 
 -- --------------------------------------------------------
 
@@ -587,16 +485,19 @@ CREATE TABLE `productos` (
 
 INSERT INTO `productos` (`id`, `id_categoria`, `nombre`, `descripcion`, `precio_compra`, `precio_venta`, `stock_minimo`, `marca`, `imagen_principal`, `activo`, `ventas_totales`, `fecha_registro`) VALUES
 (1, 2, 'sueter champions', 'sueter champions', 10.00, 20.62, 3, NULL, NULL, 1, 0, '2026-05-27 23:18:05'),
-(2, 2, 'Franela', 'franelas', 20.00, 41.46, 3, NULL, NULL, 1, 0, '2026-05-28 22:57:39'),
-(25, 6, 'perfume sabroso', '', 0.00, 10.00, 3, 'factory', NULL, 0, 0, '2026-05-29 03:55:06'),
+(2, 2, 'Franela', 'franelas', 20.00, 38.55, 3, NULL, NULL, 1, 0, '2026-05-28 22:57:39'),
+(25, 6, 'perfume sabroso', '', 0.00, 10.00, 3, 'factory', NULL, 1, 0, '2026-05-29 03:55:06'),
 (34, 6, 'perfume delicioso', 'fragancia diaria', 5.60, 11.55, 3, NULL, NULL, 1, 0, '2026-06-05 13:13:05'),
 (35, 8, 'Zapatos', 'R45-18', 200.00, 140.80, 3, NULL, NULL, 1, 0, '2026-06-05 13:30:56'),
 (39, 2, 'sueter gucci', 'tono calido', 0.00, 2.06, 3, NULL, NULL, 1, 0, '2026-06-07 04:01:17'),
 (42, 2, 'franela cara', 'franela diaria', 0.00, 10.31, 3, NULL, NULL, 0, 0, '2026-06-08 22:03:17'),
-(43, 2, 'pantalon', 'pantalon bota ancha', 10.00, 20.62, 15, NULL, NULL, 1, 0, '2026-06-10 15:59:01'),
-(45, 6, 'Tomy', 'fragancia diaria', 0.00, 20.11, 3, NULL, NULL, 1, 0, '2026-06-12 14:14:36'),
+(43, 2, 'pantalon', 'pantalon bota ancha', 7.00, 13.49, 15, NULL, NULL, 1, 0, '2026-06-10 15:59:01'),
+(45, 6, 'Tomy', 'fragancia diaria', 80.00, 160.92, 3, NULL, NULL, 1, 0, '2026-06-12 14:14:36'),
 (46, 6, 'Dior', 'fragancia diaria', 0.00, 20.11, 3, NULL, NULL, 1, 0, '2026-06-12 14:16:33'),
-(47, 6, 'Dior one', 'fragancia diaria', 5.00, 10.06, 3, NULL, NULL, 1, 0, '2026-06-12 14:19:47');
+(47, 6, 'Dior one', 'fragancia diaria', 5.00, 10.06, 3, NULL, NULL, 1, 0, '2026-06-12 14:19:47'),
+(48, 2, 'camisa overside', 'camisa ancha tipo oversid', 0.00, 28.91, 3, NULL, NULL, 1, 0, '2026-07-06 16:54:44'),
+(49, 10, 'lentes', 'lentes clasicos', 20.00, 38.55, 3, NULL, NULL, 1, 0, '2026-07-06 17:27:25'),
+(51, 8, 'asics', 'zapatos de voley', 50.00, 77.10, 7, NULL, NULL, 1, 0, '2026-07-08 00:17:51');
 
 -- --------------------------------------------------------
 
@@ -623,20 +524,28 @@ CREATE TABLE `producto_variantes` (
 INSERT INTO `producto_variantes` (`id`, `id_producto`, `codigo_producto`, `nombre_variante`, `atributos`, `precio_adicional`, `stock`, `imagen_variante`, `activo`) VALUES
 (1, 1, NULL, 'Principal', '{\"talla\":\"s\",\"color\":\"rojo\"}', 0.00, 40, NULL, 1),
 (2, 2, NULL, 'Franela roja', '{\"talla\":\"xxl\",\"color\":\"Rojo\"}', 0.00, 7, NULL, 1),
-(3, 2, NULL, 'franela verde', '{\"talla\":\"s\",\"color\":\"verde\"}', 0.00, 16, NULL, 1),
+(3, 2, NULL, 'franela verde', '{\"talla\":\"s\",\"color\":\"verde\"}', 0.00, 15, NULL, 1),
 (4, 1, NULL, 'Principal', '{\"talla\":\"l\",\"color\":\"gris\"}', 0.00, 1, NULL, 0),
-(27, 25, NULL, 'perfume test2', '{\"volumen_ml\":\"1\",\"fragancia\":\"prueba\"}', 0.00, 2, 'assets/img/products/perfumes/perfume_sabroso_perfume_test.png', 0),
-(36, 25, NULL, 'perfume rico', '{\"volumen_ml\":\"12\",\"fragancia\":\"test2\"}', 0.00, 1, NULL, 0),
-(37, 25, NULL, 'perfume pequeno', '{\"volumen_ml\":\"25\",\"fragancia\":\"hallmen\"}', 0.00, 7, 'assets/img/products/perfumes/perfume_sabroso_perfume_pequeno.png', 0),
+(27, 25, NULL, 'perfume test2', '{\"volumen_ml\":\"1\",\"fragancia\":\"prueba\"}', 0.00, 2, 'assets/img/products/perfumes/perfume_sabroso_perfume_test.png', 1),
+(36, 25, NULL, 'perfume rico', '{\"volumen_ml\":\"12\",\"fragancia\":\"test2\"}', 0.00, 1, NULL, 1),
+(37, 25, NULL, 'perfume pequeno', '{\"volumen_ml\":\"25\",\"fragancia\":\"hallmen\"}', 0.00, 7, 'assets/img/products/perfumes/perfume_sabroso_perfume_pequeno.png', 1),
 (38, 34, NULL, 'perfume test', '{\"volumen_ml\":\"150\",\"fragancia\":\"citrica\"}', 1.36, 25, 'assets/img/products/perfumes/perfume_sabroso_perfume_test.jpg', 1),
 (39, 34, NULL, 'perfume rico', '{\"volumen_ml\":\"150\",\"fragancia\":\"dulce\"}', 1.20, 7, 'assets/img/products/perfumes/perfume_sabroso_perfume_rico.jpg', 1),
 (40, 35, NULL, 'Zapatos', '{}', 0.00, 20, NULL, 1),
 (44, 39, NULL, 'sueter gucci', '{}', 0.00, 1, NULL, 1),
 (45, 42, NULL, 'Principal', '{\"talla\":\"l\",\"color\":\"BLANCA\"}', 0.00, 2, NULL, 0),
-(46, 43, NULL, 'pantalon bota ancha', '{\"talla\":\"34\",\"color\":\"azul\"}', 5.00, 19, NULL, 1),
-(47, 47, NULL, 'Principal', '{\"volumen_ml\":\"5\",\"fragancia\":\"jasmin\"}', 0.00, 20, NULL, 1),
+(46, 43, NULL, 'pantalon bota ancha', '{\"talla\":\"34\",\"color\":\"azul\"}', 5.00, 59, NULL, 1),
+(47, 47, NULL, 'Principal', '{\"volumen_ml\":\"5\",\"fragancia\":\"jasmin\"}', 0.00, 19, NULL, 1),
 (48, 47, NULL, 'dior 500ml', '{\"volumen_ml\":\"500\"}', 0.00, 0, NULL, 1),
-(49, 47, NULL, 'dior 200ml', '{\"volumen_ml\":\"200\"}', 0.00, 0, NULL, 1);
+(49, 47, NULL, 'dior 200ml', '{\"volumen_ml\":\"200\"}', 0.00, 0, NULL, 1),
+(50, 45, NULL, 'tommy12 ', '{\"volumen_ml\":\"100\"}', 0.00, 28, NULL, 1),
+(51, 2, NULL, 'franela azul', '{\"talla\":\"xs\",\"color\":\"azul\"}', 0.00, 8, NULL, 1),
+(52, 48, '455', 'beige', '{\"talla\":\"L\",\"color\":\"negro\"}', 0.00, 4, NULL, 1),
+(53, 48, '955', 'overside roja', '{\"talla\":\"XL\",\"color\":\"roja\"}', 0.00, 6, NULL, 1),
+(54, 49, NULL, 'lentes', '{}', 0.00, 11, NULL, 1),
+(55, 51, '276', 'Sky', '{\"talla\":\"42\",\"color\":\"blaca\"}', 0.00, 17, NULL, 1),
+(56, 51, NULL, 'metarice', '{\"talla\":\"38\",\"color\":\"verde\"}', 0.00, 13, NULL, 1),
+(57, 51, NULL, 'tokyo', '{\"talla\":\"43\",\"color\":\"rojo\"}', 0.00, 10, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -665,7 +574,8 @@ CREATE TABLE `proveedores` (
 INSERT INTO `proveedores` (`id`, `razon_social`, `documento_identidad`, `rif`, `nombre`, `apellido`, `telefono_1`, `telefono_2`, `correo`, `active`, `direccion`) VALUES
 (1, 'shein', 'N/A', NULL, 'shein', '', NULL, NULL, NULL, 1, NULL),
 (4, 'amazon', 'N/A', NULL, 'amazon', '', NULL, NULL, NULL, 1, NULL),
-(5, 'Champions', 'V-27120332', '2161325', 'Pepe', 'Perez', '+584225583005', NULL, 'pepe1112@gmail.com', 1, 's;kndjksbdks');
+(5, 'Champions', 'V-27120332', '2161325', 'Pepe', 'Perez', '+584225583005', NULL, 'pepe1112@gmail.com', 1, 's;kndjksbdks'),
+(6, 'alibaba', 'V-30218992', 'V302189923', 'ROSA LINDA', 'GIMENEZ MEN', '+584247669087', NULL, 'rosalinda@gmail.com', 1, 'villa concepcion');
 
 -- --------------------------------------------------------
 
@@ -737,8 +647,8 @@ CREATE TABLE `tasa` (
 --
 
 INSERT INTO `tasa` (`id`, `nombre`, `valor`, `fecha_actualizacion`) VALUES
-(2, 'BCV', 577.55, '2026-06-11 20:15:03'),
-(3, 'Zelle', 744.69, '2026-06-03 23:51:44');
+(2, 'BCV', 674.93, '2026-07-07 20:55:07'),
+(3, 'Zelle', 750.45, '2026-06-20 12:16:06');
 
 -- --------------------------------------------------------
 
@@ -766,7 +676,7 @@ INSERT INTO `usuarios` (`id`, `id_rol`, `nombre`, `usuario`, `clave`, `estado`) 
 (4, 1, 'Userrrrrt', 'kestico2', 'c775e7b757ede630cd0aa1113bd102661ab38829ca52a6422ab782862f268646', 0),
 (5, 1, 'rollinera', 'rollinera', 'adba3cd291eab6784a2ff059fdb770a94d821e92fbbe1fe075649cc90d2e0711', 1),
 (6, 3, 'PEPE', 'PEPEM', 'b221d9dbb083a7f33428d7c2a3c3198ae925614d70210e28716ccaa7cd4ddb79', 1),
-(7, 1, 'JONATHAN JOSE', 'jjyd', '21f4d881861425c9c7012b2e5e811248851acb61db3815e4566233d32975771d', 1);
+(7, 1, 'JONATHAN JOSE', 'jjyd', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 1);
 
 --
 -- Índices para tablas volcadas
@@ -955,43 +865,43 @@ ALTER TABLE `categorias`
 -- AUTO_INCREMENT de la tabla `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT de la tabla `creditos`
 --
 ALTER TABLE `creditos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `creditos_cuotas`
 --
 ALTER TABLE `creditos_cuotas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT de la tabla `despachos`
 --
 ALTER TABLE `despachos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `detalles_entrada`
 --
 ALTER TABLE `detalles_entrada`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT de la tabla `detalles_pedido`
 --
 ALTER TABLE `detalles_pedido`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT de la tabla `entradas`
 --
 ALTER TABLE `entradas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT de la tabla `metodos_pago`
@@ -1003,25 +913,25 @@ ALTER TABLE `metodos_pago`
 -- AUTO_INCREMENT de la tabla `notas_entrega`
 --
 ALTER TABLE `notas_entrega`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT de la tabla `notas_entrega_detalles`
 --
 ALTER TABLE `notas_entrega_detalles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT de la tabla `pagos`
 --
 ALTER TABLE `pagos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=131;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=145;
 
 --
 -- AUTO_INCREMENT de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT de la tabla `preguntas_seguridad`
@@ -1033,19 +943,19 @@ ALTER TABLE `preguntas_seguridad`
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT de la tabla `producto_variantes`
 --
 ALTER TABLE `producto_variantes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
 
 --
 -- AUTO_INCREMENT de la tabla `proveedores`
 --
 ALTER TABLE `proveedores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `respuestas_seguridad`

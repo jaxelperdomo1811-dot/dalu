@@ -1,8 +1,8 @@
 <?php
     namespace Lenovo\Dalu\Models;
     use Lenovo\Dalu\Models\Conexion;
-
-    class Clientes extends Conexion {
+    use Lenovo\Dalu\Interfaces\IClientes;
+    class Clientes extends Conexion implements IClientes {
         private $id;
         private $nombre;
         private $cedula;

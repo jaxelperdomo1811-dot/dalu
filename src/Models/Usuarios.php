@@ -1,8 +1,8 @@
 <?php
     namespace Lenovo\Dalu\Models;
-    use Lenovo\Dalu\Models\Conexion;
-
-    class Usuarios extends Conexion {
+    use Lenovo\Dalu\Models\Conexion;    
+    use Lenovo\Dalu\Interfaces\IUsuarios;
+    class Usuarios extends Conexion implements IUsuarios {
         private $id;
         private $nombre;
         private $rol;

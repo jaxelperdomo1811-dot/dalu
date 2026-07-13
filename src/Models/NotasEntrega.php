@@ -16,7 +16,7 @@ class NotasEntrega extends Conexion {
     
     public function __construct() {
         parent::__construct();
-    }
+    }   
     
     public function setId($id) { $this->id = $id; return $this; }
     public function setIdCliente($id_cliente) { $this->id_cliente = $id_cliente; return $this; }

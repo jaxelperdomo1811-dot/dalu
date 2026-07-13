@@ -1,9 +1,8 @@
 /**
- * proveedores.js – Lógica y validaciones para la vista de proveedores.
+ * proveedores.js
  */
 document.addEventListener('DOMContentLoaded', () => {
-
-    // API Cedula integration
+    // API Cedula
     const cedulaInput = document.getElementById('cedula');
     const tipoPersonaSelect = document.getElementById('tipo_persona');
     const nombreInput = document.getElementById('nombre');
@@ -95,20 +94,50 @@ document.addEventListener('DOMContentLoaded', () => {
         btnAddProducto.addEventListener('click', () => {
             const row = container.querySelector('.producto-row');
             if (row) {
+                const prodSelectEl = row.querySelector('.producto-select');
+                const varSelectEl = row.querySelector('.variante-select');
+
+                const $firstProd = $(prodSelectEl);
+                const $firstVar = $(varSelectEl);
+
+                // Destruir select2 temporalmente en la primera fila para clonar HTML limpio
+                if (typeof $.fn.select2 === 'function') {
+                    if ($firstProd.hasClass('select2-hidden-accessible')) {
+                        $firstProd.select2('destroy');
+                    }
+                    if ($firstVar.hasClass('select2-hidden-accessible')) {
+                        $firstVar.select2('destroy');
+                    }
+                }
+
+                // Clonar la fila limpia
                 const newRow = row.cloneNode(true);
-                // Reset values
-                newRow.querySelectorAll('input, select').forEach(input => {
+
+                // Resetear inputs de texto/número en la nueva fila
+                newRow.querySelectorAll('input').forEach(input => {
                     input.value = '';
                 });
-                
-                // Reset variante select
-                const varSelect = newRow.querySelector('.variante-select');
-                if (varSelect) {
-                    varSelect.innerHTML = '<option value="" disabled selected>Seleccione variante</option>';
+
+                // Resetear selects en la nueva fila para que estén vacíos
+                const newProdSelect = newRow.querySelector('.producto-select');
+                const newVarSelect = newRow.querySelector('.variante-select');
+
+                if (newProdSelect) {
+                    newProdSelect.value = '';
+                    newProdSelect.removeAttribute('data-categoria');
+                }
+
+                if (newVarSelect) {
+                    newVarSelect.innerHTML = '<option value="" disabled selected>Seleccione variante</option>';
+                    newVarSelect.value = '';
                 }
 
                 container.appendChild(newRow);
-                if (typeof initSelect2 === 'function') initSelect2();
+
+                // Re-inicializar select2 para todas las filas
+                if (typeof initSelect2 === 'function') {
+                    initSelect2();
+                }
             }
         });
 

@@ -1,8 +1,9 @@
 <?php
     namespace Lenovo\Dalu\Models;
     use Lenovo\Dalu\Models\Conexion;
+    use Lenovo\Dalu\Interfaces\ICategorias;
 
-    class Categorias extends Conexion {
+    class Categorias extends Conexion implements ICategorias {
         private $id;
         private $nombre;
         private $descripcion;
@@ -27,7 +28,7 @@
             $stmt->bindParam(":nombre", $this->nombre);
             $stmt->bindParam(":descripcion", $this->descripcion);
             if ($stmt->execute()) {
-                return true;
+                return $this->lastInsertId();
             } else {
                 return false;
             }
@@ -83,5 +84,43 @@
             } else {
                 return false;
             }
+        }
+
+        public function getCampos($id_categoria = null) {
+            $id = $id_categoria ?? $this->id;
+            $sql = "SELECT cv.*, cc.orden FROM campos_variante cv
+                    JOIN categoria_campos cc ON cv.id = cc.id_campo
+                    WHERE cc.id_categoria = :id_categoria AND cv.activo = 1
+                    ORDER BY cc.orden ASC";
+            $stmt = $this->prepare($sql);
+            $stmt->bindParam(":id_categoria", $id);
+            $stmt->execute();
+            $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            foreach ($result as &$row) {
+                $row['opciones'] = $row['opciones'] ? json_decode($row['opciones'], true) : null;
+            }
+            return $result;
+        }
+
+        public function setCampos($id_categoria, $campos_ids) {
+            $sqlDelete = "DELETE FROM categoria_campos WHERE id_categoria = :id_categoria";
+            $stmtDelete = $this->prepare($sqlDelete);
+            $stmtDelete->bindParam(":id_categoria", $id_categoria);
+            $stmtDelete->execute();
+
+            if (empty($campos_ids)) return true;
+
+            $sqlInsert = "INSERT INTO categoria_campos (id_categoria, id_campo, orden) VALUES (:id_categoria, :id_campo, :orden)";
+            $stmtInsert = $this->prepare($sqlInsert);
+            
+            $orden = 1;
+            foreach ($campos_ids as $id_campo) {
+                $stmtInsert->bindParam(":id_categoria", $id_categoria);
+                $stmtInsert->bindParam(":id_campo", $id_campo);
+                $stmtInsert->bindParam(":orden", $orden);
+                $stmtInsert->execute();
+                $orden++;
+            }
+            return true;
         }
     }

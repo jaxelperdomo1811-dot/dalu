@@ -384,6 +384,22 @@
                 </div>
                 <div class="modal-body">
                     <div class="row mb-3">
+                        <div class="col-md-5">
+                            <label for="tipo_persona" class="form-label">Tipo de Persona</label>
+                            <select class="form-select" name="tipo_persona" id="tipo_persona" required>
+                                <option value="" disabled selected>Seleccione un tipo de persona</option>
+                                <option value="V-">Natural (V)</option>
+                                <option value="J-">Jurídica (J)</option>
+                                <option value="E-">Extranjera (E)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-7">
+                            <label for="cedula" class="form-label">Cédula</label>
+                            <input type="text" class="form-control" pattern="[0-9]{6,8}" title="Solo números, entre 6 y 8 caracteres" name="cedula" id="cedula" placeholder="Número de Cédula" required />
+                            <div id="mensaje-cedula" style="color: red; margin-top: 5px;"></div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="nombre" class="form-label">Nombre</label>
                             <input type="text" minlength="3" maxlength="50" pattern="[A-Za-z0-9\s]{3,}" title="Ingrese solo texto, entre 3 y 50 caracteres" name="nombre" class="form-control" placeholder="Nombre" required />
@@ -401,22 +417,6 @@
                         <div class="col-md-6">
                             <label for="rif" class="form-label">RIF</label>
                             <input type="text" minlength="10" maxlength="12" pattern="[VEJPGvejpg]-?[0-9]{8}-?[0-9]" title="Formato RIF: Letra (V,E,J,P,G) seguida de 9 números. Ej: J-12345678-9 o J123456789" name="rif" class="form-control" placeholder="Ej: J-12345678-9" required />
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-5">
-                            <label for="tipo_persona" class="form-label">Tipo de Persona</label>
-                            <select class="form-select" name="tipo_persona" id="tipo_persona" required>
-                                <option value="" disabled selected>Seleccione un tipo de persona</option>
-                                <option value="V-">Natural (V)</option>
-                                <option value="J-">Jurídica (J)</option>
-                                <option value="E-">Extranjera (E)</option>
-                            </select>
-                        </div>
-                        <div class="col-md-7">
-                            <label for="cedula" class="form-label">Cédula</label>
-                            <input type="text" class="form-control" pattern="[0-9]{6,8}" title="Solo números, entre 6 y 8 caracteres" name="cedula" id="cedula" placeholder="Número de Cédula" required />
-                            <div id="mensaje-cedula" style="color: red; margin-top: 5px;"></div>
                         </div>
                     </div>
 
