@@ -471,81 +471,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- Lógica Modalidad Débito/Crédito en Agregar Nota ---
-    const switchModalidad = document.getElementById('switchModalidadCredito');
-    const labelModalidad = document.getElementById('labelModalidadTexto');
-    const inputTipo = document.getElementById('inputTipoModalidad');
-    const containerCredito = document.getElementById('opcionesCreditoContainer');
-    
-    const selPorcentaje = document.getElementById('selectPorcentajeInicial');
-    const selCuotas = document.getElementById('selectNroCuotas');
-    const proyInicial = document.getElementById('proyeccionInicial');
-    const proyCuota = document.getElementById('proyeccionCuota');
 
-    function actualizarProyeccionCreditoYPagos() {
-        // Actualizar proyecciones de credito
-        const totalNode = document.getElementById('totalNotaEntrega');
-        const total = totalNode ? parseFloat(totalNode.innerText) : 0;
-        let requeridoUsd = total; // Por defecto es debito
-        
-        if (switchModalidad && switchModalidad.checked) {
-            const pct = parseFloat(selPorcentaje.value) / 100;
-            const nroCuotas = parseInt(selCuotas.value) || 1;
-            const inicial = total * pct;
-            const restante = total - inicial;
-            const cuota = restante / nroCuotas;
-
-            if (proyInicial) proyInicial.innerText = inicial.toFixed(2);
-            if (proyCuota) proyCuota.innerText = cuota.toFixed(2);
-            requeridoUsd = inicial; // Si es credito, solo requerimos la cuota inicial
-        }
-
-        // Actualizar UI de requerido
-        const reqUsdNode = document.getElementById('montoRequeridoUSD');
-        const reqBsNode = document.getElementById('montoRequeridoBS');
-        const tasa = window.TASA_ACTUAL || 1;
-        
-        if (reqUsdNode) reqUsdNode.innerText = '$' + requeridoUsd.toFixed(2);
-        if (reqBsNode) reqBsNode.innerText = 'Bs ' + (requeridoUsd * tasa).toFixed(2);
-        
-        const restanteNode = document.getElementById('restanteInputUSD');
-        if (restanteNode) restanteNode.dataset.total = requeridoUsd;
-        
-        const formModal = document.getElementById('modalAgregarNE');
-        if (formModal) actualizarTotalesPagos(formModal);
-    }
-
-    if (switchModalidad) {
-        switchModalidad.addEventListener('change', function() {
-            if (this.checked) {
-                if (labelModalidad) {
-                    labelModalidad.innerText = 'Crédito';
-                    labelModalidad.classList.replace('text-dark', 'text-primary');
-                }
-                if (inputTipo) inputTipo.value = 'credito';
-                if (containerCredito) containerCredito.style.display = 'block';
-            } else {
-                if (labelModalidad) {
-                    labelModalidad.innerText = 'Débito';
-                    labelModalidad.classList.replace('text-primary', 'text-dark');
-                }
-                if (inputTipo) inputTipo.value = 'debito';
-                if (containerCredito) containerCredito.style.display = 'none';
-            }
-            actualizarProyeccionCreditoYPagos();
-        });
-        
-        [selPorcentaje, selCuotas].forEach(el => {
-            if (el) el.addEventListener('change', actualizarProyeccionCreditoYPagos);
-        });
-    }
-
-    // Interceptar la actualización de total de la nueva nota para recalcular
-    const observerTotal = new MutationObserver(actualizarProyeccionCreditoYPagos);
-    const totalNuevaNotaNode = document.getElementById('totalNotaEntrega');
-    if (totalNuevaNotaNode) {
-        observerTotal.observe(totalNuevaNotaNode, { childList: true, characterData: true, subtree: true });
-    }
 
     // Boton agregar pago en modal nuevo
     const btnAgregarPagoNuevo = document.querySelector('.btn-agregar-pago-nuevo');
@@ -591,3 +517,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
+// --- Configuración de Intro.js para Notas de Entrega ---
+document.addEventListener('DOMContentLoaded', () => {
+    const btnAyuda = document.getElementById('btnAyudaInteractiva');
+    if (btnAyuda) {
+        btnAyuda.addEventListener('click', (e) => {
+            e.preventDefault();
+            const tour = introJs();
+            tour.setOptions({
+                nextLabel: 'Siguiente',
+                prevLabel: 'Anterior',
+                doneLabel: 'Entendido',
+                exitOnOverlayClick: false,
+                steps: [
+                    {
+                        title: "Módulo de Notas de Entrega",
+                        intro: "Aquí visualizas y gestionas todas las notas de entrega emitidas."
+                    },
+                    {
+                        element: document.querySelector('.table-responsive'),
+                        intro: "En la tabla principal puedes ver los detalles de la entrega, cambiar estados de pago y visualizar facturas."
+                    }
+                ]
+            });
+            tour.start();
+        });
+    }
+});

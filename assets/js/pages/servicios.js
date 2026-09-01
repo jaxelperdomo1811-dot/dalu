@@ -303,3 +303,31 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(calcularTotales, 500);
 
 });
+
+// --- Configuración de Intro.js para Encargos (Servicios) ---
+document.addEventListener('DOMContentLoaded', () => {
+    const btnAyuda = document.getElementById('btnAyudaInteractiva');
+    if (btnAyuda) {
+        btnAyuda.addEventListener('click', (e) => {
+            e.preventDefault();
+            const tour = introJs();
+            tour.setOptions({
+                nextLabel: 'Siguiente',
+                prevLabel: 'Anterior',
+                doneLabel: 'Entendido',
+                exitOnOverlayClick: false,
+                steps: [
+                    {
+                        title: "Módulo de Encargos",
+                        intro: "En este módulo puedes gestionar encargos y abonos parciales."
+                    },
+                    {
+                        element: document.querySelector('.table-responsive'),
+                        intro: "Aquí puedes ver la lista de encargos pendientes o con abonos realizados."
+                    }
+                ]
+            });
+            tour.start();
+        });
+    }
+});

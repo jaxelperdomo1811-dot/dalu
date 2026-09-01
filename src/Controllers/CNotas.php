@@ -5,7 +5,6 @@ use Lenovo\Dalu\Models\NotasEntrega;
 use Lenovo\Dalu\Models\Clientes;
 use Lenovo\Dalu\Models\Productos;
 use Lenovo\Dalu\Models\Tasa;
-use Lenovo\Dalu\Models\Creditos;
 use Lenovo\Dalu\Models\Pagos;
 
 $accion = $_GET['accion'] ?? $_POST['accion'] ?? 'view';
@@ -13,8 +12,7 @@ $accion = $_GET['accion'] ?? $_POST['accion'] ?? 'view';
 switch ($accion) {
     case 'view':
         $notasModel = new NotasEntrega();
-        $notas_debito = $notasModel->getByTipo('debito');
-        $notas_credito = $notasModel->getByTipo('credito');
+        $notas_entrega = $notasModel->search();
         
         $clientes = (new Clientes())->search();
         
@@ -35,9 +33,7 @@ switch ($accion) {
 
         // Cargar pagos de cada nota para saber monto pagado
         $pagosModel = new \Lenovo\Dalu\Models\Pagos();
-        $creditoModel = new \Lenovo\Dalu\Models\Creditos();
-        
-        $procesarNotas = function(&$arrayNotas) use ($pagosModel, $creditoModel) {
+        $procesarNotas = function(&$arrayNotas) use ($pagosModel) {
             foreach ($arrayNotas as &$nota) {
                 $nota['pagos'] = $pagosModel->getByNotaEntrega($nota['id']);
                 $totalPagado = 0;
@@ -47,35 +43,12 @@ switch ($accion) {
                 $nota['total_pagado'] = $totalPagado;
                 $nota['saldo_pendiente'] = max(0, $nota['total'] - $totalPagado);
                 
-                // Lógica para despacho:
+                // Lógica para despacho (solo si está completamente pagado se podría, pero como se quitó el módulo despacho, lo ignoramos)
                 $nota['puede_despachar'] = false;
-                if ($nota['estado'] === 'confirmado') {
-                    if ($nota['tipo'] === 'credito') {
-                        // Buscar cuota 0 (inicial)
-                        $credito = $creditoModel->getCreditoPorNota($nota['id']);
-                        if ($credito) {
-                            $cuotas = $creditoModel->getCuotasPorCredito($credito['id']);
-                            foreach ($cuotas as $cuota) {
-                                if ($cuota['tipo_cuota'] === 'inicial') {
-                                    if ($cuota['estado'] === 'pagado') {
-                                        $nota['puede_despachar'] = true;
-                                    }
-                                    break;
-                                }
-                            }
-                        }
-                    } else {
-                        if ($nota['saldo_pendiente'] <= 0) {
-                            $nota['puede_despachar'] = true;
-                        }
-                    }
-                }
             }
         };
 
-        $procesarNotas($notas_debito);
-        $procesarNotas($notas_credito);
-        $notas_entrega = array_merge($notas_debito, $notas_credito);
+        $procesarNotas($notas_entrega);
         
         require_once __DIR__ . '/../Views/V_NotasEntrega.php';
         break;
@@ -118,7 +91,7 @@ switch ($accion) {
         }
 
         $estado = $_POST['estado'] ?? 'pendiente';
-        $tipo = $_POST['tipo'] ?? 'debito';
+
         $observaciones = $_POST['observaciones'] ?? '';
         $fecha_pedido = date('Y-m-d H:i:s');
 
@@ -151,7 +124,6 @@ switch ($accion) {
             $notasModel->setIdCliente($idCliente)
                        ->setFechaPedido($fecha_pedido)
                        ->setEstado($estado)
-                       ->setTipo($tipo)
                        ->setTotal($total)
                        ->setObservaciones($observaciones)
                        ->setDetalles($detalles);
@@ -159,39 +131,7 @@ switch ($accion) {
             $idNotaNueva = $notasModel->insert();
             
             if ($idNotaNueva) {
-                if ($tipo === 'credito') {
-                    $porcentaje_inicial = (int)($_POST['porcentaje_inicial'] ?? 40);
-                    $nro_cuotas = (int)($_POST['nro_cuotas'] ?? 1);
-                    $frecuencia = $_POST['frecuencia'] ?? 'semanal';
 
-                    $monto_cuota_inicial = $total * ($porcentaje_inicial / 100);
-                    $restante = $total - $monto_cuota_inicial;
-                    $monto_por_cuota = ($nro_cuotas > 0) ? ($restante / $nro_cuotas) : 0;
-
-                    $creditoModel = new Creditos();
-                    $creditoModel->setIdNotaEntrega($idNotaNueva)
-                                 ->setPorcentajeInicial($porcentaje_inicial)
-                                 ->setMontoCuotaInicial($monto_cuota_inicial)
-                                 ->setNroCuotas($nro_cuotas)
-                                 ->setMontoPorCuota($monto_por_cuota)
-                                 ->setFrecuencia($frecuencia);
-                    $idCredito = $creditoModel->insert();
-                    
-                    if ($idCredito) {
-                        // Insertar cuota inicial (0) vence el mismo dia
-                        $creditoModel->insertarCuota($idCredito, 'inicial', 0, $monto_cuota_inicial, date('Y-m-d'));
-
-                        // Insertar cuotas regulares
-                        $dias_frecuencia = ['semanal' => 7, 'quincenal' => 15, 'mensual' => 30];
-                        $dias = $dias_frecuencia[$frecuencia] ?? 7;
-                        
-                        $fecha_actual = date('Y-m-d');
-                        for ($j = 1; $j <= $nro_cuotas; $j++) {
-                            $fecha_vencimiento = date('Y-m-d', strtotime($fecha_actual . " + " . ($dias * $j) . " days"));
-                            $creditoModel->insertarCuota($idCredito, 'regular', $j, $monto_por_cuota, $fecha_vencimiento);
-                        }
-                    }
-                }
 
                 // PROCESAR PAGOS AL CREAR LA NOTA
                 $metodos = $_POST['id_metodo_pago'] ?? [];
@@ -231,29 +171,7 @@ switch ($accion) {
                                         ->setReferencia($referencia);
 
                             if ($modeloPagos->insert()) {
-                                // Logica para deducir cuotas si es credito
-                                if ($tipo === 'credito' && isset($idCredito)) {
-                                    $pago_restante = $monto_usd;
-                                    $cuotas_pendientes = $creditoModel->obtenerCuotasPendientes($idCredito);
-                                    foreach ($cuotas_pendientes as $cuota) {
-                                        if ($pago_restante <= 0.01) break;
-                                        
-                                        $deuda = floatval($cuota['monto_restante']);
-                                        if ($pago_restante >= $deuda) {
-                                            $creditoModel->actualizarMontoRestanteCuota($cuota['id'], 0);
-                                            $pago_restante -= $deuda;
-                                        } else {
-                                            $nuevo_restante = $deuda - $pago_restante;
-                                            $creditoModel->actualizarMontoRestanteCuota($cuota['id'], $nuevo_restante);
-                                            $pago_restante = 0;
-                                        }
-                                    }
-                                    
-                                    $pendientes = $creditoModel->obtenerCuotasPendientes($idCredito);
-                                    if (count($pendientes) === 0) {
-                                        $creditoModel->actualizarEstadoCredito($idCredito, 'pagado');
-                                    }
-                                }
+
                             }
                         }
                     }

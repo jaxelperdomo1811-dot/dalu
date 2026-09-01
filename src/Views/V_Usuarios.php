@@ -1,25 +1,20 @@
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="assets/css/css.css">
-    <link rel="stylesheet" href="assets/css/tabla.css">
-    <link rel="stylesheet" href="assets/css/header.css">
-    <link rel="stylesheet" href="assets/bootstrap.min.css">
-    <link rel="icon" href="assets/img/dalulisto.png">
-    <script src="assets/js/js.js" defer></script>
-    <script src="assets/js/pages/usuarios.js" defer></script>
-    <script src="assets/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/DataTablet/datatables.min.js" defer></script>
-    <script src="assets/DataTablet/tabla.js" defer></script>
-    <link rel="stylesheet" href="assets/DataTablet/datatables.css">
-    <title>Usuarios y Roles</title>
-    <link rel="stylesheet" href="assets/css/libs/select2.min.css">
-    <link rel="stylesheet" href="assets/css/libs/select2-bootstrap-5-theme.min.css">
-    <script src="assets/js/libs/select2.min.js" defer></script>
-</head>
+<?php
+$tituloPagina = "Usuarios y Roles";
+$extraCss = [
+    "assets/css/css.css",
+    "assets/css/tabla.css",
+    "assets/DataTablet/datatables.css",
+    "assets/css/libs/select2.min.css",
+    "assets/css/libs/select2-bootstrap-5-theme.min.css"
+];
+$extraJs = [
+    "assets/js/pages/usuarios.js",
+    "assets/DataTablet/datatables.min.js",
+    "assets/DataTablet/tabla.js",
+    "assets/js/libs/select2.min.js"
+];
+require_once __DIR__ . "/../Views/layout/head.php";
+?>
 
 <body>
     <?php require_once __DIR__ . "/../Views/layout/header.php"; ?>

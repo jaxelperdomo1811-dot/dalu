@@ -1,25 +1,20 @@
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="assets/css/css.css">
-    <link rel="stylesheet" href="assets/css/tabla.css">
-    <link rel="stylesheet" href="assets/css/header.css">
-    <link rel="stylesheet" href="assets/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/DataTablet/datatables.css">
-    <link rel="icon" href="assets/img/dalulisto.png">
-    <script src="assets/js/js.js" defer></script>
-    <script src="assets/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/DataTablet/datatables.min.js" defer></script>
-    <script src="assets/js/pages/notas_entrega.js" defer></script>
-    <script src="assets/DataTablet/tabla.js" defer></script>
-    <title>Notas de Entrega</title>
-    <link rel="stylesheet" href="assets/css/libs/select2.min.css">
-    <link rel="stylesheet" href="assets/css/libs/select2-bootstrap-5-theme.min.css">
-    <script src="assets/js/libs/select2.min.js" defer></script>
-</head>
+<?php
+$tituloPagina = "Notas de Entrega";
+$extraCss = [
+    "assets/css/css.css",
+    "assets/css/tabla.css",
+    "assets/DataTablet/datatables.css",
+    "assets/css/libs/select2.min.css",
+    "assets/css/libs/select2-bootstrap-5-theme.min.css"
+];
+$extraJs = [
+    "assets/DataTablet/datatables.min.js",
+    "assets/js/pages/notas_entrega.js",
+    "assets/DataTablet/tabla.js",
+    "assets/js/libs/select2.min.js"
+];
+require_once __DIR__ . "/../Views/layout/head.php";
+?>
 
 <body>
     <?php require_once __DIR__ . "/../Views/layout/header.php"; ?>
@@ -48,20 +43,8 @@
                 <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarNE">+ Nueva Nota</button>
             </div>
 
-            <ul class="nav nav-tabs mb-3" id="notasTabs" role="tablist">
-                <li class="nav-item">
-                    <button class="nav-link active" id="tab-debito" data-bs-toggle="tab" data-bs-target="#modulo-debito" type="button">Débito</button>
-                </li>
-                <li class="nav-item">
-                    <button class="nav-link" id="tab-credito" data-bs-toggle="tab" data-bs-target="#modulo-credito" type="button">Crédito</button>
-                </li>
-            </ul>
-
-            <div class="tab-content">
-                <!-- Modulo Debito -->
-                <div class="tab-pane fade show active" id="modulo-debito">
                     <div class="table-responsive">
-                        <table id="tablaNotasDebito" class="table-DT table table-striped">
+                        <table id="tablaNotas" class="table-DT table table-striped">
                             <thead>
                                 <tr>
                                     <th class="col-auto" scope="col">Nro #</th>
@@ -74,7 +57,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($notas_debito ?? [] as $n): ?>
+                                <?php foreach ($notas_entrega ?? [] as $n): ?>
                                     <tr>
                                         <td><?php echo htmlspecialchars($n['id']); ?></td>
                                         <td><?php echo htmlspecialchars($n['nombre_cliente'] ?? ''); ?></td>
@@ -87,12 +70,7 @@
 
                                             <button type="button" class="btn btn-sm btn-warning m-1" data-bs-toggle="modal" data-bs-target="#modalAvanzarEstadoNE<?= $n['id'] ?>" <?= in_array($n['estado'], ['entregado','cancelado']) ? ' disabled' : '' ?>>Siguiente estado</button>
                                             
-                                            <?php if ($n['puede_despachar']): ?>
-                                            <form action="?c=Despacho&accion=insert" method="POST" class="d-inline">
-                                                <input type="hidden" name="id_nota_entrega" value="<?= $n['id'] ?>">
-                                                <button type="submit" class="btn btn-sm btn-primary m-1" onclick="return confirm('¿Crear orden de despacho para esta nota?')">Crear Despacho</button>
-                                            </form>
-                                            <?php endif; ?>
+
 
                                             <button type="button" class="btn btn-sm btn-danger m-1" data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminarNE<?= $n['id'] ?>" <?= in_array($n['estado'], ['cancelado']) ? ' disabled' : '' ?>>Cancelar</button>
                                         </td>
@@ -101,53 +79,6 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
-
-                <!-- Modulo Credito -->
-                <div class="tab-pane fade" id="modulo-credito">
-                    <div class="table-responsive">
-                        <table id="tablaNotasCredito" class="table-DT table table-striped">
-                            <thead>
-                                <tr>
-                                    <th class="col-auto" scope="col">Nro #</th>
-                                    <th class="col-auto" scope="col">Cliente</th>
-                                    <th class="col-auto" scope="col">Fecha</th>
-                                    <th class="col-auto" scope="col">Total</th>
-                                    <th class="col-auto" scope="col">Pagado</th>
-                                    <th class="col-auto" scope="col">Estado</th>
-                                    <th class="col-auto" scope="col">Accion</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($notas_credito ?? [] as $n): ?>
-                                    <tr>
-                                        <td><?php echo htmlspecialchars($n['id']); ?></td>
-                                        <td><?php echo htmlspecialchars($n['nombre_cliente'] ?? ''); ?></td>
-                                        <td><?php echo htmlspecialchars($n['fecha_pedido'] ?? ''); ?></td>
-                                        <td>$<?php echo number_format($n['total'], 2); ?></td>
-                                        <td>$<?php echo number_format($n['total_pagado'] ?? 0, 2); ?></td>
-                                        <td><?php echo htmlspecialchars($n['estado']); ?></td>
-                                        <td>
-                                            <button type="button" class="btn btn-sm btn-info m-1 btn-ver-detalles" data-id="<?= $n['id'] ?>">Detalles</button>
-
-                                            <button type="button" class="btn btn-sm btn-warning m-1" data-bs-toggle="modal" data-bs-target="#modalAvanzarEstadoNE<?= $n['id'] ?>" <?= in_array($n['estado'], ['entregado','cancelado']) ? ' disabled' : '' ?>>Siguiente estado</button>
-                                            
-                                            <?php if ($n['puede_despachar']): ?>
-                                            <!-- <form action="?c=Despacho&accion=insert" method="POST" class="d-inline">
-                                                <input type="hidden" name="id_nota_entrega" value=" //$n['id'] ?>">
-                                                <button type="submit" class="btn btn-sm btn-primary m-1" onclick="return confirm('¿Crear orden de despacho para esta nota?')">Crear Despacho</button>
-                                            </form> -->
-                                            <?php endif; ?>
-
-                                            <button type="button" class="btn btn-sm btn-danger m-1" data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminarNE<?= $n['id'] ?>" <?= in_array($n['estado'], ['cancelado']) ? ' disabled' : '' ?>>Cancelar</button>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
         </div>
     </main>
 
@@ -261,51 +192,7 @@
                         
                         <!-- Lado Derecho: Pagos y Modalidad -->
                         <div class="col-md-5 p-4 bg-light border-start" style="overflow-y: auto; height: calc(100vh - 130px);">
-                            <!-- Configuración de Modalidad -->
-                            <div class="card bg-white shadow-sm mb-3">
-                                <div class="card-body py-2">
-                                    <div class="d-flex align-items-center justify-content-between mb-2">
-                                        <label class="form-label m-0 fw-bold">Modalidad de Pago:</label>
-                                        <div class="form-check form-switch m-0">
-                                            <input class="form-check-input" type="checkbox" id="switchModalidadCredito">
-                                            <label class="form-check-label fw-bold ms-2" for="switchModalidadCredito" id="labelModalidadTexto">Débito</label>
-                                        </div>
-                                        <input type="hidden" name="tipo" id="inputTipoModalidad" value="debito">
-                                    </div>
 
-                                    <div id="opcionesCreditoContainer" style="display: none;">
-                                        <hr class="my-2">
-                                        <div class="row g-2">
-                                            <div class="col-md-4">
-                                                <label class="form-label text-sm m-0">Cuota Inicial (%)</label>
-                                                <select name="porcentaje_inicial" id="selectPorcentajeInicial" class="form-select form-select-sm">
-                                                    <option value="40">40%</option>
-                                                    <option value="60">60%</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="form-label text-sm m-0">Frecuencia</label>
-                                                <select name="frecuencia" id="selectFrecuencia" class="form-select form-select-sm">
-                                                    <option value="semanal">Semanal</option>
-                                                    <option value="quincenal">Quincenal</option>
-                                                    <option value="mensual">Mensual</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="form-label text-sm m-0">Nro. Cuotas</label>
-                                                <select name="nro_cuotas" id="selectNroCuotas" class="form-select form-select-sm">
-                                                    <?php for($i=1; $i<=6; $i++): ?>
-                                                    <option value="<?= $i ?>"><?= $i ?> Cuota<?= $i>1?'s':'' ?></option>
-                                                    <?php endfor; ?>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="mt-2 text-end text-sm text-primary">
-                                            <em>Proyección: Inicial $<span id="proyeccionInicial">0.00</span> | Cuotas $<span id="proyeccionCuota">0.00</span> c/u</em>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
                             <h5 class="border-bottom pb-2">Registro de Pago <small class="text-muted" style="font-size: 0.6em;">Tasa: <?= number_format($tasaActual['valor'] ?? 1, 2) ?> Bs/$</small></h5>
                             

@@ -79,32 +79,23 @@ class Pagos extends Conexion {
         }
     }
 
-    public function getAgrupadosPorNota($tipo_nota = null) {
+    public function getAgrupadosPorNota() {
         try {
             $sql = "SELECT n.id as id_nota, 
                            CONCAT(c.nombre, ' ', COALESCE(c.apellido, '')) as cliente_nombre,
                            n.total,
                            COUNT(pag.id) as total_pagos,
-                           SUM(CASE WHEN pag.estado = 'por verificar' THEN 1 ELSE 0 END) as pagos_por_verificar,
-                           n.tipo as tipo_nota
+                           SUM(CASE WHEN pag.estado = 'por verificar' THEN 1 ELSE 0 END) as pagos_por_verificar
                     FROM notas_entrega n
                     JOIN pagos pag ON n.id = pag.id_nota_entrega
-                    LEFT JOIN clientes c ON n.id_cliente = c.id";
-
-            if ($tipo_nota) {
-                $sql .= " WHERE n.tipo = :tipo_nota";
-            }
-            
-            $sql .= " GROUP BY n.id ORDER BY n.fecha_pedido DESC";
+                    LEFT JOIN clientes c ON n.id_cliente = c.id
+                    GROUP BY n.id ORDER BY n.fecha_pedido DESC";
             
             $stmt = $this->prepare($sql);
-            if ($tipo_nota) {
-                $stmt->bindParam(":tipo_nota", $tipo_nota);
-            }
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            error_log("Error al agrupar pagos por nota: " . $e->getMessage());
+            error_log("Error en getAgrupadosPorNota: " . $e->getMessage());
             return [];
         }
     }

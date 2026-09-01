@@ -73,71 +73,7 @@ CREATE TABLE `clientes` (
 ) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `creditos`
---
 
-DROP TABLE IF EXISTS `creditos`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `creditos` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_nota_entrega` int(11) NOT NULL,
-  `porcentaje_inicial` int(11) NOT NULL,
-  `monto_cuota_inicial` decimal(10,2) NOT NULL,
-  `nro_cuotas` int(11) NOT NULL,
-  `monto_por_cuota` decimal(10,2) NOT NULL,
-  `frecuencia` enum('semanal','quincenal','mensual') NOT NULL,
-  `estado` enum('pendiente','pagado') NOT NULL DEFAULT 'pendiente',
-  `fecha_registro` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  KEY `id_nota_entrega` (`id_nota_entrega`),
-  CONSTRAINT `creditos_ibfk_1` FOREIGN KEY (`id_nota_entrega`) REFERENCES `notas_entrega` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `creditos_cuotas`
---
-
-DROP TABLE IF EXISTS `creditos_cuotas`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `creditos_cuotas` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_credito` int(11) NOT NULL,
-  `tipo_cuota` enum('inicial','regular') NOT NULL,
-  `nro_cuota` int(11) NOT NULL,
-  `monto` decimal(10,2) NOT NULL,
-  `monto_restante` decimal(10,2) NOT NULL,
-  `fecha_vencimiento` date NOT NULL,
-  `estado` enum('pendiente','pagado','retrasado') NOT NULL DEFAULT 'pendiente',
-  `fecha_pago` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `id_credito` (`id_credito`),
-  CONSTRAINT `creditos_cuotas_ibfk_1` FOREIGN KEY (`id_credito`) REFERENCES `creditos` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `despachos`
---
-
-DROP TABLE IF EXISTS `despachos`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `despachos` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_nota_entrega` int(11) NOT NULL,
-  `numero_despacho` varchar(50) NOT NULL,
-  `fecha_despacho` date NOT NULL,
-  `estado` enum('pendiente','enviado','entregado','cancelado') NOT NULL DEFAULT 'pendiente',
-  `fecha_registro` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  KEY `id_nota_entrega` (`id_nota_entrega`),
-  CONSTRAINT `despachos_ibfk_1` FOREIGN KEY (`id_nota_entrega`) REFERENCES `notas_entrega` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `detalles_entrada`
@@ -238,7 +174,6 @@ CREATE TABLE `notas_entrega` (
   `id_cliente` int(11) NOT NULL,
   `fecha_pedido` datetime NOT NULL,
   `estado` enum('pendiente','confirmado','enviado','recibido','entregado','cancelado') NOT NULL DEFAULT 'pendiente',
-  `tipo` enum('debito','credito') NOT NULL DEFAULT 'debito',
   `total` decimal(10,2) NOT NULL DEFAULT 0.00,
   `observaciones` text DEFAULT NULL,
   `fecha_registro` timestamp NOT NULL DEFAULT current_timestamp(),

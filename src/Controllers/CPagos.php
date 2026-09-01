@@ -5,15 +5,13 @@ use Lenovo\Dalu\Models\Pagos;
 use Lenovo\Dalu\Models\MetodosPago;
 use Lenovo\Dalu\Models\Tasa;
 use Lenovo\Dalu\Models\NotasEntrega;
-use Lenovo\Dalu\Models\Creditos;
 
 $accion = $_GET['accion'] ?? $_POST['accion'] ?? 'view';
 
 switch($accion) {
     case 'view':
         $pagosModel = new Pagos();
-        $notasCredito = $pagosModel->getAgrupadosPorNota('credito');
-        $notasDebito = $pagosModel->getAgrupadosPorNota('debito');
+        $notas = $pagosModel->getAgrupadosPorNota();
         
         require_once __DIR__ . '/../Views/V_Pagos.php';
         break;
@@ -97,38 +95,7 @@ switch($accion) {
 
                         if ($modeloPagos->insert()) {
                             $exitos++;
-                            
-                            // Logica para deducir cuotas si es credito
-                            $notasModel = new NotasEntrega();
-                            $nota = $notasModel->getById($id_nota_entrega);
-                            if ($nota && $nota['tipo'] === 'credito') {
-                                $creditoModel = new Creditos();
-                                $credito = $creditoModel->getCreditoPorNota($id_nota_entrega);
-                                if ($credito) {
-                                    $pago_restante = $monto_usd;
-                                    $cuotas_pendientes = $creditoModel->obtenerCuotasPendientes($credito['id']);
-                                    foreach ($cuotas_pendientes as $cuota) {
-                                        if ($pago_restante <= 0.01) break; // Tolerancia
-                                        
-                                        $deuda = floatval($cuota['monto_restante']);
-                                        if ($pago_restante >= $deuda) {
-                                            // Paga toda esta cuota
-                                            $creditoModel->actualizarMontoRestanteCuota($cuota['id'], 0);
-                                            $pago_restante -= $deuda;
-                                        } else {
-                                            // Abono parcial
-                                            $nuevo_restante = $deuda - $pago_restante;
-                                            $creditoModel->actualizarMontoRestanteCuota($cuota['id'], $nuevo_restante);
-                                            $pago_restante = 0;
-                                        }
-                                    }
-                                    
-                                    $pendientes = $creditoModel->obtenerCuotasPendientes($credito['id']);
-                                    if (count($pendientes) === 0) {
-                                        $creditoModel->actualizarEstadoCredito($credito['id'], 'pagado');
-                                    }
-                                }
-                            }
+
                         }
                     }
                 }

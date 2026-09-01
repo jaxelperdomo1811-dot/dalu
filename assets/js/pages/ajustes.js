@@ -1,8 +1,8 @@
-document.addEventListener('DOMContentLoaded', () => {
+/**
+ * ajustes.js - Funciones para Ajustes
+ */
 
-});
-
-// --- Configuración de Intro.js para Resolver Detalles ---
+// --- Configuración de Intro.js para Ajustes ---
 document.addEventListener('DOMContentLoaded', () => {
     const btnAyuda = document.getElementById('btnAyudaInteractiva');
     if (btnAyuda) {
@@ -16,12 +16,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 exitOnOverlayClick: false,
                 steps: [
                     {
-                        title: "Resolver Detalles Vagos",
-                        intro: "En esta pantalla puedes resolver detalles que no quedaron claros al crear un pedido o encargo."
+                        title: "Módulo de Ajustes",
+                        intro: "Aquí configuras opciones generales del sistema."
                     },
                     {
                         element: document.querySelector('.card'),
-                        intro: "Revisa cada detalle y especifica el producto o material exacto a asignar."
+                        intro: "Puedes ver o actualizar configuraciones clave, como la tasa del Dólar."
                     }
                 ]
             });

@@ -1,8 +1,8 @@
-document.addEventListener('DOMContentLoaded', () => {
+/**
+ * ventas.js - Funciones para Ventas
+ */
 
-});
-
-// --- Configuración de Intro.js para Usuarios ---
+// --- Configuración de Intro.js para Ventas ---
 document.addEventListener('DOMContentLoaded', () => {
     const btnAyuda = document.getElementById('btnAyudaInteractiva');
     if (btnAyuda) {
@@ -16,16 +16,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 exitOnOverlayClick: false,
                 steps: [
                     {
-                        title: "Módulo de Usuarios",
-                        intro: "Aquí puedes gestionar los usuarios con acceso al sistema y sus roles."
+                        title: "Módulo de Ventas",
+                        intro: "Aquí registras y gestionas las ventas directas a los clientes."
                     },
                     {
-                        element: document.querySelector('button[data-bs-target="#agregarUsuarioModal"]'),
-                        intro: "Con este botón puedes registrar un nuevo usuario en el sistema."
+                        element: document.querySelector('button[data-bs-target="#agregarVentaModal"]'),
+                        intro: "Presiona este botón para iniciar el registro de una nueva venta."
                     },
                     {
                         element: document.querySelector('.table-responsive'),
-                        intro: "Esta tabla muestra los usuarios. Puedes editar sus permisos o inactivarlos."
+                        intro: "Aquí puedes ver el historial de ventas concretadas."
                     }
                 ]
             });

@@ -78,16 +78,6 @@ window.onpageshow = function(event) {
       </a>
     </li>
 
-    <li class="nav-item m-1 fs-6">
-      <a class="nav-link" href="?c=Creditos">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"
-          class='bx bxs-chart icon'><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-          <path fill="#ffffff"
-            d="M64 64C28.7 64 0 92.7 0 128V384c0 35.3 28.7 64 64 64H512c35.3 0 64-28.7 64-64V128c0-35.3-28.7-64-64-64H64zm64 320H64V320c35.3 0 64 28.7 64 64zM64 192V128h64c0 35.3-28.7 64-64 64zM448 384c0-35.3 28.7-64 64-64v64H448zm64-192c-35.3 0-64-28.7-64-64h64v64zM288 160a96 96 0 1 1 0 192 96 96 0 1 1 0-192z" />
-        </svg>
-        Créditos
-      </a>
-    </li>
 
     <li class="nav-item m-1 fs-6">
       <a class="nav-link" href="?c=Pagos">
@@ -97,18 +87,7 @@ window.onpageshow = function(event) {
         Pagos
       </a>
 
-    <!-- <li class="nav-item m-1 fs-6">
-      <a class="nav-link" href="?c=Despacho">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"
-          class='bx bxs-chart icon'><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.
-          <path fill="#ffffff"
-            d="M48 0C21.5 0 0 21.5 0 48L0 368c0 26.5 21.5 48 48 48l16 0c0 53 43 96 96 96s96-43 96-96l128 0c0 53 43 96 96 96s96-43 96-96l32 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l0-64 0-32 0-18.7c0-17-6.7-33.3-18.7-45.3L512 114.7c-12-12-28.3-18.7-45.3-18.7L416 96l0-48c0-26.5-21.5-48-48-48L48 0zM416 160l50.7 0L544 237.3l0 18.7-128 0 0-96zM112 416a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm368-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z" />
-        </svg>
-          Gestión de
-          <br>
-          Despachos 
-      </a>
-    </li> -->
+
 
 
     <li class="nav-item m-1 fs-6">
@@ -161,6 +140,13 @@ window.onpageshow = function(event) {
         <span class="text-dark fw-semibold me-2">Dólar BCV:</span>
         <span class="text-success fw-bold" id="Dolar_bcv"><?= htmlspecialchars($tasaValor) ?> Bs</span>
     </div>
+
+    <button id="btnAyudaInteractiva" class="me-3 text-dark" title="Ayuda Interactiva" style="background: none; border: none; padding: 0;">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="26" height="26" fill="currentColor">
+        <!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+        <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM169.8 165.3c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 .1-.4 .3-.6 .5V288c0 17.7-14.3 32-32 32s-32-14.3-32-32v-39.2c0-8.5 3.4-16.6 9.4-22.6l32.7-32.7c6.6-6.6 10.5-15.6 10.5-25c0-19.4-15.8-35.1-35.1-35.1H222.6c-8.9 0-16.9 5.6-19.9 14.1l-18.1 51.3c-5.9 16.7-24.2 25.4-40.8 19.5s-25.4-24.2-19.5-40.8l18.1-51.3zM256 352a40 40 0 1 1 0 80 40 40 0 1 1 0-80z"/>
+      </svg>
+    </button>
 
     <a href="?c=Ajustes" class="me-3 text-dark" title="Ajustes y Configuración">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="26" height="26" fill="currentColor">

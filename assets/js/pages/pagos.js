@@ -118,3 +118,31 @@ $(document).ready(function() {
         location.reload();
     });
 });
+
+// --- Configuración de Intro.js para Pagos ---
+document.addEventListener('DOMContentLoaded', () => {
+    const btnAyuda = document.getElementById('btnAyudaInteractiva');
+    if (btnAyuda) {
+        btnAyuda.addEventListener('click', (e) => {
+            e.preventDefault();
+            const tour = introJs();
+            tour.setOptions({
+                nextLabel: 'Siguiente',
+                prevLabel: 'Anterior',
+                doneLabel: 'Entendido',
+                exitOnOverlayClick: false,
+                steps: [
+                    {
+                        title: "Módulo de Pagos",
+                        intro: "Aquí puedes visualizar y auditar los pagos que requieren verificación."
+                    },
+                    {
+                        element: document.querySelector('.table-responsive'),
+                        intro: "En la tabla se listan las Notas de Entrega que tienen pagos pendientes de verificar. Usa los botones de acción para aprobar o rechazar cada uno."
+                    }
+                ]
+            });
+            tour.start();
+        });
+    }
+});

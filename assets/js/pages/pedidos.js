@@ -247,3 +247,31 @@ document.addEventListener('DOMContentLoaded', () => {
     initPedidoDetalles();
 
 });
+
+// --- Configuración de Intro.js para Pedidos ---
+document.addEventListener('DOMContentLoaded', () => {
+    const btnAyuda = document.getElementById('btnAyudaInteractiva');
+    if (btnAyuda) {
+        btnAyuda.addEventListener('click', (e) => {
+            e.preventDefault();
+            const tour = introJs();
+            tour.setOptions({
+                nextLabel: 'Siguiente',
+                prevLabel: 'Anterior',
+                doneLabel: 'Entendido',
+                exitOnOverlayClick: false,
+                steps: [
+                    {
+                        title: "Módulo de Pedidos",
+                        intro: "En este módulo se gestionan los pedidos o encargos."
+                    },
+                    {
+                        element: document.querySelector('.table-responsive'),
+                        intro: "Aquí ves la lista de pedidos pendientes, en proceso o completados."
+                    }
+                ]
+            });
+            tour.start();
+        });
+    }
+});

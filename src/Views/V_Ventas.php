@@ -1,25 +1,17 @@
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="assets/css/css.css">
-    <link rel="stylesheet" href="assets/css/tabla.css">
-    <link rel="stylesheet" href="assets/css/header.css">
-    <link rel="stylesheet" href="assets/bootstrap.min.css">
-    <link rel="icon" href="assets/img/dalulisto.png">
-    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-    
-    <link rel="stylesheet" href="assets/DataTablet/datatables.css">
-    <script src="assets/js/Ventas.js" defer></script>
-    <script src="assets/js/js.js" defer></script>
-    <script src="assets/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/DataTablet/datatables.min.js" defer></script>
-    <script src="assets/DataTablet/tabla.js" defer></script>
-
-    <title>Ventas</title>
-</head>
+<?php
+$tituloPagina = "Ventas";
+$extraCss = [
+    "assets/css/css.css",
+    "assets/css/tabla.css",
+    "assets/DataTablet/datatables.css"
+];
+$extraJs = [
+    "assets/js/pages/ventas.js",
+    "assets/DataTablet/datatables.min.js",
+    "assets/DataTablet/tabla.js"
+];
+require_once __DIR__ . "/../Views/layout/head.php";
+?>
 
 <body>
     <?php require_once __DIR__ . "/../Views/layout/header.php"; ?>

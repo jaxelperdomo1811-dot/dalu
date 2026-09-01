@@ -1,24 +1,20 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="assets/css/css.css">
-    <link rel="stylesheet" href="assets/css/header.css">
-    <link rel="stylesheet" href="assets/bootstrap.min.css">
-    <link rel="icon" href="assets/img/dalulisto.png">
-    <script src="assets/js/libs/jquery-3.7.1.min.js"></script>
-    <script src="assets/js/bootstrap.bundle.min.js"></script>
-    <title>Resolver Detalles Vagos - Pedido #<?= htmlspecialchars($pedido['id']) ?></title>
-    <style>
-        .resuelto { background-color: #d1e7dd !important; }
-        .ignorado { background-color: #e2e3e5 !important; }
-    </style>
-    <link rel="stylesheet" href="assets/css/libs/select2.min.css">
-    <link rel="stylesheet" href="assets/css/libs/select2-bootstrap-5-theme.min.css">
-    <script src="assets/js/libs/select2.min.js" defer></script>
-    <script src="assets/js/pages/resolver_detalles.js" defer></script>
-</head>
+<?php
+$tituloPagina = "Resolver Detalles Vagos - Pedido #" . htmlspecialchars($pedido['id']);
+$extraCss = [
+    "assets/css/css.css",
+    "assets/css/libs/select2.min.css",
+    "assets/css/libs/select2-bootstrap-5-theme.min.css"
+];
+$extraJs = [
+    "assets/js/libs/select2.min.js",
+    "assets/js/pages/resolver_detalles.js"
+];
+require_once __DIR__ . "/../Views/layout/head.php";
+?>
+<style>
+    .resuelto { background-color: #d1e7dd !important; }
+    .ignorado { background-color: #e2e3e5 !important; }
+</style>
 <body>
     <?php require_once __DIR__ . "/../Views/layout/header.php"; ?>
     

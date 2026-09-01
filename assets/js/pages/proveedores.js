@@ -412,3 +412,38 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+// --- Configuración de Intro.js para Proveedores ---
+document.addEventListener('DOMContentLoaded', () => {
+    const btnAyuda = document.getElementById('btnAyudaInteractiva');
+    if (btnAyuda) {
+        btnAyuda.addEventListener('click', (e) => {
+            e.preventDefault();
+            const tour = introJs();
+            tour.setOptions({
+                nextLabel: 'Siguiente',
+                prevLabel: 'Anterior',
+                doneLabel: 'Entendido',
+                exitOnOverlayClick: false,
+                steps: [
+                    {
+                        title: "Módulo de Proveedores",
+                        intro: "Aquí puedes gestionar a los proveedores de la tienda y sus compras."
+                    },
+                    {
+                        element: document.querySelector('button[data-bs-target="#agregarProveedorModal"]'),
+                        intro: "Utiliza este botón para registrar un nuevo proveedor."
+                    },
+                    {
+                        element: document.querySelector('button[data-bs-target="#agregarEntradaModal"]'),
+                        intro: "Con este botón puedes registrar una Nueva Compra a un proveedor existente."
+                    },
+                    {
+                        element: document.querySelector('.table-responsive'),
+                        intro: "Aquí se listan todos tus proveedores. Puedes ver más detalles, editarlos o inactivarlos usando los botones de acción."
+                    }
+                ]
+            });
+            tour.start();
+        });
+    }
+});

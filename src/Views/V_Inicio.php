@@ -1,17 +1,13 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <title>Dalu Boutique - Inicio</title>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="assets/css/header.css">
-    <link rel="stylesheet" href="assets/css/inicio.css">
-    <link rel="stylesheet" href="assets/bootstrap.min.css">
-    <link rel="icon" href="assets/img/dalulisto.png">
-    <script src="assets/js/js.js" defer></script>
-    <script src="assets/js/libs/jquery-3.7.1.min.js"></script>
-    <script src="assets/js/bootstrap.bundle.min.js"></script>
-</head>
+<?php
+$tituloPagina = "Dalu Boutique - Inicio";
+$extraCss = [
+    "assets/css/inicio.css"
+];
+$extraJs = [
+    "assets/js/pages/inicio.js"
+];
+require_once __DIR__ . "/../Views/layout/head.php";
+?>
 
 <body>
 

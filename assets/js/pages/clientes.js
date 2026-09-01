@@ -99,3 +99,35 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// --- Configuración de Intro.js para Clientes ---
+document.addEventListener('DOMContentLoaded', () => {
+    const btnAyuda = document.getElementById('btnAyudaInteractiva');
+    if (btnAyuda) {
+        btnAyuda.addEventListener('click', (e) => {
+            e.preventDefault();
+            const tour = introJs();
+            tour.setOptions({
+                nextLabel: 'Siguiente',
+                prevLabel: 'Anterior',
+                doneLabel: 'Entendido',
+                exitOnOverlayClick: false,
+                steps: [
+                    {
+                        title: "Módulo de Clientes",
+                        intro: "Aquí puedes gestionar a los clientes de tu negocio."
+                    },
+                    {
+                        element: document.querySelector('button[data-bs-target="#agregarClienteModal"]'),
+                        intro: "Utiliza este botón para registrar un nuevo cliente."
+                    },
+                    {
+                        element: document.querySelector('.table-responsive'),
+                        intro: "Aquí se listan todos tus clientes. Puedes editarlos usando las acciones disponibles."
+                    }
+                ]
+            });
+            tour.start();
+        });
+    }
+});

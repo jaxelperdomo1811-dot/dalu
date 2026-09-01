@@ -391,3 +391,35 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 });
+
+// --- Configuración de Intro.js para Productos ---
+document.addEventListener('DOMContentLoaded', () => {
+    const btnAyuda = document.getElementById('btnAyudaInteractiva');
+    if (btnAyuda) {
+        btnAyuda.addEventListener('click', (e) => {
+            e.preventDefault();
+            const tour = introJs();
+            tour.setOptions({
+                nextLabel: 'Siguiente',
+                prevLabel: 'Anterior',
+                doneLabel: 'Entendido',
+                exitOnOverlayClick: false,
+                steps: [
+                    {
+                        title: "Módulo de Productos",
+                        intro: "Aquí puedes gestionar el inventario de productos de tu tienda."
+                    },
+                    {
+                        element: document.querySelector('button[data-bs-target="#modalCrearProducto"]'),
+                        intro: "Utiliza este botón para añadir un nuevo producto al catálogo."
+                    },
+                    {
+                        element: document.querySelector('.table-responsive'),
+                        intro: "En esta tabla puedes ver todos tus productos, editar su información, gestionar imágenes o inactivarlos."
+                    }
+                ]
+            });
+            tour.start();
+        });
+    }
+});

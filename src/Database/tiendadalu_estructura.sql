@@ -70,58 +70,7 @@ CREATE TABLE `clientes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
--- --------------------------------------------------------
 
---
--- Estructura de tabla para la tabla `creditos`
---
-
-CREATE TABLE `creditos` (
-  `id` int(11) NOT NULL,
-  `id_nota_entrega` int(11) NOT NULL,
-  `porcentaje_inicial` int(11) NOT NULL,
-  `monto_cuota_inicial` decimal(10,2) NOT NULL,
-  `nro_cuotas` int(11) NOT NULL,
-  `monto_por_cuota` decimal(10,2) NOT NULL,
-  `frecuencia` VARCHAR(50) NOT NULL,
-  `estado` VARCHAR(50) NOT NULL DEFAULT 'pendiente',
-  `fecha_registro` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `creditos_cuotas`
---
-
-CREATE TABLE `creditos_cuotas` (
-  `id` int(11) NOT NULL,
-  `id_credito` int(11) NOT NULL,
-  `tipo_cuota` VARCHAR(50) NOT NULL,
-  `nro_cuota` int(11) NOT NULL,
-  `monto` decimal(10,2) NOT NULL,
-  `monto_restante` decimal(10,2) NOT NULL,
-  `fecha_vencimiento` date NOT NULL,
-  `estado` VARCHAR(50) NOT NULL DEFAULT 'pendiente',
-  `fecha_pago` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `despachos`
---
-
-CREATE TABLE `despachos` (
-  `id` int(11) NOT NULL,
-  `id_nota_entrega` int(11) NOT NULL,
-  `numero_despacho` varchar(50) NOT NULL,
-  `fecha_despacho` date NOT NULL,
-  `estado` VARCHAR(50) NOT NULL DEFAULT 'pendiente',
-  `fecha_registro` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
 -- --------------------------------------------------------
@@ -204,7 +153,6 @@ CREATE TABLE `notas_entrega` (
   `id_cliente` int(11) NOT NULL,
   `fecha_pedido` datetime NOT NULL,
   `estado` VARCHAR(50) NOT NULL DEFAULT 'pendiente',
-  `tipo` VARCHAR(50) NOT NULL DEFAULT 'debito',
   `total` decimal(10,2) NOT NULL DEFAULT 0.00,
   `observaciones` text DEFAULT NULL,
   `fecha_registro` timestamp NOT NULL DEFAULT current_timestamp()
@@ -429,26 +377,7 @@ ALTER TABLE `clientes`
   ADD UNIQUE KEY `correo` (`correo`),
   ADD UNIQUE KEY `telefono` (`telefono`);
 
---
--- Indices de la tabla `creditos`
---
-ALTER TABLE `creditos`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `id_nota_entrega` (`id_nota_entrega`);
 
---
--- Indices de la tabla `creditos_cuotas`
---
-ALTER TABLE `creditos_cuotas`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `id_credito` (`id_credito`);
-
---
--- Indices de la tabla `despachos`
---
-ALTER TABLE `despachos`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `id_nota_entrega` (`id_nota_entrega`);
 
 --
 -- Indices de la tabla `detalles_entrada`
@@ -592,23 +521,7 @@ ALTER TABLE `categorias`
 ALTER TABLE `clientes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
---
--- AUTO_INCREMENT de la tabla `creditos`
---
-ALTER TABLE `creditos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
---
--- AUTO_INCREMENT de la tabla `creditos_cuotas`
---
-ALTER TABLE `creditos_cuotas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
-
---
--- AUTO_INCREMENT de la tabla `despachos`
---
-ALTER TABLE `despachos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `detalles_entrada`
@@ -710,23 +623,7 @@ ALTER TABLE `usuarios`
 -- Restricciones para tablas volcadas
 --
 
---
--- Filtros para la tabla `creditos`
---
-ALTER TABLE `creditos`
-  ADD CONSTRAINT `creditos_ibfk_1` FOREIGN KEY (`id_nota_entrega`) REFERENCES `notas_entrega` (`id`) ON DELETE CASCADE;
 
---
--- Filtros para la tabla `creditos_cuotas`
---
-ALTER TABLE `creditos_cuotas`
-  ADD CONSTRAINT `creditos_cuotas_ibfk_1` FOREIGN KEY (`id_credito`) REFERENCES `creditos` (`id`) ON DELETE CASCADE;
-
---
--- Filtros para la tabla `despachos`
---
-ALTER TABLE `despachos`
-  ADD CONSTRAINT `despachos_ibfk_1` FOREIGN KEY (`id_nota_entrega`) REFERENCES `notas_entrega` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `detalles_entrada`

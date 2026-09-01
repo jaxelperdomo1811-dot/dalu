@@ -1,16 +1,13 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="assets/css/css.css">
-    <link rel="stylesheet" href="assets/css/header.css">
-    <link rel="stylesheet" href="assets/bootstrap.min.css">
-    <link rel="icon" href="assets/img/dalulisto.png">
-    <script src="assets/js/js.js" defer></script>
-    <script src="assets/js/bootstrap.bundle.min.js"></script>
-    <title>Ajustes y Configuración</title>
-</head>
+<?php
+$tituloPagina = "Ajustes y Configuración";
+$extraCss = [
+    "assets/css/css.css"
+];
+$extraJs = [
+    "assets/js/pages/ajustes.js"
+];
+require_once __DIR__ . "/../Views/layout/head.php";
+?>
 <body>
     <?php require_once __DIR__ . "/../Views/layout/header.php"; ?>
     <main>

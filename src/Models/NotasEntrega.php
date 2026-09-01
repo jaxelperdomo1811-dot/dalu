@@ -9,7 +9,6 @@ class NotasEntrega extends Conexion {
     private $id_cliente;
     private $fecha_pedido;
     private $estado;
-    private $tipo;
     private $total;
     private $observaciones;
     private $detalles = [];
@@ -22,7 +21,6 @@ class NotasEntrega extends Conexion {
     public function setIdCliente($id_cliente) { $this->id_cliente = $id_cliente; return $this; }
     public function setFechaPedido($fecha_pedido) { $this->fecha_pedido = $fecha_pedido; return $this; }
     public function setEstado($estado) { $this->estado = $estado; return $this; }
-    public function setTipo($tipo) { $this->tipo = $tipo; return $this; }
     public function setTotal($total) { $this->total = $total; return $this; }
     public function setObservaciones($observaciones) { $this->observaciones = $observaciones; return $this; }
     public function setDetalles($detalles) { $this->detalles = $detalles; return $this; }
@@ -31,7 +29,6 @@ class NotasEntrega extends Conexion {
     public function getIdCliente() { return $this->id_cliente; }
     public function getFechaPedido() { return $this->fecha_pedido; }
     public function getEstado() { return $this->estado; }
-    public function getTipo() { return $this->tipo; }
     public function getTotal() { return $this->total; }
     public function getObservaciones() { return $this->observaciones; }
     public function getDetallesObj() { return $this->detalles; }
@@ -51,22 +48,7 @@ class NotasEntrega extends Conexion {
         }
     }
 
-    public function getByTipo($tipo) {
-        try {
-            $sql = "SELECT n.*, c.nombre as nombre_cliente 
-                    FROM notas_entrega n
-                    LEFT JOIN clientes c ON n.id_cliente = c.id
-                    WHERE n.tipo = :tipo
-                    ORDER BY n.fecha_registro DESC";
-            $stmt = $this->prepare($sql);
-            $stmt->bindParam(':tipo', $tipo);
-            $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            error_log("Error al buscar notas de entrega por tipo: " . $e->getMessage());
-            return [];
-        }
-    }
+
 
     public function getDetalles($id_nota) {
         try {
@@ -103,13 +85,12 @@ class NotasEntrega extends Conexion {
 
     public function insert() {
         try {
-            $sql = "INSERT INTO notas_entrega (id_cliente, fecha_pedido, estado, tipo, total, observaciones) 
-                    VALUES (:id_cliente, :fecha_pedido, :estado, :tipo, :total, :observaciones)";
+            $sql = "INSERT INTO notas_entrega (id_cliente, fecha_pedido, estado, total, observaciones) 
+                    VALUES (:id_cliente, :fecha_pedido, :estado, :total, :observaciones)";
             $stmt = $this->prepare($sql);
             $stmt->bindParam(":id_cliente", $this->id_cliente);
             $stmt->bindParam(":fecha_pedido", $this->fecha_pedido);
             $stmt->bindParam(":estado", $this->estado);
-            $stmt->bindParam(":tipo", $this->tipo);
             $stmt->bindParam(":total", $this->total);
             $stmt->bindParam(":observaciones", $this->observaciones);
             $stmt->execute();

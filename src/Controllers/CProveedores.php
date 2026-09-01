@@ -100,7 +100,7 @@ switch ($accion) {
             'success' => true,
             'exists' => false,
             'valid_format' => (bool)$isValidFormat,
-            'message' => $isValidFormat ? 'Cédula válida sintácticamente.' : 'Formato de cédula inválido.'
+            'message' => $isValidFormat ? 'Cédula válida no registrada.' : 'Formato de cédula inválido.'
         ]);
         exit;
         break;
