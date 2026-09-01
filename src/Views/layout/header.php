@@ -125,7 +125,7 @@ window.onpageshow = function(event) {
       <a class="nav-link" href="?c=Servicios">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" class='bx bxs-chart icon'><!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path fill="#ffffff" d="M88 289.6L64.4 360.2L64.4 160C64.4 124.7 93.1 96 128.4 96L267.1 96C280.9 96 294.4 100.5 305.5 108.8L343.9 137.6C349.4 141.8 356.2 144 363.1 144L480.4 144C515.7 144 544.4 172.7 544.4 208L544.4 224L179 224C137.7 224 101 250.4 87.9 289.6zM509.8 512L131 512C98.2 512 75.1 479.9 85.5 448.8L133.5 304.8C140 285.2 158.4 272 179 272L557.8 272C590.6 272 613.7 304.1 603.3 335.2L555.3 479.2C548.8 498.8 530.4 512 509.8 512z"/>
       </svg>
-        Servicios
+        Encargos
       </a>
     </li>
     <li class="nav-item  m-1 fs-6">
@@ -206,7 +206,7 @@ window.onpageshow = function(event) {
             <input type="hidden" id="inputTasaId" name="id">
           </div>
           <div class="mb-2">
-            <button type="button" class="btn btn-outline-primary btn-sm" id="btnActualizarApi">Actualizar con API BCV</button>
+            <button type="button" class="btn btn-outline-primary btn-sm" id="btnActualizarApi">Usar tasa actual</button>
           </div>
           <div>
             <label class="form-label">Última actualización:</label>
@@ -245,14 +245,13 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     $('#btnActualizarApi').on('click', function() {
-        fetch("https://ve.dolarapi.com/v1/dolares")
-            .then(res => res.json())
-            .then(data => {
-                $('#inputTasa').val(parseFloat(data[0].promedio).toFixed(2));
-            }).catch(err => {
-                console.error("Error al obtener la API del BCV", err);
-                alert("Error al obtener la tasa desde la API.");
-            });
+      // Evitar llamadas a APIs externas: usar la tasa almacenada en el servidor
+      var serverTasa = <?php echo json_encode(floatval($tasaActual_header['valor'] ?? 0)); ?>;
+      if (!isNaN(serverTasa) && serverTasa > 0) {
+        $('#inputTasa').val(parseFloat(serverTasa).toFixed(2));
+      } else {
+        alert('Tasa no disponible en el servidor. Actualice manualmente.');
+      }
     });
 
     $('#formTasa').on('submit', function(e) {

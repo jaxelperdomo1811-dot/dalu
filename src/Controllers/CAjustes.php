@@ -27,20 +27,13 @@ switch ($accion) {
 
             if ($nombre && is_numeric($valor)) {
                 $tasaModel = new Tasa();
-                // Verificamos si existe el registro para actualizar o insertar
-                $existente = $tasaModel->getLatest($nombre);
-                
                 $tasaModel->setNombre($nombre);
                 $tasaModel->setValor(floatval($valor));
 
-                if ($existente) {
-                    $tasaModel->setId($existente['id']);
-                }
-
-                if ($tasaModel->update()) {
-                    $_SESSION['success'] = "Tasa {$nombre} actualizada exitosamente.";
+                if ($tasaModel->insert()) {
+                    $_SESSION['success'] = "Tasa {$nombre} registrada exitosamente.";
                 } else {
-                    $_SESSION['error'] = "Error al actualizar la tasa {$nombre}.";
+                    $_SESSION['error'] = "Error al registrar la tasa {$nombre}.";
                 }
             } else {
                 $_SESSION['error'] = "Datos inválidos para la tasa.";

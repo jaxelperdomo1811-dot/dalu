@@ -5,49 +5,43 @@
     $accion = $_GET['accion'] ?? $_POST['accion'] ?? 'view';
 
     switch ($accion) {
-        case 'view':
-            $clientes = (new Clientes())->search();
-            $clientesInactivos = (new Clientes())->searchInactive();
-            require_once __DIR__ . '/../Views/V_cliente.php';
-            break;
-        case 'insert':
-            $telefonoRaw = trim($_POST['phone_full'] ?? $_POST['telefono'] ?? '');
-            $telefono = preg_replace('/[^\d+]/', '', $telefonoRaw);
-            
-            if (preg_match('/^0(?:412|414|416|422|424|426)\d{7}$/', $telefono)) {
-                $telefono = '+58' . substr($telefono, 1);
-            } elseif (preg_match('/^(?:412|414|416|422|424|426)\d{7}$/', $telefono)) {
-                $telefono = '+58' . $telefono;
-            } elseif ($telefono !== '' && strpos($telefono, '+') !== 0) {
-                $telefono = '+' . $telefono;
+        case 'consultarCedula':
+            header('Content-Type: application/json');
+            $tipoPersona = $_GET['tipo_persona'] ?? '';
+            $cedula = $_GET['cedula'] ?? '';
+
+            if (empty($tipoPersona) || empty($cedula)) {
+                echo json_encode(['success' => false, 'error' => 'Faltan parámetros']);
+                exit;
             }
 
-            if (!empty($telefono) && !preg_match('/^\+[1-9]\d{6,14}$/', $telefono)) {
-                $_SESSION['error'] = "Error: El número de teléfono no es válido o no tiene el formato correcto (+58...).";
-                header("Location: ?c=clientes&accion=view");
-                exit();
+            $cedulaCompleta = trim($tipoPersona . $cedula);
+            $clienteModel = new Clientes();
+            $clienteExistente = $clienteModel->getByCedula($cedulaCompleta);
+
+            if ($clienteExistente) {
+                echo json_encode([
+                    'success' => true,
+                    'exists' => true,
+                    'source' => 'db',
+                    'data' => [
+                        'id' => $clienteExistente['id'],
+                        'nombre_completo' => trim(($clienteExistente['nombre'] ?? '') . ' ' . ($clienteExistente['apellido'] ?? ''))
+                    ]
+                ]);
+                exit;
             }
 
-            $cliente = new Clientes();
-            $tipoPersona = $_POST['tipo_persona'] ?? '';
-            $cedulaNumero = $_POST['cedula'] ?? '';
-            $cedulaCompleta = trim($tipoPersona . $cedulaNumero);
+            // Validación sintáctica básica de cédula (6-9 dígitos)
+            $isValidFormat = preg_match('/^\d{6,9}$/', $cedula);
 
-            $cliente->setNombre($_POST['nombre'] ?? null)
-                    ->setApellido($_POST['apellido'] ?? null)
-                    ->setCorreo($_POST['correo'] ?? null)
-                    ->setTelefono($telefono)
-                    ->setDireccion($_POST['direccion'] ?? null)
-                    ->setCedula($cedulaCompleta !== '' ? $cedulaCompleta : null);
-            try {
-                if ($cliente->insert()) {
-                    $_SESSION['success'] = "Cliente registrado exitosamente.";
-                } else {
-                    $_SESSION['error'] = "Error al insertar el cliente.";
-                }
-            } catch (\PDOException $e) {
-                if ($e->getCode() == 23000) {
-                    $_SESSION['error'] = "Error: Ya existe un cliente registrado con esta cédula.";
+            echo json_encode([
+                'success' => true,
+                'exists' => false,
+                'valid_format' => (bool)$isValidFormat,
+                'message' => $isValidFormat ? 'Cédula válida sintácticamente.' : 'Formato de cédula inválido.'
+            ]);
+            exit;
                 } else {
                     $_SESSION['error'] = "Error de base de datos: " . $e->getMessage();
                 }
@@ -140,27 +134,8 @@
             
             $nacionalidad = str_replace('-', '', $tipoPersona);
             
-            $envFile = __DIR__ . '/../../.env';
-            if (file_exists($envFile)) {
-                $env = parse_ini_file($envFile);
-                $app_id = $env['app_id'] ?? '';
-                $token = $env['token'] ?? '';
-                
-                $url = "https://api.cedula.com.ve/api/v1?app_id={$app_id}&token={$token}&nacionalidad={$nacionalidad}&cedula={$cedula}";
-                
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, $url);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                $response = curl_exec($ch);
-                curl_close($ch);
-                
-                if ($response !== false) {
-                    echo $response;
-                    exit;
-                }
-            }
-            echo json_encode(['error' => 'No se pudo consultar la API']);
+            // Consulta externa deshabilitada: usar registro manual o buscar en BD
+            echo json_encode(['error' => 'API_disabled', 'message' => 'Consulta externa de cédula deshabilitada.']);
             exit;
             break;
         case 'buscarYRegistrarCedula':
@@ -185,57 +160,8 @@
                 exit;
             }
 
-            $nacionalidad = str_replace('-', '', $tipoPersona);
-            $envFile = __DIR__ . '/../../.env';
-            if (file_exists($envFile)) {
-                $env = parse_ini_file($envFile);
-                $app_id = $env['app_id'] ?? '';
-                $token = $env['token'] ?? '';
-                
-                $url = "https://api.cedula.com.ve/api/v1?app_id={$app_id}&token={$token}&nacionalidad={$nacionalidad}&cedula={$cedula}";
-                
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, $url);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                $response = curl_exec($ch);
-                curl_close($ch);
-                
-                if ($response !== false) {
-                    $apiData = json_decode($response, true);
-                    if (!empty($apiData['data'])) {
-                        $persona = $apiData['data'];
-                        $nombre = trim(($persona['primer_nombre'] ?? '') . ' ' . ($persona['segundo_nombre'] ?? ''));
-                        $apellido = trim(($persona['primer_apellido'] ?? '') . ' ' . ($persona['segundo_apellido'] ?? ''));
-                        
-                        $clienteModel->setNombre($nombre)
-                                     ->setApellido($apellido)
-                                     ->setCedula($cedulaCompleta)
-                                     ->setTelefono(null)
-                                     ->setCorreo(null)
-                                     ->setDireccion(null);
-                        
-                        try {
-                            if ($clienteModel->insert()) {
-                                $nuevoCliente = $clienteModel->getByCedula($cedulaCompleta);
-                                echo json_encode(['success' => true, 'source' => 'api_and_db', 'data' => [
-                                    'id' => $nuevoCliente['id'],
-                                    'nombre_completo' => trim($nombre . ' ' . $apellido)
-                                ]]);
-                                exit;
-                            } else {
-                                echo json_encode(['success' => false, 'error' => 'Error al guardar en BD']);
-                                exit;
-                            }
-                        } catch (\Exception $e) {
-                            echo json_encode(['success' => false, 'error' => 'Error BD: ' . $e->getMessage()]);
-                            exit;
-                        }
-                    }
-                }
-            }
-            
-            echo json_encode(['success' => false, 'error' => 'Cédula no encontrada']);
+            // API externa deshabilitada: devolver instrucción para registro manual
+            echo json_encode(['success' => false, 'error' => 'API_disabled', 'message' => 'Consulta externa deshabilitada. Registre el cliente manualmente.']);
             exit;
             break;
         default:

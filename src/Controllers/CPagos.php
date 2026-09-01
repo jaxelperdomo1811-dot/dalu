@@ -92,7 +92,7 @@ switch($accion) {
                                     ->setIdMetodoPago($id_metodo_pago)
                                     ->setMontoBs($monto_bs)
                                     ->setMontoUsd($monto_usd)
-                                    ->setTasa($valor_tasa)
+                                    ->setIdTasa($tasa_actual['id'] ?? 1)
                                     ->setReferencia($referencia);
 
                         if ($modeloPagos->insert()) {

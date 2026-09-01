@@ -30,26 +30,21 @@ document.addEventListener('DOMContentLoaded', () => {
                         const rInput = modal.querySelector('input[name="rif"]');
                         const btnSubmit = modal.querySelector('button[type="submit"]');
 
-                        if (data.error_db) {
-                            mensajeCedula.style.color = 'red';
-                            mensajeCedula.innerText = data.error_db;
-                            if (nInput) nInput.value = '';
+                        if (data.exists) {
+                            const persona = data.data || {};
+                            if (nInput) nInput.value = persona.nombre_completo || '';
                             if (aInput) aInput.value = '';
-                            if (rInput) rInput.value = '';
-                            if (btnSubmit) btnSubmit.disabled = true;
-                        } else if (data.data) {
-                            const persona = data.data;
-                            
-                            if (nInput) nInput.value = `${persona.primer_nombre || ''} ${persona.segundo_nombre || ''}`.trim();
-                            if (aInput) aInput.value = `${persona.primer_apellido || ''} ${persona.segundo_apellido || ''}`.trim();
-                            if (rInput && persona.rif) rInput.value = persona.rif;
-                            
+                            if (rInput && persona.rif) rInput.value = persona.rif || '';
+
                             mensajeCedula.style.color = 'green';
                             mensajeCedula.innerText = 'Datos encontrados.';
                             if (btnSubmit) btnSubmit.disabled = false;
                         } else {
-                            mensajeCedula.style.color = 'red';
-                            mensajeCedula.innerText = 'Documento no encontrado.';
+                            mensajeCedula.style.color = data.valid_format ? 'orange' : 'red';
+                            mensajeCedula.innerText = data.message || 'Documento no encontrado.';
+                            if (nInput) nInput.value = '';
+                            if (aInput) aInput.value = '';
+                            if (rInput) rInput.value = '';
                             if (btnSubmit) btnSubmit.disabled = false;
                         }
                     } catch (e) {
@@ -401,7 +396,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 modal.show();
                 
                 try {
-                    const response = await fetch('?c=entradas&accion=view_detalles&id=' + id);
+                    const response = await fetch('?c=compraProductos&accion=view_detalles&id=' + id);
                     if (response.ok) {
                         const html = await response.text();
                         contenido.innerHTML = html;

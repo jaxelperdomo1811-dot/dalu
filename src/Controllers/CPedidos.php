@@ -13,7 +13,6 @@ switch ($accion) {
         $pedidos = (new Pedidos())->getByTipo('propios');
         $pedidosC = (new Pedidos())->getByTipo('cliente');
         $pedidosP = (new Pedidos())->getByTipo('proveedor');
-        $clientes = (new Clientes())->search();
         $proveedores = (new Proveedores())->search();
         
         $prodModel = new Productos();
@@ -35,7 +34,7 @@ switch ($accion) {
         $pedido = new Pedidos();
         $pedido->setTipo('propios')
                ->setEstado($_POST['estado'] ?? 'pendiente')
-               ->setIdCliente(null)
+               ->setNombreCliente(null)
                ->setIdProveedor($_POST['id_proveedor']);
 
         // Procesar detalles opcionales
@@ -99,7 +98,7 @@ switch ($accion) {
         $pedido = new Pedidos();
         $pedido->setTipo('proveedor')
                ->setEstado($_POST['estado'] ?? 'pendiente')
-               ->setIdCliente(null)
+               ->setNombreCliente(null)
                ->setIdProveedor($_POST['id_proveedor']);
 
         // Procesar detalles opcionales
@@ -249,7 +248,7 @@ switch ($accion) {
             break;
         }
 
-        $clienteNombre = $pedido['cliente_nombre'] ? trim($pedido['cliente_nombre'] . ' ' . $pedido['cliente_apellido']) : null;
+        $clienteNombre = !empty($pedido['nombre_cliente']) ? trim($pedido['nombre_cliente']) : null;
         $origen = $pedido['tipo'] === 'cliente' ? $clienteNombre : ($pedido['nombre_proveedor'] ?: 'Proveedor no registrado');
         $fecha = $pedido['fecha_pedido'] ?? $pedido['fecha_registro'] ?? 'No disponible';
         $estado = htmlspecialchars($pedido['estado']);

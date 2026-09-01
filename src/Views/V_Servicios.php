@@ -16,7 +16,7 @@
     <script src="assets/js/pages/pedidos.js" defer></script>
     <script src="assets/js/pages/servicios.js" defer></script>
     <script src="assets/DataTablet/tabla.js" defer></script>
-    <title>Servicios</title>
+    <title>Encargos</title>
     <link rel="stylesheet" href="assets/css/libs/select2.min.css">
     <link rel="stylesheet" href="assets/css/libs/select2-bootstrap-5-theme.min.css">
     <script src="assets/js/libs/select2.min.js" defer></script>
@@ -58,7 +58,7 @@
                 <!-- Modulo Clientes -->
                 <div class="tab-pane fade show active" id="modulo-clientes">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h1 class="titulo text-black">Servicio de Pedidos para Clientes</h1>
+                        <h1 class="titulo text-black">Encargos de los Clientes</h1>
                         <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarPC">+ Nuevo Pedido</button>
                     </div>
 

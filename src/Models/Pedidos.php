@@ -4,7 +4,7 @@ use Lenovo\Dalu\Models\Conexion;
 
     class Pedidos extends Conexion {
         private $id;
-        private $id_cliente;
+        private $nombre_cliente;
         private $tipo;
         private $estado;
         private $fecha_registro;
@@ -12,24 +12,24 @@ use Lenovo\Dalu\Models\Conexion;
         
         private $detalles = [];
 
-        public function __construct($id = null, $id_cliente = null, $tipo = null, $estado = 'pendiente', $id_proveedor = null) {
+        public function __construct($id = null, $nombre_cliente = null, $tipo = null, $estado = 'pendiente', $id_proveedor = null) {
             parent::__construct();
             $this->id = $id;
-            $this->id_cliente = $id_cliente;
+            $this->nombre_cliente = $nombre_cliente;
             $this->tipo = $tipo;
             $this->estado = $estado;
             $this->id_proveedor = $id_proveedor;
         }
         
         public function setId($id) { $this->id = $id; return $this; }
-        public function setIdCliente($id_cliente) { $this->id_cliente = $id_cliente; return $this; }
+        public function setNombreCliente($nombre_cliente) { $this->nombre_cliente = $nombre_cliente; return $this; }
         public function setTipo($tipo) { $this->tipo = $tipo; return $this; }
         public function setEstado($estado) { $this->estado = $estado; return $this; }
         public function setIdProveedor($id_proveedor) { $this->id_proveedor = $id_proveedor; return $this; }
         public function setDetalles($detalles) { $this->detalles = $detalles; return $this; }
         
         public function getId() { return $this->id; }
-        public function getIdCliente() { return $this->id_cliente; }
+        public function getNombreCliente() { return $this->nombre_cliente; }
         public function getTipo() { return $this->tipo; }
         public function getEstado() { return $this->estado; }
         public function getIdProveedor() { return $this->id_proveedor; }
@@ -38,11 +38,11 @@ use Lenovo\Dalu\Models\Conexion;
         
         public function insert() {
             try {
-                $sql = "INSERT INTO pedidos (id_cliente, id_proveedor, tipo, estado) 
-                        VALUES (:id_cliente, :id_proveedor, :tipo, :estado)";
+                $sql = "INSERT INTO pedidos (nombre_cliente, id_proveedor, tipo, estado) 
+                        VALUES (:nombre_cliente, :id_proveedor, :tipo, :estado)";
                 
                 $stmt = $this->prepare($sql);
-                $stmt->bindParam(":id_cliente", $this->id_cliente);
+                $stmt->bindParam(":nombre_cliente", $this->nombre_cliente);
                 $stmt->bindParam(":id_proveedor", $this->id_proveedor);
                 $stmt->bindParam(":tipo", $this->tipo);
                 $stmt->bindParam(":estado", $this->estado);
@@ -105,12 +105,8 @@ use Lenovo\Dalu\Models\Conexion;
         // Buscar pedidos activos (no finalizados)
         public function search() {
             $sql = "SELECT p.*, 
-                    COALESCE(NULLIF(pr.razon_social, ''), NULLIF(pr.nombre, ''), 'Proveedor Desconocido') AS nombre_proveedor,
-                    c.nombre as cliente_nombre, 
-                    c.apellido as cliente_apellido,
-                    c.telefono as cliente_telefono
+                    COALESCE(NULLIF(pr.razon_social, ''), NULLIF(pr.nombre, ''), 'Proveedor Desconocido') AS nombre_proveedor
                     FROM pedidos p
-                    LEFT JOIN clientes c ON p.id_cliente = c.id
                     LEFT JOIN proveedores pr ON p.id_proveedor = pr.id
                     WHERE p.estado NOT IN ('recibido', 'cancelado')
                     ORDER BY p.fecha_registro DESC";
@@ -123,11 +119,8 @@ use Lenovo\Dalu\Models\Conexion;
         // Buscar pedidos finalizados (recibidos o cancelados)
         public function searchFinished() {
             $sql = "SELECT p.*, 
-                    COALESCE(NULLIF(pr.razon_social, ''), NULLIF(pr.nombre, ''), 'Proveedor Desconocido') AS nombre_proveedor,
-                    c.nombre as cliente_nombre, 
-                    c.apellido as cliente_apellido
+                    COALESCE(NULLIF(pr.razon_social, ''), NULLIF(pr.nombre, ''), 'Proveedor Desconocido') AS nombre_proveedor
                     FROM pedidos p
-                    LEFT JOIN clientes c ON p.id_cliente = c.id
                     LEFT JOIN proveedores pr ON p.id_proveedor = pr.id
                     WHERE p.estado IN ('recibido', 'cancelado')
                     ORDER BY p.fecha_registro DESC";
@@ -140,14 +133,8 @@ use Lenovo\Dalu\Models\Conexion;
         // buscar pedido por ID con sus detalles
         public function getById($id) {
             $sql = "SELECT p.*, 
-                    COALESCE(NULLIF(pr.razon_social, ''), NULLIF(pr.nombre, ''), 'Proveedor Desconocido') AS nombre_proveedor,
-                    c.nombre as cliente_nombre, 
-                    c.apellido as cliente_apellido,
-                    c.cedula as cliente_cedula,
-                    c.telefono as cliente_telefono,
-                    c.direccion as cliente_direccion
+                    COALESCE(NULLIF(pr.razon_social, ''), NULLIF(pr.nombre, ''), 'Proveedor Desconocido') AS nombre_proveedor
                     FROM pedidos p
-                    LEFT JOIN clientes c ON p.id_cliente = c.id
                     LEFT JOIN proveedores pr ON p.id_proveedor = pr.id
                     WHERE p.id = :id";
             
@@ -168,11 +155,8 @@ use Lenovo\Dalu\Models\Conexion;
          */
         public function getByTipo($tipo) {
             $sql = "SELECT p.*, 
-                    COALESCE(NULLIF(pr.razon_social, ''), NULLIF(pr.nombre, ''), 'Proveedor Desconocido') AS nombre_proveedor,
-                    c.nombre as cliente_nombre, 
-                    c.apellido as cliente_apellido
+                    COALESCE(NULLIF(pr.razon_social, ''), NULLIF(pr.nombre, ''), 'Proveedor Desconocido') AS nombre_proveedor
                     FROM pedidos p
-                    LEFT JOIN clientes c ON p.id_cliente = c.id
                     LEFT JOIN proveedores pr ON p.id_proveedor = pr.id
                     WHERE p.tipo = :tipo
                     ORDER BY p.fecha_registro DESC";
@@ -186,19 +170,16 @@ use Lenovo\Dalu\Models\Conexion;
         /**
          * Obtener pedidos por cliente
          */
-        public function getByCliente($cliente_id) {
+        public function getByNombreCliente($nombre_cliente) {
             $sql = "SELECT p.*, 
-                    COALESCE(NULLIF(pr.razon_social, ''), NULLIF(pr.nombre, ''), 'Proveedor Desconocido') AS nombre_proveedor,
-                    c.nombre as cliente_nombre, 
-                    c.apellido as cliente_apellido
+                    COALESCE(NULLIF(pr.razon_social, ''), NULLIF(pr.nombre, ''), 'Proveedor Desconocido') AS nombre_proveedor
                     FROM pedidos p
-                    LEFT JOIN clientes c ON p.id_cliente = c.id
                     LEFT JOIN proveedores pr ON p.id_proveedor = pr.id
-                    WHERE p.id_cliente = :cliente_id
+                    WHERE p.nombre_cliente = :nombre_cliente
                     ORDER BY p.fecha_registro DESC";
             
             $stmt = $this->prepare($sql);
-            $stmt->bindParam(":cliente_id", $cliente_id);
+            $stmt->bindParam(":nombre_cliente", $nombre_cliente);
             $stmt->execute();
             
             $pedidos = $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -476,11 +457,8 @@ use Lenovo\Dalu\Models\Conexion;
         
         // Obtener pedidos por estado
         public function getByEstado($estado) {
-            $sql = "SELECT p.*, 
-                    c.nombre as cliente_nombre, 
-                    c.apellido as cliente_apellido
+            $sql = "SELECT p.*
                     FROM pedidos p
-                    LEFT JOIN clientes c ON p.id_cliente = c.id
                     WHERE p.estado = :estado
                     ORDER BY p.fecha_registro DESC";
             
@@ -505,11 +483,8 @@ use Lenovo\Dalu\Models\Conexion;
         
         // Buscar pedidos por rango de fechas
         public function getByFechaRange($fecha_inicio, $fecha_fin) {
-            $sql = "SELECT p.*, 
-                        c.nombre as cliente_nombre, 
-                        c.apellido as cliente_apellido
+            $sql = "SELECT p.*
                     FROM pedidos p
-                    LEFT JOIN clientes c ON p.id_cliente = c.id
                     WHERE DATE(p.fecha_registro) BETWEEN :fecha_inicio AND :fecha_fin
                     ORDER BY p.fecha_registro DESC";
             

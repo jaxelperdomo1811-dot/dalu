@@ -43,7 +43,7 @@
                     <button class="nav-link active" id="tab-proveedores" data-bs-toggle="tab" data-bs-target="#modulo-proveedores" type="button">Proveedores</button>
                 </li>
                 <li class="nav-item">
-                    <button class="nav-link" id="tab-entradas" data-bs-toggle="tab" data-bs-target="#modulo-entradas" type="button">Entradas</button>
+                    <button class="nav-link" id="tab-compras" data-bs-toggle="tab" data-bs-target="#modulo-compras" type="button">Compras de Productos</button>
                 </li>
             </ul>
 
@@ -321,19 +321,19 @@
 
                 </div>
 
-                <!-- Modulo Entradas -->
-                <div class="tab-pane fade" id="modulo-entradas">
+                <!-- Modulo Compras de Productos -->
+                <div class="tab-pane fade" id="modulo-compras">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h1 class="titulo text-black">Entradas</h1>
+                        <h1 class="titulo text-black">Compras de Productos</h1>
                         <button type="button" class="btn btn-info text-white" data-bs-toggle="modal" data-bs-target="#entradaModal">
-                            + Nueva Entrada
+                            + Nueva Compra
                         </button>
                     </div>
                     <div class="table-responsive">
                         <table class="table-DT table table-striped">
                             <thead>
                                 <tr>
-                                    <th scope="col">ID Entrada</th>
+                                    <th scope="col">ID Compra</th>
                                     <th scope="col">Lote</th>
                                     <th scope="col">Proveedor</th>
                                     <th scope="col">Fecha</th>
@@ -362,7 +362,7 @@
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                     <tr>
-                                        <td colspan="6" class="text-center">No hay entradas registradas.</td>
+                                        <td colspan="6" class="text-center">No hay compras registradas.</td>
                                     </tr>
                                 <?php endif; ?>
                             </tbody>
@@ -452,16 +452,16 @@
         </div>
     </div>
 
-    <!-- formulario de registro de entradas -->
+    <!-- formulario de registro de compras -->
     <div class="modal fade" id="entradaModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5">Registrar Entrada (Compra)</h1>
+                    <h1 class="modal-title fs-5">Registrar Compra de Productos</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="needs-validation" method="POST" action="?c=entradas&accion=insert" id="entradaForm">
+                    <form class="needs-validation" method="POST" action="?c=compraProductos&accion=insert" id="entradaForm">
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="id_proveedor" class="form-label">Proveedor</label>
@@ -523,7 +523,7 @@
 
                         <div class='modal-footer'>
                             <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Cerrar</button>
-                            <button type='submit' class='btn btn-primary'>Guardar Entrada</button>
+                            <button type='submit' class='btn btn-primary'>Guardar Compra</button>
                         </div>
                     </form>
                 </div>
@@ -534,7 +534,7 @@
         <div class="modal-dialog modal-xl text-center">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Detalles de la Entrada</h5>
+                    <h5 class="modal-title">Detalles de la Compra</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="contenidoEntradasInsumo">

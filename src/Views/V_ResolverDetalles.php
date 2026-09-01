@@ -74,7 +74,7 @@
         
         <div class="text-end mt-4">
             <a href="?c=pedidos&accion=view" class="btn btn-outline-secondary me-2">Volver</a>
-            <form action="?c=entradas&accion=crearDesdePedido" method="POST" class="d-inline" id="formFinalizar">
+            <form action="?c=compraProductos&accion=crearDesdePedido" method="POST" class="d-inline" id="formFinalizar">
                 <input type="hidden" name="pedido_id" value="<?= $pedido['id'] ?>">
                 <button type="button" class="btn btn-success" id="btnFinalizar" onclick="checkFinalizar()">Finalizar y Crear Entrada</button>
             </form>

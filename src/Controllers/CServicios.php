@@ -216,7 +216,7 @@
                                                    ->setIdMetodoPago($id_metodo)
                                                    ->setMontoBs($montoBs)
                                                    ->setMontoUsd($montoUsd)
-                                                   ->setTasa($tasaActual['valor'])
+                                                   ->setIdTasa($tasaActual['id'] ?? 1)
                                                    ->setReferencia($referencia);
                                         $pagosModel->insert();
                                         $montoAbonadoTotal += $montoUsd;

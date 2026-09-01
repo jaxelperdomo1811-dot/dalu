@@ -35,18 +35,24 @@ class Tasa extends Conexion {
         }
     }
     
-    public function update() {
+    public function insert() {
         try {
-            if ($this->id) {
-                $stmt = $this->prepare("UPDATE tasa SET valor = :valor, fecha_actualizacion = current_timestamp() WHERE id = :id");
-                $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
-            } else {
-                $stmt = $this->prepare("INSERT INTO tasa (nombre, valor, fecha_actualizacion) VALUES (:nombre, :valor, current_timestamp())");
-                $nombre = $this->nombre ?? 'BCV';
-                $stmt->bindParam(':nombre', $nombre, PDO::PARAM_STR);
-            }
+            $stmt = $this->prepare("INSERT INTO tasa (nombre, valor, fecha_actualizacion) VALUES (:nombre, :valor, current_timestamp())");
+            $nombre = $this->nombre ?? 'BCV';
+            $stmt->bindParam(':nombre', $nombre, PDO::PARAM_STR);
             $stmt->bindParam(':valor', $this->valor);
             return $stmt->execute();
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
+    public function getById($id) {
+        try {
+            $stmt = $this->prepare("SELECT * FROM tasa WHERE id = :id LIMIT 1");
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             return false;
         }

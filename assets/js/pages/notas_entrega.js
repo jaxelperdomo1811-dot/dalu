@@ -22,18 +22,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 pedidoNombreCliente.setAttribute('readonly', true);
 
                 try {
-                    const response = await fetch(`?c=clientes&accion=buscarYRegistrarCedula&tipo_persona=${tipo}&cedula=${cedula}`);
+                    const response = await fetch(`?c=clientes&accion=consultarCedula&tipo_persona=${tipo}&cedula=${cedula}`);
                     const data = await response.json();
 
-                    if (data.success && data.data) {
+                    if (data.success && data.exists) {
                         mensajePedidoCedula.style.color = 'green';
-                        mensajePedidoCedula.innerText = data.source === 'db' ? 'Cliente encontrado en BD.' : 'Cliente registrado desde API.';
+                        mensajePedidoCedula.innerText = data.source === 'db' ? 'Cliente encontrado en BD.' : 'Cliente encontrado.';
                         pedidoNombreCliente.value = data.data.nombre_completo;
                         pedidoIdCliente.value = data.data.id;
                         pedidoNombreCliente.setAttribute('readonly', true);
                     } else {
-                        mensajePedidoCedula.style.color = 'orange';
-                        mensajePedidoCedula.innerText = 'Cliente no encontrado. Ingrese el nombre para registrarlo.';
+                        mensajePedidoCedula.style.color = data.valid_format ? 'orange' : 'red';
+                        mensajePedidoCedula.innerText = data.message || 'Cliente no encontrado. Ingrese el nombre para registrarlo.';
                         pedidoNombreCliente.removeAttribute('readonly');
                         pedidoNombreCliente.focus();
                     }

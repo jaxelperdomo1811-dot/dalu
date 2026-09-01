@@ -114,7 +114,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="needs-validation" method="POST" action="index.php?c=entradas&a=procesarEntradaConDetalles" id="entradaForm">
+                    <form class="needs-validation" method="POST" action="?c=compraProductos&accion=insert" id="entradaForm">
                         <div class="container container-form">
 
                             <input type="hidden" name="id_proveedor" id="id_proveedor" value="">

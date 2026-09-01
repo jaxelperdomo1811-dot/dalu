@@ -37,23 +37,20 @@ document.addEventListener('DOMContentLoaded', () => {
                         const aInput = modal.querySelector('input[name="apellido"]');
                         const btnSubmit = modal.querySelector('button[type="submit"]');
                         
-                        if (data.error_db) {
-                            mensajeCedula.style.color = 'red';
-                            mensajeCedula.innerText = data.error_db;
-                            if (nInput) nInput.value = '';
-                            if (aInput) aInput.value = '';
-                            if (btnSubmit) btnSubmit.disabled = true;
-                        } else if (data.data) {
+                        if (data.exists) {
                             const persona = data.data;
-                            if (nInput) nInput.value = `${persona.primer_nombre || ''} ${persona.segundo_nombre || ''}`.trim();
-                            if (aInput) aInput.value = `${persona.primer_apellido || ''} ${persona.segundo_apellido || ''}`.trim();
-                            
+                            if (nInput) nInput.value = persona.nombre_completo || '';
+                            if (aInput) aInput.value = '';
+
                             mensajeCedula.style.color = 'green';
                             mensajeCedula.innerText = 'Datos encontrados.';
                             if (btnSubmit) btnSubmit.disabled = false;
                         } else {
-                            mensajeCedula.style.color = 'red';
-                            mensajeCedula.innerText = 'Cédula no encontrada. Por favor ingrese su nombre y apellido manualmente';
+                            // No existe en BD
+                            mensajeCedula.style.color = data.valid_format ? 'orange' : 'red';
+                            mensajeCedula.innerText = data.message || 'Cédula no encontrada. Por favor ingrese su nombre y apellido manualmente';
+                            if (nInput) nInput.value = '';
+                            if (aInput) aInput.value = '';
                             if (btnSubmit) btnSubmit.disabled = false;
                         }
                     } catch (e) {
